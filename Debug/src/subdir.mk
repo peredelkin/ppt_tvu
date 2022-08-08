@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../src/gpio.c \
 ../src/main.c \
 ../src/spi.c \
 ../src/system_stm32f4xx.c \
@@ -13,6 +14,7 @@ S_UPPER_SRCS += \
 ../src/startup_stm32f429_439xx.S 
 
 OBJS += \
+./src/gpio.o \
 ./src/main.o \
 ./src/spi.o \
 ./src/startup_stm32f429_439xx.o \
@@ -23,6 +25,7 @@ S_UPPER_DEPS += \
 ./src/startup_stm32f429_439xx.d 
 
 C_DEPS += \
+./src/gpio.d \
 ./src/main.d \
 ./src/spi.d \
 ./src/system_stm32f4xx.d \
@@ -33,7 +36,7 @@ C_DEPS += \
 src/%.o: ../src/%.c src/subdir.mk
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU Arm Cross C Compiler'
-	arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -Wuninitialized -Wall -Wmissing-declarations -Wpointer-arith -Wfloat-equal  -g -ggdb -I"C:\Users\Ruslan\eclipse-workspace\PPT_TVU\inc" -std=gnu11 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -Wuninitialized -Wall -Wmissing-declarations -Wpointer-arith -Wfloat-equal  -g -ggdb -I"/home/ruslan/ppt_tvu/inc" -std=gnu11 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

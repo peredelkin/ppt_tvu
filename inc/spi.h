@@ -11,6 +11,8 @@
 #include <assert.h>
 #include "stm32f4xx.h"
 
+//TODO: причесать
+
 #define SPI_CR1_T_SIZE 2
 #define SPI_CR2_T_SIZE 2
 #define SPI_SR_T_SIZE 2
