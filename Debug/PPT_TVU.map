@@ -1,0 +1,482 @@
+
+Discarded input sections
+
+ .text          0x00000000        0x0 ./src/main.o
+ .data          0x00000000        0x0 ./src/main.o
+ .bss           0x00000000        0x0 ./src/main.o
+ .text          0x00000000        0x0 ./src/spi.o
+ .data          0x00000000        0x0 ./src/spi.o
+ .bss           0x00000000        0x0 ./src/spi.o
+ .text.spi_cr1_write
+                0x00000000       0x1e ./src/spi.o
+ .debug_info    0x00000000      0x585 ./src/spi.o
+ .debug_abbrev  0x00000000      0x106 ./src/spi.o
+ .debug_aranges
+                0x00000000       0x20 ./src/spi.o
+ .debug_ranges  0x00000000       0x10 ./src/spi.o
+ .debug_line    0x00000000       0xf3 ./src/spi.o
+ .debug_str     0x00000000      0x3bd ./src/spi.o
+ .comment       0x00000000       0x4e ./src/spi.o
+ .debug_frame   0x00000000       0x38 ./src/spi.o
+ .ARM.attributes
+                0x00000000       0x2d ./src/spi.o
+ .text          0x00000000       0x14 ./src/startup_stm32f429_439xx.o
+ .data          0x00000000        0x0 ./src/startup_stm32f429_439xx.o
+ .bss           0x00000000        0x0 ./src/startup_stm32f429_439xx.o
+ .text          0x00000000        0x0 ./src/system_stm32f4xx.o
+ .data          0x00000000        0x0 ./src/system_stm32f4xx.o
+ .bss           0x00000000        0x0 ./src/system_stm32f4xx.o
+ .data.SystemCoreClock
+                0x00000000        0x4 ./src/system_stm32f4xx.o
+ .data.AHBPrescTable
+                0x00000000       0x10 ./src/system_stm32f4xx.o
+ .text.SystemCoreClockUpdate
+                0x00000000      0x100 ./src/system_stm32f4xx.o
+ .text          0x00000000        0x0 ./src/tic12400.o
+ .data          0x00000000        0x0 ./src/tic12400.o
+ .bss           0x00000000        0x0 ./src/tic12400.o
+ .text.tic12400_tx_data_transposition
+                0x00000000       0x36 ./src/tic12400.o
+ .text.tic12400_rx_data_transposition
+                0x00000000       0x3e ./src/tic12400.o
+ .text.tic12400_handler
+                0x00000000       0xec ./src/tic12400.o
+ .debug_info    0x00000000      0x3a9 ./src/tic12400.o
+ .debug_abbrev  0x00000000      0x132 ./src/tic12400.o
+ .debug_aranges
+                0x00000000       0x30 ./src/tic12400.o
+ .debug_ranges  0x00000000       0x20 ./src/tic12400.o
+ .debug_line    0x00000000      0x162 ./src/tic12400.o
+ .debug_str     0x00000000      0x678 ./src/tic12400.o
+ .comment       0x00000000       0x4e ./src/tic12400.o
+ .debug_frame   0x00000000       0x88 ./src/tic12400.o
+ .ARM.attributes
+                0x00000000       0x2d ./src/tic12400.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+RAM              0x20000000         0x00030000         xrw
+CCMRAM           0x10000000         0x00010000         xrw
+FLASH            0x08000000         0x00100000         xr
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD ./src/main.o
+LOAD ./src/spi.o
+LOAD ./src/startup_stm32f429_439xx.o
+LOAD ./src/system_stm32f4xx.o
+LOAD ./src/tic12400.o
+                0x20030000                _estack = 0x20030000
+                0x00000000                _Min_Heap_Size = 0x0
+                0x00000400                _Min_Stack_Size = 0x400
+
+.isr_vector     0x08000000      0x1ac
+                0x08000000                . = ALIGN (0x4)
+ *(.isr_vector)
+ .isr_vector    0x08000000      0x1ac ./src/startup_stm32f429_439xx.o
+                0x08000000                g_pfnVectors
+                0x080001ac                . = ALIGN (0x4)
+
+.text           0x080001ac      0x26c
+                0x080001ac                . = ALIGN (0x4)
+ *(.text)
+ *(.text*)
+ .text.main     0x080001ac       0xa0 ./src/main.o
+                0x080001ac                main
+ .text.Reset_Handler
+                0x0800024c       0x44 ./src/startup_stm32f429_439xx.o
+                0x0800024c                Reset_Handler
+ .text.Default_Handler
+                0x08000290        0x2 ./src/startup_stm32f429_439xx.o
+                0x08000290                RTC_Alarm_IRQHandler
+                0x08000290                HASH_RNG_IRQHandler
+                0x08000290                EXTI2_IRQHandler
+                0x08000290                TIM8_CC_IRQHandler
+                0x08000290                DebugMon_Handler
+                0x08000290                UART8_IRQHandler
+                0x08000290                SPI4_IRQHandler
+                0x08000290                TIM1_CC_IRQHandler
+                0x08000290                DMA2_Stream5_IRQHandler
+                0x08000290                HardFault_Handler
+                0x08000290                DMA1_Stream5_IRQHandler
+                0x08000290                SysTick_Handler
+                0x08000290                PVD_IRQHandler
+                0x08000290                SDIO_IRQHandler
+                0x08000290                TAMP_STAMP_IRQHandler
+                0x08000290                PendSV_Handler
+                0x08000290                NMI_Handler
+                0x08000290                CAN2_RX1_IRQHandler
+                0x08000290                EXTI3_IRQHandler
+                0x08000290                TIM8_TRG_COM_TIM14_IRQHandler
+                0x08000290                TIM1_UP_TIM10_IRQHandler
+                0x08000290                TIM8_UP_TIM13_IRQHandler
+                0x08000290                I2C3_ER_IRQHandler
+                0x08000290                EXTI0_IRQHandler
+                0x08000290                I2C2_EV_IRQHandler
+                0x08000290                DMA1_Stream2_IRQHandler
+                0x08000290                CAN1_RX0_IRQHandler
+                0x08000290                FPU_IRQHandler
+                0x08000290                OTG_HS_WKUP_IRQHandler
+                0x08000290                UsageFault_Handler
+                0x08000290                LTDC_ER_IRQHandler
+                0x08000290                CAN2_SCE_IRQHandler
+                0x08000290                DMA2_Stream2_IRQHandler
+                0x08000290                SPI1_IRQHandler
+                0x08000290                TIM6_DAC_IRQHandler
+                0x08000290                TIM1_BRK_TIM9_IRQHandler
+                0x08000290                DCMI_IRQHandler
+                0x08000290                CAN2_RX0_IRQHandler
+                0x08000290                DMA2_Stream3_IRQHandler
+                0x08000290                USART6_IRQHandler
+                0x08000290                USART3_IRQHandler
+                0x08000290                CRYP_IRQHandler
+                0x08000290                CAN1_RX1_IRQHandler
+                0x08000290                UART5_IRQHandler
+                0x08000290                DMA2_Stream0_IRQHandler
+                0x08000290                TIM4_IRQHandler
+                0x08000290                I2C1_EV_IRQHandler
+                0x08000290                DMA1_Stream6_IRQHandler
+                0x08000290                DMA1_Stream1_IRQHandler
+                0x08000290                UART4_IRQHandler
+                0x08000290                TIM3_IRQHandler
+                0x08000290                RCC_IRQHandler
+                0x08000290                TIM8_BRK_TIM12_IRQHandler
+                0x08000290                Default_Handler
+                0x08000290                EXTI15_10_IRQHandler
+                0x08000290                ADC_IRQHandler
+                0x08000290                DMA1_Stream7_IRQHandler
+                0x08000290                SPI5_IRQHandler
+                0x08000290                TIM7_IRQHandler
+                0x08000290                CAN2_TX_IRQHandler
+                0x08000290                TIM5_IRQHandler
+                0x08000290                DMA2_Stream7_IRQHandler
+                0x08000290                I2C3_EV_IRQHandler
+                0x08000290                EXTI9_5_IRQHandler
+                0x08000290                RTC_WKUP_IRQHandler
+                0x08000290                LTDC_IRQHandler
+                0x08000290                ETH_WKUP_IRQHandler
+                0x08000290                SPI2_IRQHandler
+                0x08000290                OTG_HS_EP1_IN_IRQHandler
+                0x08000290                MemManage_Handler
+                0x08000290                DMA1_Stream0_IRQHandler
+                0x08000290                CAN1_TX_IRQHandler
+                0x08000290                SVC_Handler
+                0x08000290                EXTI4_IRQHandler
+                0x08000290                FSMC_IRQHandler
+                0x08000290                ETH_IRQHandler
+                0x08000290                OTG_HS_EP1_OUT_IRQHandler
+                0x08000290                WWDG_IRQHandler
+                0x08000290                SPI6_IRQHandler
+                0x08000290                TIM2_IRQHandler
+                0x08000290                OTG_FS_WKUP_IRQHandler
+                0x08000290                TIM1_TRG_COM_TIM11_IRQHandler
+                0x08000290                OTG_HS_IRQHandler
+                0x08000290                DMA2D_IRQHandler
+                0x08000290                EXTI1_IRQHandler
+                0x08000290                UART7_IRQHandler
+                0x08000290                USART2_IRQHandler
+                0x08000290                I2C2_ER_IRQHandler
+                0x08000290                DMA2_Stream1_IRQHandler
+                0x08000290                CAN1_SCE_IRQHandler
+                0x08000290                FLASH_IRQHandler
+                0x08000290                DMA2_Stream4_IRQHandler
+                0x08000290                BusFault_Handler
+                0x08000290                USART1_IRQHandler
+                0x08000290                OTG_FS_IRQHandler
+                0x08000290                SPI3_IRQHandler
+                0x08000290                DMA1_Stream4_IRQHandler
+                0x08000290                I2C1_ER_IRQHandler
+                0x08000290                DMA2_Stream6_IRQHandler
+                0x08000290                SAI1_IRQHandler
+                0x08000290                DMA1_Stream3_IRQHandler
+ *fill*         0x08000292        0x2 
+ .text.SystemInit
+                0x08000294       0x5c ./src/system_stm32f4xx.o
+                0x08000294                SystemInit
+ .text.SetSysClock
+                0x080002f0      0x128 ./src/system_stm32f4xx.o
+ *(.glue_7)
+ .glue_7        0x08000418        0x0 linker stubs
+ *(.glue_7t)
+ .glue_7t       0x08000418        0x0 linker stubs
+ *(.eh_frame)
+ *(.init)
+ *(.fini)
+                0x08000418                . = ALIGN (0x4)
+                0x08000418                _etext = .
+
+.vfp11_veneer   0x08000418        0x0
+ .vfp11_veneer  0x08000418        0x0 linker stubs
+
+.v4_bx          0x08000418        0x0
+ .v4_bx         0x08000418        0x0 linker stubs
+
+.iplt           0x08000418        0x0
+ .iplt          0x08000418        0x0 ./src/startup_stm32f429_439xx.o
+
+.rel.dyn        0x08000418        0x0
+ .rel.iplt      0x08000418        0x0 ./src/startup_stm32f429_439xx.o
+
+.rodata         0x08000418        0x0
+                0x08000418                . = ALIGN (0x4)
+ *(.rodata)
+ *(.rodata*)
+                0x08000418                . = ALIGN (0x4)
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+
+.ARM            0x08000418        0x0
+                0x08000418                __exidx_start = .
+ *(.ARM.exidx*)
+                0x08000418                __exidx_end = .
+
+.preinit_array  0x08000418        0x0
+                [!provide]                PROVIDE (__preinit_array_start = .)
+ *(.preinit_array*)
+                [!provide]                PROVIDE (__preinit_array_end = .)
+
+.init_array     0x08000418        0x0
+                [!provide]                PROVIDE (__init_array_start = .)
+ *(SORT_BY_NAME(.init_array.*))
+ *(.init_array*)
+                [!provide]                PROVIDE (__init_array_end = .)
+
+.fini_array     0x08000418        0x0
+                [!provide]                PROVIDE (__fini_array_start = .)
+ *(SORT_BY_NAME(.fini_array.*))
+ *(.fini_array*)
+                [!provide]                PROVIDE (__fini_array_end = .)
+                0x08000418                _sidata = LOADADDR (.data)
+
+.data           0x20000000        0x0 load address 0x08000418
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                _sdata = .
+ *(.data)
+ *(.data*)
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                _edata = .
+                0x08000418                _siccmram = LOADADDR (.ccmram)
+
+.igot.plt       0x20000000        0x0 load address 0x08000418
+ .igot.plt      0x20000000        0x0 ./src/startup_stm32f429_439xx.o
+
+.ccmram         0x10000000        0x0 load address 0x08000418
+                0x10000000                . = ALIGN (0x4)
+                0x10000000                _sccmram = .
+ *(.ccmram)
+ *(.ccmram*)
+                0x10000000                . = ALIGN (0x4)
+                0x10000000                _eccmram = .
+                0x10000000                . = ALIGN (0x4)
+
+.bss            0x20000000        0x0
+                0x20000000                _sbss = .
+                0x20000000                __bss_start__ = _sbss
+ *(.bss)
+ *(.bss*)
+ *(COMMON)
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                _ebss = .
+                0x20000000                __bss_end__ = _ebss
+
+._user_heap_stack
+                0x20000000      0x400
+                0x20000000                . = ALIGN (0x8)
+                [!provide]                PROVIDE (end = .)
+                [!provide]                PROVIDE (_end = .)
+                0x20000000                . = (. + _Min_Heap_Size)
+                0x20000400                . = (. + _Min_Stack_Size)
+ *fill*         0x20000000      0x400 
+                0x20000400                . = ALIGN (0x8)
+
+/DISCARD/
+ libc.a(*)
+ libm.a(*)
+ libgcc.a(*)
+
+.ARM.attributes
+                0x00000000       0x33
+ *(.ARM.attributes)
+ .ARM.attributes
+                0x00000000       0x2d ./src/main.o
+ .ARM.attributes
+                0x0000002d       0x23 ./src/startup_stm32f429_439xx.o
+ .ARM.attributes
+                0x00000050       0x2d ./src/system_stm32f4xx.o
+OUTPUT(PPT_TVU.elf elf32-littlearm)
+LOAD linker stubs
+LOAD c:/program files (x86)/gnu arm embedded toolchain/10 2020-q4-major/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc.a
+LOAD c:/program files (x86)/gnu arm embedded toolchain/10 2020-q4-major/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a
+LOAD c:/program files (x86)/gnu arm embedded toolchain/10 2020-q4-major/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v7-m/nofp\libgcc.a
+
+.debug_info     0x00000000      0xa16
+ .debug_info    0x00000000      0x3da ./src/main.o
+ .debug_info    0x000003da       0x22 ./src/startup_stm32f429_439xx.o
+ .debug_info    0x000003fc      0x61a ./src/system_stm32f4xx.o
+
+.debug_abbrev   0x00000000      0x26e
+ .debug_abbrev  0x00000000       0xf7 ./src/main.o
+ .debug_abbrev  0x000000f7       0x12 ./src/startup_stm32f429_439xx.o
+ .debug_abbrev  0x00000109      0x165 ./src/system_stm32f4xx.o
+
+.debug_aranges  0x00000000       0x78
+ .debug_aranges
+                0x00000000       0x20 ./src/main.o
+ .debug_aranges
+                0x00000020       0x28 ./src/startup_stm32f429_439xx.o
+ .debug_aranges
+                0x00000048       0x30 ./src/system_stm32f4xx.o
+
+.debug_ranges   0x00000000       0x50
+ .debug_ranges  0x00000000       0x10 ./src/main.o
+ .debug_ranges  0x00000010       0x20 ./src/startup_stm32f429_439xx.o
+ .debug_ranges  0x00000030       0x20 ./src/system_stm32f4xx.o
+
+.debug_line     0x00000000      0x4b2
+ .debug_line    0x00000000      0x167 ./src/main.o
+ .debug_line    0x00000167       0x7c ./src/startup_stm32f429_439xx.o
+ .debug_line    0x000001e3      0x2cf ./src/system_stm32f4xx.o
+
+.debug_str      0x00000000      0x438
+ .debug_str     0x00000000      0x2e7 ./src/main.o
+                                0x320 (size before relaxing)
+ .debug_str     0x000002e7       0x2f ./src/startup_stm32f429_439xx.o
+                                 0x5f (size before relaxing)
+ .debug_str     0x00000316      0x122 ./src/system_stm32f4xx.o
+                                0x3f5 (size before relaxing)
+
+.comment        0x00000000       0x4d
+ .comment       0x00000000       0x4d ./src/main.o
+                                 0x4e (size before relaxing)
+ .comment       0x0000004d       0x4e ./src/system_stm32f4xx.o
+
+.debug_frame    0x00000000       0xa8
+ .debug_frame   0x00000000       0x2c ./src/main.o
+ .debug_frame   0x0000002c       0x7c ./src/system_stm32f4xx.o
+
+Cross Reference Table
+
+Symbol                                            File
+ADC_IRQHandler                                    ./src/startup_stm32f429_439xx.o
+AHBPrescTable                                     ./src/system_stm32f4xx.o
+BusFault_Handler                                  ./src/startup_stm32f429_439xx.o
+CAN1_RX0_IRQHandler                               ./src/startup_stm32f429_439xx.o
+CAN1_RX1_IRQHandler                               ./src/startup_stm32f429_439xx.o
+CAN1_SCE_IRQHandler                               ./src/startup_stm32f429_439xx.o
+CAN1_TX_IRQHandler                                ./src/startup_stm32f429_439xx.o
+CAN2_RX0_IRQHandler                               ./src/startup_stm32f429_439xx.o
+CAN2_RX1_IRQHandler                               ./src/startup_stm32f429_439xx.o
+CAN2_SCE_IRQHandler                               ./src/startup_stm32f429_439xx.o
+CAN2_TX_IRQHandler                                ./src/startup_stm32f429_439xx.o
+CRYP_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+DCMI_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+DMA1_Stream0_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA1_Stream1_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA1_Stream2_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA1_Stream3_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA1_Stream4_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA1_Stream5_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA1_Stream6_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA1_Stream7_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA2D_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+DMA2_Stream0_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA2_Stream1_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA2_Stream2_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA2_Stream3_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA2_Stream4_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA2_Stream5_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA2_Stream6_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DMA2_Stream7_IRQHandler                           ./src/startup_stm32f429_439xx.o
+DebugMon_Handler                                  ./src/startup_stm32f429_439xx.o
+Default_Handler                                   ./src/startup_stm32f429_439xx.o
+ETH_IRQHandler                                    ./src/startup_stm32f429_439xx.o
+ETH_WKUP_IRQHandler                               ./src/startup_stm32f429_439xx.o
+EXTI0_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+EXTI15_10_IRQHandler                              ./src/startup_stm32f429_439xx.o
+EXTI1_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+EXTI2_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+EXTI3_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+EXTI4_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+EXTI9_5_IRQHandler                                ./src/startup_stm32f429_439xx.o
+FLASH_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+FPU_IRQHandler                                    ./src/startup_stm32f429_439xx.o
+FSMC_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+HASH_RNG_IRQHandler                               ./src/startup_stm32f429_439xx.o
+HardFault_Handler                                 ./src/startup_stm32f429_439xx.o
+I2C1_ER_IRQHandler                                ./src/startup_stm32f429_439xx.o
+I2C1_EV_IRQHandler                                ./src/startup_stm32f429_439xx.o
+I2C2_ER_IRQHandler                                ./src/startup_stm32f429_439xx.o
+I2C2_EV_IRQHandler                                ./src/startup_stm32f429_439xx.o
+I2C3_ER_IRQHandler                                ./src/startup_stm32f429_439xx.o
+I2C3_EV_IRQHandler                                ./src/startup_stm32f429_439xx.o
+LTDC_ER_IRQHandler                                ./src/startup_stm32f429_439xx.o
+LTDC_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+MemManage_Handler                                 ./src/startup_stm32f429_439xx.o
+NMI_Handler                                       ./src/startup_stm32f429_439xx.o
+OTG_FS_IRQHandler                                 ./src/startup_stm32f429_439xx.o
+OTG_FS_WKUP_IRQHandler                            ./src/startup_stm32f429_439xx.o
+OTG_HS_EP1_IN_IRQHandler                          ./src/startup_stm32f429_439xx.o
+OTG_HS_EP1_OUT_IRQHandler                         ./src/startup_stm32f429_439xx.o
+OTG_HS_IRQHandler                                 ./src/startup_stm32f429_439xx.o
+OTG_HS_WKUP_IRQHandler                            ./src/startup_stm32f429_439xx.o
+PVD_IRQHandler                                    ./src/startup_stm32f429_439xx.o
+PendSV_Handler                                    ./src/startup_stm32f429_439xx.o
+RCC_IRQHandler                                    ./src/startup_stm32f429_439xx.o
+RTC_Alarm_IRQHandler                              ./src/startup_stm32f429_439xx.o
+RTC_WKUP_IRQHandler                               ./src/startup_stm32f429_439xx.o
+Reset_Handler                                     ./src/startup_stm32f429_439xx.o
+SAI1_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+SDIO_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+SPI1_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+SPI2_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+SPI3_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+SPI4_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+SPI5_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+SPI6_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+SVC_Handler                                       ./src/startup_stm32f429_439xx.o
+SysTick_Handler                                   ./src/startup_stm32f429_439xx.o
+SystemCoreClock                                   ./src/system_stm32f4xx.o
+SystemCoreClockUpdate                             ./src/system_stm32f4xx.o
+SystemInit                                        ./src/system_stm32f4xx.o
+                                                  ./src/startup_stm32f429_439xx.o
+TAMP_STAMP_IRQHandler                             ./src/startup_stm32f429_439xx.o
+TIM1_BRK_TIM9_IRQHandler                          ./src/startup_stm32f429_439xx.o
+TIM1_CC_IRQHandler                                ./src/startup_stm32f429_439xx.o
+TIM1_TRG_COM_TIM11_IRQHandler                     ./src/startup_stm32f429_439xx.o
+TIM1_UP_TIM10_IRQHandler                          ./src/startup_stm32f429_439xx.o
+TIM2_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+TIM3_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+TIM4_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+TIM5_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+TIM6_DAC_IRQHandler                               ./src/startup_stm32f429_439xx.o
+TIM7_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+TIM8_BRK_TIM12_IRQHandler                         ./src/startup_stm32f429_439xx.o
+TIM8_CC_IRQHandler                                ./src/startup_stm32f429_439xx.o
+TIM8_TRG_COM_TIM14_IRQHandler                     ./src/startup_stm32f429_439xx.o
+TIM8_UP_TIM13_IRQHandler                          ./src/startup_stm32f429_439xx.o
+UART4_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+UART5_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+UART7_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+UART8_IRQHandler                                  ./src/startup_stm32f429_439xx.o
+USART1_IRQHandler                                 ./src/startup_stm32f429_439xx.o
+USART2_IRQHandler                                 ./src/startup_stm32f429_439xx.o
+USART3_IRQHandler                                 ./src/startup_stm32f429_439xx.o
+USART6_IRQHandler                                 ./src/startup_stm32f429_439xx.o
+UsageFault_Handler                                ./src/startup_stm32f429_439xx.o
+WWDG_IRQHandler                                   ./src/startup_stm32f429_439xx.o
+_ebss                                             ./src/startup_stm32f429_439xx.o
+_edata                                            ./src/startup_stm32f429_439xx.o
+_estack                                           ./src/startup_stm32f429_439xx.o
+_sbss                                             ./src/startup_stm32f429_439xx.o
+_sdata                                            ./src/startup_stm32f429_439xx.o
+_sidata                                           ./src/startup_stm32f429_439xx.o
+g_pfnVectors                                      ./src/startup_stm32f429_439xx.o
+main                                              ./src/main.o
+                                                  ./src/startup_stm32f429_439xx.o
+spi_cr1_write                                     ./src/spi.o
+tic12400_handler                                  ./src/tic12400.o
+tic12400_rx_data_transposition                    ./src/tic12400.o
+tic12400_tx_data_transposition                    ./src/tic12400.o
