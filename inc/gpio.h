@@ -260,12 +260,112 @@ typedef struct
   __IO GPIO_AFRH_REG	AFRH;		/*!< GPIO alternate function registers,     Address offset: 0x24	*/
 } BITS_GPIO_TypeDef;
 
+
+
+//! Маска пина.
+enum _Gpio_Pin_Mask {
+    GPIO_PIN_0  = (0),
+    GPIO_PIN_1  = (1),
+    GPIO_PIN_2  = (2),
+    GPIO_PIN_3  = (3),
+    GPIO_PIN_4  = (4),
+    GPIO_PIN_5  = (5),
+    GPIO_PIN_6  = (6),
+    GPIO_PIN_7  = (7),
+    GPIO_PIN_8  = (8),
+    GPIO_PIN_9  = (9),
+    GPIO_PIN_10 = (10),
+    GPIO_PIN_11 = (11),
+    GPIO_PIN_12 = (12),
+    GPIO_PIN_13 = (13),
+    GPIO_PIN_14 = (14),
+    GPIO_PIN_15 = (15)
+};
+
+//! Тип пина GPIO.
+typedef uint16_t gpio_pin_t;
+
+//! Состояние пина.
+enum _Gpio_Pin_State {
+    GPIO_STATE_OFF = 0, //!< Выключено.
+    GPIO_STATE_ON  = 1  //!< Включено.
+};
+
+//! Тип состояния пина.
+typedef uint16_t gpio_state_t;
+
+//! Режим пина.
+enum _Gpio_Mode {
+    GPIO_MODE_INPUT = 0, //!< Вход.
+    GPIO_MODE_OUT_GP = 1, //!< Выход общего назначения
+    GPIO_MODE_OUT_AF = 2, //!< Выход альтернативных функций.
+    GPIO_MODE_ANALOG = 3, //!< Аналоговый вход / выход.
+};
+
+//! Тип режима пина.
+typedef enum _Gpio_Mode gpio_mode_t;
+
+//! Тип выхода пина.
+enum _Gpio_Otype {
+    GPIO_OTYPE_PP = 0, //!< Пуш-пулл.
+    GPIO_OTYPE_OD = 1  //!< Открытй коллектор.
+};
+
+//! Тип типа выхода пина.
+typedef enum _Gpio_Otype gpio_otype_t;
+
+//! Скорость выхода пина.
+enum _Gpio_Ospeed {
+    GPIO_OSPEED_LOW       = 0, //!< Очень медленно.
+    GPIO_OSPEED_MEDIUM    = 1, //!< Медленно.
+    GPIO_OSPEED_HIGH      = 2, //!< Быстро.
+    GPIO_OSPEED_VERY_HIGH = 3  //!< Очень быстро.
+};
+
+//! Тип скорости выхода пина.
+typedef enum _Gpio_Ospeed gpio_ospeed_t;
+
+//! Подтяжка пина.
+enum _Gpio_PuPd {
+    GPIO_PUPD_NONE = 0, //!< Подтяжка не включена.
+    GPIO_PUPD_UP   = 1, //!< Подтяжка к питанию.
+    GPIO_PUPD_DOWN = 2  //!< Подтяжка к земле.
+};
+
+//! Тип подтяжки пина.
+typedef enum _Gpio_PuPd gpio_pupd_t;
+
+//! Альтернативные функции пина.
+enum _Gpio_Af {
+    GPIO_AF_0 = 0,
+    GPIO_AF_1 = 1,
+    GPIO_AF_2 = 2,
+    GPIO_AF_3 = 3,
+    GPIO_AF_4 = 4,
+    GPIO_AF_5 = 5,
+    GPIO_AF_6 = 6,
+    GPIO_AF_7 = 7,
+    GPIO_AF_8 = 8,
+    GPIO_AF_9 = 9,
+    GPIO_AF_10 = 10,
+    GPIO_AF_11 = 11,
+    GPIO_AF_12 = 12,
+    GPIO_AF_13 = 13,
+    GPIO_AF_14 = 14,
+    GPIO_AF_15 = 15,
+};
+
+//! Тип альтернативных функций пина.
+typedef enum _Gpio_Af gpio_af_t;
+
+
+
 extern void gpio_pin_setup(GPIO_TypeDef *gpio,
-		uint8_t pin_n,
-		uint8_t pin_mode,
-		uint8_t pin_otype,
-		uint8_t pin_ospeed,
-		uint8_t pin_pupd,
-		uint8_t pin_altf);
+		gpio_pin_t pin_n,
+		gpio_mode_t pin_mode,
+		gpio_otype_t pin_otype,
+		gpio_ospeed_t pin_ospeed,
+		gpio_pupd_t pin_pupd,
+		gpio_af_t pin_altf);
 
 #endif /* INC_GPIO_H_ */

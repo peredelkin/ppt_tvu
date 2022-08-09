@@ -7,23 +7,23 @@
 
 #include "gpio.h"
 
-void gpio_mode_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n, uint8_t pin_mode);
-void gpio_output_type_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n, uint8_t pin_otype);
-void gpio_output_speed_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n, uint8_t pin_ospeed);
-void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n, uint8_t pin_pupd);
-bool gpio_input_data_bit_read(GPIO_TypeDef *gpio, uint8_t pin_n);
-bool gpio_output_data_bit_read(GPIO_TypeDef *gpio, uint8_t pin_n);
-void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n, uint8_t pin_data);
-void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n, uint8_t pin_altf);
+void gpio_mode_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n, gpio_mode_t pin_mode);
+void gpio_output_type_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n, gpio_otype_t pin_otype);
+void gpio_output_speed_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n, gpio_ospeed_t pin_ospeed);
+void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n, gpio_pupd_t pin_pupd);
+bool gpio_input_data_bit_read(GPIO_TypeDef *gpio, gpio_pin_t pin_n);
+bool gpio_output_data_bit_read(GPIO_TypeDef *gpio, gpio_pin_t pin_n);
+void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n, uint8_t pin_data);
+void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n, gpio_af_t pin_altf);
 
 void gpio_pin_setup(GPIO_TypeDef *gpio,
-		uint8_t pin_n,
-		uint8_t pin_mode,
-		uint8_t pin_otype,
-		uint8_t pin_ospeed,
-		uint8_t pin_pupd,
-		uint8_t pin_altf) {
-
+		gpio_pin_t pin_n,
+		gpio_mode_t pin_mode,
+		gpio_otype_t pin_otype,
+		gpio_ospeed_t pin_ospeed,
+		gpio_pupd_t pin_pupd,
+		gpio_af_t pin_altf)
+{
 	gpio_mode_bit_setup(gpio, pin_n, pin_mode);
 	gpio_output_type_bit_setup(gpio, pin_n, pin_otype);
 	gpio_output_speed_bit_setup(gpio, pin_n, pin_ospeed);
@@ -31,7 +31,7 @@ void gpio_pin_setup(GPIO_TypeDef *gpio,
 	gpio_alternate_function_bit_setup(gpio, pin_n, pin_altf);
 }
 
-void gpio_mode_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n, uint8_t pin_mode) {
+void gpio_mode_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n, gpio_mode_t pin_mode) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 
@@ -89,8 +89,8 @@ void gpio_mode_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n, uint8_t pin_mode) {
 	}
 }
 
-void gpio_output_type_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n,
-		uint8_t pin_otype) {
+void gpio_output_type_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n,
+		gpio_otype_t pin_otype) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 
@@ -148,8 +148,8 @@ void gpio_output_type_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n,
 	}
 }
 
-void gpio_output_speed_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n,
-		uint8_t pin_ospeed) {
+void gpio_output_speed_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n,
+		gpio_ospeed_t pin_ospeed) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 
@@ -207,8 +207,8 @@ void gpio_output_speed_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n,
 	}
 }
 
-void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n,
-		uint8_t pin_pupd) {
+void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n,
+		gpio_pupd_t pin_pupd) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 
@@ -266,7 +266,7 @@ void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n,
 	}
 }
 
-bool gpio_input_data_bit_read(GPIO_TypeDef *gpio, uint8_t pin_n) {
+bool gpio_input_data_bit_read(GPIO_TypeDef *gpio, gpio_pin_t pin_n) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 
@@ -308,7 +308,7 @@ bool gpio_input_data_bit_read(GPIO_TypeDef *gpio, uint8_t pin_n) {
 	}
 }
 
-bool gpio_output_data_bit_read(GPIO_TypeDef *gpio, uint8_t pin_n) {
+bool gpio_output_data_bit_read(GPIO_TypeDef *gpio, gpio_pin_t pin_n) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 
@@ -350,7 +350,7 @@ bool gpio_output_data_bit_read(GPIO_TypeDef *gpio, uint8_t pin_n) {
 	}
 }
 
-void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n,
+void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n,
 		uint8_t pin_data) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
@@ -410,8 +410,8 @@ void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n,
 
 }
 
-void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, uint8_t pin_n,
-		uint8_t pin_altf) {
+void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, gpio_pin_t pin_n,
+		gpio_af_t pin_altf) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 

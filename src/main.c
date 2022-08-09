@@ -8,7 +8,7 @@ int main(void) {
 	GPIOH->MODER |= (GPIO_MODER_MODER10_0 | GPIO_MODER_MODER11_0 | GPIO_MODER_MODER12_0);
 	GPIOH->ODR |= (GPIO_ODR_ODR_10 | GPIO_ODR_ODR_11 | GPIO_ODR_ODR_12);
 
-	gpio_pin_setup(GPIOA, 1, 1, 0, 0, 0, 0);
+	gpio_pin_setup(GPIOA, GPIO_PIN_1, GPIO_MODE_OUT_GP, GPIO_OTYPE_PP, GPIO_OSPEED_LOW, GPIO_PUPD_NONE, GPIO_AF_0);
 
 	for(int i = 0; i < 10000000; i ++){
 		__NOP();
