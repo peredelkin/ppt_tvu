@@ -124,11 +124,4 @@ typedef struct
   uint16_t			RESERVED8;	/*!< Reserved, 0x22                                                           */
 } spi_typedef;
 
-#define SPI1_U		((spi_typedef *) SPI1_BASE)
-#define SPI2_U		((spi_typedef *) SPI2_BASE)
-#define SPI3_U		((spi_typedef *) SPI3_BASE)
-#define SPI4_U		((spi_typedef *) SPI4_BASE)
-#define SPI5_U		((spi_typedef *) SPI5_BASE)
-#define SPI6_U		((spi_typedef *) SPI6_BASE)
-
 #endif /* INC_SPI_H_ */

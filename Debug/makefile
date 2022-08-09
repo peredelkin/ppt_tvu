@@ -55,7 +55,7 @@ main-build: PPT_TVU.elf secondary-outputs
 PPT_TVU.elf: $(OBJS) $(USER_OBJS) makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GNU Arm Cross C Linker'
-	arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -Wuninitialized -Wall -Wmissing-declarations -Wpointer-arith -Wfloat-equal  -g -ggdb -T "/home/ruslan/ppt_tvu/STM32F429IGTx_FLASH.ld" -nostartfiles -nodefaultlibs -nostdlib -Xlinker --gc-sections -Wl,-Map,"PPT_TVU.map" -Xlinker --cref --specs=nosys.specs -o "PPT_TVU.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -ffreestanding -fno-builtin -Wuninitialized -Wall -Wmissing-declarations -Wpointer-arith -Wfloat-equal  -g -ggdb -T "C:\Users\Ruslan\eclipse-workspace\PPT_TVU\STM32F429IGTx_FLASH.ld" -nostartfiles -nodefaultlibs -nostdlib -Xlinker --gc-sections -Wl,-Map,"PPT_TVU.map" -Xlinker --cref --specs=nosys.specs -o "PPT_TVU.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
