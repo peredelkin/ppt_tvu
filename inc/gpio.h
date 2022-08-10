@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include <stdbool.h>
+#include "defs.h"
 #include "stm32f4xx.h"
 
 #define GPIO_MODER_BITS_TYPEDEF_SIZE 4
@@ -22,7 +23,7 @@
 #define GPIO_AFRL_BITS_TYPEDEF_SIZE 4
 #define GPIO_AFRH_BITS_TYPEDEF_SIZE 4
 
-typedef struct __attribute__((packed)) GPIO_MODER_BITS {
+typedef struct PACKED GPIO_MODER_BITS {
 	unsigned MODER0 :2;
 	unsigned MODER1 :2;
 	unsigned MODER2 :2;
@@ -47,7 +48,7 @@ typedef union _GPIO_MODER_REG {
 	struct GPIO_MODER_BITS bit;
 } GPIO_MODER_REG;
 
-typedef struct __attribute__((packed)) GPIO_OTYPER_BITS {
+typedef struct PACKED GPIO_OTYPER_BITS {
 	unsigned OT0 :1;
 	unsigned OT1 :1;
 	unsigned OT2 :1;
@@ -73,7 +74,7 @@ typedef union _GPIO_OTYPER_REG {
 	struct GPIO_OTYPER_BITS bit;
 } GPIO_OTYPER_REG;
 
-typedef struct __attribute__((packed)) GPIO_OSPEEDR_BITS {
+typedef struct PACKED GPIO_OSPEEDR_BITS {
 	unsigned OSPEEDR0 :2;
 	unsigned OSPEEDR1 :2;
 	unsigned OSPEEDR2 :2;
@@ -98,7 +99,7 @@ typedef union _GPIO_OSPEEDR_REG {
 	struct GPIO_OSPEEDR_BITS bit;
 } GPIO_OSPEEDR_REG;
 
-typedef struct __attribute__((packed)) GPIO_PUPDR_BITS {
+typedef struct PACKED GPIO_PUPDR_BITS {
 	unsigned PUPDR0 :2;
 	unsigned PUPDR1 :2;
 	unsigned PUPDR2 :2;
@@ -123,7 +124,7 @@ typedef union _GPIO_PUPDR_REG {
 	struct GPIO_PUPDR_BITS bit;
 } GPIO_PUPDR_REG;
 
-typedef struct __attribute__((packed)) GPIO_IDR_BITS {
+typedef struct PACKED GPIO_IDR_BITS {
 	unsigned IDR0 :1;
 	unsigned IDR1 :1;
 	unsigned IDR2 :1;
@@ -149,7 +150,7 @@ typedef union _GPIO_IDR_REG {
 	struct GPIO_IDR_BITS bit;
 } GPIO_IDR_REG;
 
-typedef struct __attribute__((packed)) GPIO_ODR_BITS {
+typedef struct PACKED GPIO_ODR_BITS {
 	unsigned ODR0 :1;
 	unsigned ODR1 :1;
 	unsigned ODR2 :1;
@@ -175,7 +176,7 @@ typedef union _GPIO_ODR_REG {
 	struct GPIO_ODR_BITS bit;
 } GPIO_ODR_REG;
 
-typedef struct __attribute__((packed)) GPIO_LCKR_BITS {
+typedef struct PACKED GPIO_LCKR_BITS {
 	unsigned LCK0 :1;
 	unsigned LCK1 :1;
 	unsigned LCK2 :1;
@@ -202,7 +203,7 @@ typedef union _GPIO_LCKR_REG {
 	struct GPIO_LCKR_BITS bit;
 } GPIO_LCKR_REG;
 
-typedef struct __attribute__((packed)) GPIO_AFRL_BITS {
+typedef struct PACKED GPIO_AFRL_BITS {
 	unsigned AFRL0 :4;
 	unsigned AFRL1 :4;
 	unsigned AFRL2 :4;
@@ -219,7 +220,7 @@ typedef union _GPIO_AFRL_REG {
 	struct GPIO_AFRL_BITS bit;
 } GPIO_AFRL_REG;
 
-typedef struct __attribute__((packed)) GPIO_AFRH_BITS {
+typedef struct PACKED GPIO_AFRH_BITS {
 	unsigned AFRH8 :4;
 	unsigned AFRH9 :4;
 	unsigned AFRH10 :4;
@@ -345,6 +346,19 @@ enum _GPIO_PIN_AF {
 
 //! Тип альтернативных функций пина.
 typedef enum _GPIO_PIN_AF gpio_pin_af_t;
+
+typedef struct _GPIO_PIN {
+	gpio_pin_mode_t pin_mode;
+	gpio_pin_otype_t pin_otype;
+	gpio_pin_ospeed_t pin_ospeed;
+	gpio_pin_pupd_t pin_pupd;
+	gpio_pin_af_t pin_af;
+} gpio_pin_cfg_t;
+
+typedef struct _GPIO_PORT {
+	GPIO_TypeDef *gpio;
+	gpio_pin_cfg_t pin[16];
+} gpio_port_cfg_t;
 
 extern void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype, gpio_pin_ospeed_t pin_ospeed,

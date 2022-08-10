@@ -7,31 +7,47 @@
 
 #include "gpio.h"
 
-void gpio_mode_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n, gpio_pin_mode_t pin_mode);
-void gpio_output_type_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n, gpio_pin_otype_t pin_otype);
-void gpio_output_speed_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n, gpio_pin_ospeed_t pin_ospeed);
-void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n, gpio_pin_pupd_t pin_pupd);
-gpio_pin_state_t gpio_input_data_bit_read(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n);
-gpio_pin_state_t gpio_output_data_bit_read(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n);
-void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n, gpio_pin_state_t pin_state);
-void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n, gpio_pin_af_t pin_af);
+void gpio_mode_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_mode_t pin_mode);
+void gpio_output_type_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_otype_t pin_otype);
+void gpio_output_speed_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_ospeed_t pin_ospeed);
+void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_pupd_t pin_pupd);
+gpio_pin_state_t gpio_input_data_bit_read(GPIO_TypeDef *gpio,
+		gpio_pin_n_t pin_n);
+gpio_pin_state_t gpio_output_data_bit_read(GPIO_TypeDef *gpio,
+		gpio_pin_n_t pin_n);
+void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_state_t pin_state);
+void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_af_t pin_af);
 
-void gpio_pin_setup(GPIO_TypeDef *gpio,
-		gpio_pin_n_t pin_n,
-		gpio_pin_mode_t pin_mode,
-		gpio_pin_otype_t pin_otype,
-		gpio_pin_ospeed_t pin_ospeed,
-		gpio_pin_pupd_t pin_pupd,
-		gpio_pin_af_t pin_altf)
-{
+void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype,
+		gpio_pin_ospeed_t pin_ospeed, gpio_pin_pupd_t pin_pupd,
+		gpio_pin_af_t pin_af) {
 	gpio_mode_bit_setup(gpio, pin_n, pin_mode);
 	gpio_output_type_bit_setup(gpio, pin_n, pin_otype);
 	gpio_output_speed_bit_setup(gpio, pin_n, pin_ospeed);
 	gpio_pull_updown_bit_setup(gpio, pin_n, pin_pupd);
-	gpio_alternate_function_bit_setup(gpio, pin_n, pin_altf);
+	gpio_alternate_function_bit_setup(gpio, pin_n, pin_af);
 }
 
-void gpio_mode_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n, gpio_pin_mode_t pin_mode) {
+void gpio_pin_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_cfg_t *cfg) {
+	gpio_pin_setup(gpio,
+			pin_n,
+			cfg->pin_mode,
+			cfg->pin_otype,
+			cfg->pin_ospeed,
+			cfg->pin_pupd,
+			cfg->pin_af);
+}
+
+void gpio_mode_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_mode_t pin_mode) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 
@@ -266,85 +282,87 @@ void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 	}
 }
 
-gpio_pin_state_t gpio_input_data_bit_read(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n) {
+gpio_pin_state_t gpio_input_data_bit_read(GPIO_TypeDef *gpio,
+		gpio_pin_n_t pin_n) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 
 	switch (pin_n) {
 	case GPIO_PIN_0:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR0);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR0);
 	case GPIO_PIN_1:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR1);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR1);
 	case GPIO_PIN_2:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR2);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR2);
 	case GPIO_PIN_3:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR3);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR3);
 	case GPIO_PIN_4:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR4);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR4);
 	case GPIO_PIN_5:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR5);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR5);
 	case GPIO_PIN_6:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR6);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR6);
 	case GPIO_PIN_7:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR7);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR7);
 	case GPIO_PIN_8:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR8);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR8);
 	case GPIO_PIN_9:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR9);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR9);
 	case GPIO_PIN_10:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR10);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR10);
 	case GPIO_PIN_11:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR11);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR11);
 	case GPIO_PIN_12:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR12);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR12);
 	case GPIO_PIN_13:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR13);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR13);
 	case GPIO_PIN_14:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR14);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR14);
 	case GPIO_PIN_15:
-		return (gpio_pin_state_t)(gpio_bits->IDR.bit.IDR15);
+		return (gpio_pin_state_t) (gpio_bits->IDR.bit.IDR15);
 	default:
 		return GPIO_STATE_OFF;
 	}
 }
 
-gpio_pin_state_t gpio_output_data_bit_read(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n) {
+gpio_pin_state_t gpio_output_data_bit_read(GPIO_TypeDef *gpio,
+		gpio_pin_n_t pin_n) {
 
 	BITS_GPIO_TypeDef *gpio_bits = (BITS_GPIO_TypeDef*) gpio;
 
 	switch (pin_n) {
 	case GPIO_PIN_0:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR0);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR0);
 	case GPIO_PIN_1:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR1);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR1);
 	case GPIO_PIN_2:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR2);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR2);
 	case GPIO_PIN_3:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR3);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR3);
 	case GPIO_PIN_4:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR4);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR4);
 	case GPIO_PIN_5:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR5);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR5);
 	case GPIO_PIN_6:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR6);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR6);
 	case GPIO_PIN_7:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR7);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR7);
 	case GPIO_PIN_8:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR8);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR8);
 	case GPIO_PIN_9:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR9);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR9);
 	case GPIO_PIN_10:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR10);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR10);
 	case GPIO_PIN_11:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR11);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR11);
 	case GPIO_PIN_12:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR12);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR12);
 	case GPIO_PIN_13:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR13);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR13);
 	case GPIO_PIN_14:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR14);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR14);
 	case GPIO_PIN_15:
-		return (gpio_pin_state_t)(gpio_bits->ODR.bit.ODR15);
+		return (gpio_pin_state_t) (gpio_bits->ODR.bit.ODR15);
 	default:
 		return GPIO_STATE_OFF;
 	}
