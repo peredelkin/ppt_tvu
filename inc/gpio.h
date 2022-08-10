@@ -47,7 +47,6 @@ typedef union _GPIO_MODER_REG {
 	struct GPIO_MODER_BITS bit;
 } GPIO_MODER_REG;
 
-
 typedef struct __attribute__((packed)) GPIO_OTYPER_BITS {
 	unsigned OT0 :1;
 	unsigned OT1 :1;
@@ -74,7 +73,6 @@ typedef union _GPIO_OTYPER_REG {
 	struct GPIO_OTYPER_BITS bit;
 } GPIO_OTYPER_REG;
 
-
 typedef struct __attribute__((packed)) GPIO_OSPEEDR_BITS {
 	unsigned OSPEEDR0 :2;
 	unsigned OSPEEDR1 :2;
@@ -100,7 +98,6 @@ typedef union _GPIO_OSPEEDR_REG {
 	struct GPIO_OSPEEDR_BITS bit;
 } GPIO_OSPEEDR_REG;
 
-
 typedef struct __attribute__((packed)) GPIO_PUPDR_BITS {
 	unsigned PUPDR0 :2;
 	unsigned PUPDR1 :2;
@@ -125,7 +122,6 @@ typedef union _GPIO_PUPDR_REG {
 	uint32_t all;
 	struct GPIO_PUPDR_BITS bit;
 } GPIO_PUPDR_REG;
-
 
 typedef struct __attribute__((packed)) GPIO_IDR_BITS {
 	unsigned IDR0 :1;
@@ -153,7 +149,6 @@ typedef union _GPIO_IDR_REG {
 	struct GPIO_IDR_BITS bit;
 } GPIO_IDR_REG;
 
-
 typedef struct __attribute__((packed)) GPIO_ODR_BITS {
 	unsigned ODR0 :1;
 	unsigned ODR1 :1;
@@ -179,7 +174,6 @@ typedef union _GPIO_ODR_REG {
 	uint32_t all;
 	struct GPIO_ODR_BITS bit;
 } GPIO_ODR_REG;
-
 
 typedef struct __attribute__((packed)) GPIO_LCKR_BITS {
 	unsigned LCK0 :1;
@@ -208,7 +202,6 @@ typedef union _GPIO_LCKR_REG {
 	struct GPIO_LCKR_BITS bit;
 } GPIO_LCKR_REG;
 
-
 typedef struct __attribute__((packed)) GPIO_AFRL_BITS {
 	unsigned AFRL0 :4;
 	unsigned AFRL1 :4;
@@ -226,8 +219,7 @@ typedef union _GPIO_AFRL_REG {
 	struct GPIO_AFRL_BITS bit;
 } GPIO_AFRL_REG;
 
-
-typedef struct  __attribute__((packed)) GPIO_AFRH_BITS {
+typedef struct __attribute__((packed)) GPIO_AFRH_BITS {
 	unsigned AFRH8 :4;
 	unsigned AFRH9 :4;
 	unsigned AFRH10 :4;
@@ -244,128 +236,118 @@ typedef union _GPIO_AFRH_REG {
 	struct GPIO_AFRH_BITS bit;
 } GPIO_AFRH_REG;
 
-
-typedef struct
-{
-  __IO GPIO_MODER_REG	MODER;		/*!< GPIO port mode register,               Address offset: 0x00	*/
-  __IO GPIO_OTYPER_REG	OTYPER;		/*!< GPIO port output type register,        Address offset: 0x04	*/
-  __IO GPIO_OSPEEDR_REG	OSPEEDR;	/*!< GPIO port output speed register,       Address offset: 0x08	*/
-  __IO GPIO_PUPDR_REG	PUPDR;		/*!< GPIO port pull-up/pull-down register,  Address offset: 0x0C	*/
-  __IO GPIO_IDR_REG		IDR;		/*!< GPIO port input data register,         Address offset: 0x10	*/
-  __IO GPIO_ODR_REG		ODR;		/*!< GPIO port output data register,        Address offset: 0x14	*/
-  __IO uint16_t			BSRRL;		/*!< GPIO port bit set/reset low register,  Address offset: 0x18	*/
-  __IO uint16_t			BSRRH;		/*!< GPIO port bit set/reset high register, Address offset: 0x1A	*/
-  __IO GPIO_LCKR_REG	LCKR;		/*!< GPIO port configuration lock register, Address offset: 0x1C	*/
-  __IO GPIO_AFRL_REG	AFRL;		/*!< GPIO alternate function registers,     Address offset: 0x20	*/
-  __IO GPIO_AFRH_REG	AFRH;		/*!< GPIO alternate function registers,     Address offset: 0x24	*/
+typedef struct {
+	__IO GPIO_MODER_REG MODER; /*!< GPIO port mode register,               Address offset: 0x00	*/
+	__IO GPIO_OTYPER_REG OTYPER; /*!< GPIO port output type register,        Address offset: 0x04	*/
+	__IO GPIO_OSPEEDR_REG OSPEEDR; /*!< GPIO port output speed register,       Address offset: 0x08	*/
+	__IO GPIO_PUPDR_REG PUPDR; /*!< GPIO port pull-up/pull-down register,  Address offset: 0x0C	*/
+	__IO GPIO_IDR_REG IDR; /*!< GPIO port input data register,         Address offset: 0x10	*/
+	__IO GPIO_ODR_REG ODR; /*!< GPIO port output data register,        Address offset: 0x14	*/
+	__IO uint16_t BSRRL; /*!< GPIO port bit set/reset low register,  Address offset: 0x18	*/
+	__IO uint16_t BSRRH; /*!< GPIO port bit set/reset high register, Address offset: 0x1A	*/
+	__IO GPIO_LCKR_REG LCKR; /*!< GPIO port configuration lock register, Address offset: 0x1C	*/
+	__IO GPIO_AFRL_REG AFRL; /*!< GPIO alternate function registers,     Address offset: 0x20	*/
+	__IO GPIO_AFRH_REG AFRH; /*!< GPIO alternate function registers,     Address offset: 0x24	*/
 } BITS_GPIO_TypeDef;
 
-
-
 //! Маска пина.
-enum _Gpio_Pin_Mask {
-    GPIO_PIN_0  = (0),
-    GPIO_PIN_1  = (1),
-    GPIO_PIN_2  = (2),
-    GPIO_PIN_3  = (3),
-    GPIO_PIN_4  = (4),
-    GPIO_PIN_5  = (5),
-    GPIO_PIN_6  = (6),
-    GPIO_PIN_7  = (7),
-    GPIO_PIN_8  = (8),
-    GPIO_PIN_9  = (9),
-    GPIO_PIN_10 = (10),
-    GPIO_PIN_11 = (11),
-    GPIO_PIN_12 = (12),
-    GPIO_PIN_13 = (13),
-    GPIO_PIN_14 = (14),
-    GPIO_PIN_15 = (15)
+enum _GPIO_PIN_MASK {
+	GPIO_PIN_0 = 0,
+	GPIO_PIN_1 = 1,
+	GPIO_PIN_2 = 2,
+	GPIO_PIN_3 = 3,
+	GPIO_PIN_4 = 4,
+	GPIO_PIN_5 = 5,
+	GPIO_PIN_6 = 6,
+	GPIO_PIN_7 = 7,
+	GPIO_PIN_8 = 8,
+	GPIO_PIN_9 = 9,
+	GPIO_PIN_10 = 10,
+	GPIO_PIN_11 = 11,
+	GPIO_PIN_12 = 12,
+	GPIO_PIN_13 = 13,
+	GPIO_PIN_14 = 14,
+	GPIO_PIN_15 = 15
 };
 
-//! Тип пина GPIO.
-typedef uint16_t gpio_pin_t;
+//! Тип номера пина GPIO.
+typedef uint8_t gpio_pin_n_t;
 
 //! Состояние пина.
-enum _Gpio_Pin_State {
-    GPIO_STATE_OFF = 0, //!< Выключено.
-    GPIO_STATE_ON  = 1  //!< Включено.
+enum _GPIO_PIN_STATE {
+	GPIO_STATE_OFF = 0, //!< Выключено.
+	GPIO_STATE_ON = 1  //!< Включено.
 };
 
 //! Тип состояния пина.
-typedef uint16_t gpio_state_t;
+typedef bool gpio_pin_state_t;
 
 //! Режим пина.
-enum _Gpio_Mode {
-    GPIO_MODE_INPUT = 0, //!< Вход.
-    GPIO_MODE_OUT_GP = 1, //!< Выход общего назначения
-    GPIO_MODE_OUT_AF = 2, //!< Выход альтернативных функций.
-    GPIO_MODE_ANALOG = 3, //!< Аналоговый вход / выход.
+enum _GPIO_PIN_MODE {
+	GPIO_MODE_INPUT = 0, //!< Вход.
+	GPIO_MODE_OUT_GP = 1, //!< Выход общего назначения
+	GPIO_MODE_OUT_AF = 2, //!< Выход альтернативных функций.
+	GPIO_MODE_ANALOG = 3, //!< Аналоговый вход / выход.
 };
 
 //! Тип режима пина.
-typedef enum _Gpio_Mode gpio_mode_t;
+typedef enum _GPIO_PIN_MODE gpio_pin_mode_t;
 
 //! Тип выхода пина.
-enum _Gpio_Otype {
-    GPIO_OTYPE_PP = 0, //!< Пуш-пулл.
-    GPIO_OTYPE_OD = 1  //!< Открытй коллектор.
+enum _GPIO_PIN_OTYPE {
+	GPIO_OTYPE_PP = 0, //!< Пуш-пулл.
+	GPIO_OTYPE_OD = 1  //!< Открытй коллектор.
 };
 
 //! Тип типа выхода пина.
-typedef enum _Gpio_Otype gpio_otype_t;
+typedef enum _GPIO_PIN_OTYPE gpio_pin_otype_t;
 
 //! Скорость выхода пина.
-enum _Gpio_Ospeed {
-    GPIO_OSPEED_LOW       = 0, //!< Очень медленно.
-    GPIO_OSPEED_MEDIUM    = 1, //!< Медленно.
-    GPIO_OSPEED_HIGH      = 2, //!< Быстро.
-    GPIO_OSPEED_VERY_HIGH = 3  //!< Очень быстро.
+enum _GPIO_PIN_OSPEED {
+	GPIO_OSPEED_LOW = 0, //!< Очень медленно.
+	GPIO_OSPEED_MEDIUM = 1, //!< Медленно.
+	GPIO_OSPEED_HIGH = 2, //!< Быстро.
+	GPIO_OSPEED_VERY_HIGH = 3  //!< Очень быстро.
 };
 
 //! Тип скорости выхода пина.
-typedef enum _Gpio_Ospeed gpio_ospeed_t;
+typedef enum _GPIO_PIN_OSPEED gpio_pin_ospeed_t;
 
 //! Подтяжка пина.
-enum _Gpio_PuPd {
-    GPIO_PUPD_NONE = 0, //!< Подтяжка не включена.
-    GPIO_PUPD_UP   = 1, //!< Подтяжка к питанию.
-    GPIO_PUPD_DOWN = 2  //!< Подтяжка к земле.
+enum _GPIO_PIN_PUPD {
+	GPIO_PUPD_NONE = 0, //!< Подтяжка не включена.
+	GPIO_PUPD_UP = 1, //!< Подтяжка к питанию.
+	GPIO_PUPD_DOWN = 2  //!< Подтяжка к земле.
 };
 
 //! Тип подтяжки пина.
-typedef enum _Gpio_PuPd gpio_pupd_t;
+typedef enum _GPIO_PIN_PUPD gpio_pin_pupd_t;
 
 //! Альтернативные функции пина.
-enum _Gpio_Af {
-    GPIO_AF_0 = 0,
-    GPIO_AF_1 = 1,
-    GPIO_AF_2 = 2,
-    GPIO_AF_3 = 3,
-    GPIO_AF_4 = 4,
-    GPIO_AF_5 = 5,
-    GPIO_AF_6 = 6,
-    GPIO_AF_7 = 7,
-    GPIO_AF_8 = 8,
-    GPIO_AF_9 = 9,
-    GPIO_AF_10 = 10,
-    GPIO_AF_11 = 11,
-    GPIO_AF_12 = 12,
-    GPIO_AF_13 = 13,
-    GPIO_AF_14 = 14,
-    GPIO_AF_15 = 15,
+enum _GPIO_PIN_AF {
+	GPIO_AF_0 = 0,
+	GPIO_AF_1 = 1,
+	GPIO_AF_2 = 2,
+	GPIO_AF_3 = 3,
+	GPIO_AF_4 = 4,
+	GPIO_AF_5 = 5,
+	GPIO_AF_6 = 6,
+	GPIO_AF_7 = 7,
+	GPIO_AF_8 = 8,
+	GPIO_AF_9 = 9,
+	GPIO_AF_10 = 10,
+	GPIO_AF_11 = 11,
+	GPIO_AF_12 = 12,
+	GPIO_AF_13 = 13,
+	GPIO_AF_14 = 14,
+	GPIO_AF_15 = 15,
 };
 
 //! Тип альтернативных функций пина.
-typedef enum _Gpio_Af gpio_af_t;
+typedef enum _GPIO_PIN_AF gpio_pin_af_t;
 
-
-
-extern void gpio_pin_setup(GPIO_TypeDef *gpio,
-		gpio_pin_t pin_n,
-		gpio_mode_t pin_mode,
-		gpio_otype_t pin_otype,
-		gpio_ospeed_t pin_ospeed,
-		gpio_pupd_t pin_pupd,
-		gpio_af_t pin_altf);
+extern void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype, gpio_pin_ospeed_t pin_ospeed,
+		gpio_pin_pupd_t pin_pupd, gpio_pin_af_t pin_af);
 
 #endif /* INC_GPIO_H_ */
