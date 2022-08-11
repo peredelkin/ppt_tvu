@@ -13,6 +13,8 @@
 #include "defs.h"
 #include "stm32f4xx.h"
 
+#define GPIO_PORT_PIN_COUNT 16
+
 #define GPIO_MODER_BITS_TYPEDEF_SIZE 4
 #define GPIO_OTYPER_BITS_TYPEDEF_SIZE 4
 #define GPIO_OSPEEDR_BITS_TYPEDEF_SIZE 4
@@ -357,11 +359,17 @@ typedef struct _GPIO_PIN {
 
 typedef struct _GPIO_PORT {
 	GPIO_TypeDef *gpio;
-	gpio_pin_cfg_t pin[16];
+	gpio_pin_cfg_t cfg[GPIO_PORT_PIN_COUNT];
 } gpio_port_cfg_t;
 
 extern void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
-		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype, gpio_pin_ospeed_t pin_ospeed,
-		gpio_pin_pupd_t pin_pupd, gpio_pin_af_t pin_af);
+		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype,
+		gpio_pin_ospeed_t pin_ospeed, gpio_pin_pupd_t pin_pupd,
+		gpio_pin_af_t pin_af);
+
+extern void gpio_pin_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_cfg_t *cfg);
+
+extern void gpio_port_cfg_setup(gpio_port_cfg_t *port);
 
 #endif /* INC_GPIO_H_ */
