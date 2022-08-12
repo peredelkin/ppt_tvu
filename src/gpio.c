@@ -7,20 +7,41 @@
 
 #include "gpio.h"
 
+void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype,
+		gpio_pin_ospeed_t pin_ospeed, gpio_pin_pupd_t pin_pupd,
+		gpio_pin_af_t pin_af);
+
+void gpio_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		const gpio_cfg_t *cfg);
+
+void gpio_pin_cfg_setup(const gpio_pin_cfg_t *pin);
+
+void gpio_pins_cfg_setup(const gpio_pin_cfg_t *pin, size_t count);
+
+void gpio_port_cfg_setup(gpio_port_cfg_t *port);
+
 void gpio_mode_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_mode_t pin_mode);
+
 void gpio_output_type_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_otype_t pin_otype);
+
 void gpio_output_speed_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_ospeed_t pin_ospeed);
+
 void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_pupd_t pin_pupd);
+
 gpio_pin_state_t gpio_input_data_bit_read(GPIO_TypeDef *gpio,
 		gpio_pin_n_t pin_n);
+
 gpio_pin_state_t gpio_output_data_bit_read(GPIO_TypeDef *gpio,
 		gpio_pin_n_t pin_n);
+
 void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_state_t pin_state);
+
 void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_af_t pin_af);
 
@@ -35,16 +56,27 @@ void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 	gpio_alternate_function_bit_setup(gpio, pin_n, pin_af);
 }
 
-void gpio_pin_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
-		gpio_pin_cfg_t *cfg) {
+void gpio_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		const gpio_cfg_t *cfg) {
 	gpio_pin_setup(gpio, pin_n, cfg->pin_mode, cfg->pin_otype, cfg->pin_ospeed,
 			cfg->pin_pupd, cfg->pin_af);
 }
 
+void gpio_pin_cfg_setup(const gpio_pin_cfg_t *pin) {
+	gpio_cfg_setup(pin->gpio, pin->pin_n, &pin->cfg);
+}
+
+void gpio_pins_cfg_setup(const gpio_pin_cfg_t *pin, size_t count) {
+	size_t pin_count;
+	for (pin_count = 0; pin_count < count; pin_count++) {
+		gpio_pin_cfg_setup(&pin[pin_count]);
+	}
+}
+
 void gpio_port_cfg_setup(gpio_port_cfg_t *port) {
-	uint8_t pin_n;
+	size_t pin_n;
 	for (pin_n = 0; pin_n < GPIO_PORT_PIN_COUNT; pin_n++) {
-		gpio_pin_cfg_setup(&port->gpio, pin_n, &port->cfg[pin_n]);
+		gpio_cfg_setup(port->gpio, pin_n, &port->cfg[pin_n]);
 	}
 }
 

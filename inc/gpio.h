@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include "defs.h"
 #include "stm32f4xx.h"
 
@@ -274,7 +275,7 @@ enum _GPIO_PIN_MASK {
 };
 
 //! Тип номера пина GPIO.
-typedef uint8_t gpio_pin_n_t;
+typedef size_t gpio_pin_n_t;
 
 //! Состояние пина.
 enum _GPIO_PIN_STATE {
@@ -287,10 +288,10 @@ typedef bool gpio_pin_state_t;
 
 //! Режим пина.
 enum _GPIO_PIN_MODE {
-	GPIO_MODE_INPUT = 0, //!< Вход.
-	GPIO_MODE_OUT_GP = 1, //!< Выход общего назначения
-	GPIO_MODE_OUT_AF = 2, //!< Выход альтернативных функций.
-	GPIO_MODE_ANALOG = 3, //!< Аналоговый вход / выход.
+	GPIO_MODE_IN = 0, //!< Вход общего назначения.
+	GPIO_MODE_OUT = 1, //!< Выход общего назначения.
+	GPIO_MODE_AF = 2, //!< Альтернативная функция.
+	GPIO_MODE_AN = 3, //!< Аналоговая функция.
 };
 
 //! Тип режима пина.
@@ -349,26 +350,47 @@ enum _GPIO_PIN_AF {
 //! Тип альтернативных функций пина.
 typedef enum _GPIO_PIN_AF gpio_pin_af_t;
 
-typedef struct _GPIO_PIN {
+typedef struct _GPIO_CFG {
 	gpio_pin_mode_t pin_mode;
 	gpio_pin_otype_t pin_otype;
 	gpio_pin_ospeed_t pin_ospeed;
 	gpio_pin_pupd_t pin_pupd;
 	gpio_pin_af_t pin_af;
+} gpio_cfg_t;
+
+typedef struct _GPIO_PIN_CFG {
+	GPIO_TypeDef *gpio;
+	gpio_pin_n_t pin_n;
+	gpio_cfg_t cfg;
 } gpio_pin_cfg_t;
 
-typedef struct _GPIO_PORT {
+typedef struct _GPIO_PORT_CFG {
 	GPIO_TypeDef *gpio;
-	gpio_pin_cfg_t cfg[GPIO_PORT_PIN_COUNT];
+	gpio_cfg_t cfg[GPIO_PORT_PIN_COUNT];
 } gpio_port_cfg_t;
+
+#define GPIO_PIN_CFG(PORT, N, MODE, OTYPE, OSPEED, PUPD, AF)\
+{\
+	.gpio = PORT,\
+	.pin_n = N,\
+	.cfg.pin_mode = MODE,\
+	.cfg.pin_otype = OTYPE,\
+	.cfg.pin_ospeed = OSPEED,\
+	.cfg.pin_pupd = PUPD,\
+	.cfg.pin_af = AF\
+}
 
 extern void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype,
 		gpio_pin_ospeed_t pin_ospeed, gpio_pin_pupd_t pin_pupd,
 		gpio_pin_af_t pin_af);
 
-extern void gpio_pin_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
-		gpio_pin_cfg_t *cfg);
+extern void gpio_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
+		const gpio_cfg_t *cfg);
+
+extern void gpio_pin_cfg_setup(const gpio_pin_cfg_t *pin);
+
+extern void gpio_pins_cfg_setup(const gpio_pin_cfg_t *pin, size_t count);
 
 extern void gpio_port_cfg_setup(gpio_port_cfg_t *port);
 
