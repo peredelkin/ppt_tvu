@@ -1,0 +1,26 @@
+/*
+ * init.c
+ *
+ *  Created on: 31 авг. 2022 г.
+ *      Author: Ruslan
+ */
+
+#include "init.h"
+
+void rcc_init(void) {
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOFEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOGEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOHEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOIEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOJEN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOKEN;
+}
+
+void gpio_init(void) {
+	gpio_pins_cfg_setup(gpio_init_array, 2);
+}
