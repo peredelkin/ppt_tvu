@@ -350,13 +350,31 @@ typedef struct
 {
 	SPI_CR1_REG		CR1;		/*!< SPI control register 1 (not used in I2S mode),      Address offset: 0x00 */
 	SPI_CR2_REG		CR2;		/*!< SPI control register 2,                             Address offset: 0x04 */
-	SPI_SR_REG		SR;			/*!< SPI status register,                                Address offset: 0x08 */
-	SPI_DR_REG		DR;			/*!< SPI data register,                                  Address offset: 0x0C */
-	SPI_CRCPR_REG	CRCPR;		/*!< SPI CRC polynomial register (not used in I2S mode), Address offset: 0x10 */
-	SPI_RXCRCR_REG	RXCRCR;		/*!< SPI RX CRC register (not used in I2S mode),         Address offset: 0x14 */
-	SPI_TXCRCR_REG	TXCRCR;		/*!< SPI TX CRC register (not used in I2S mode),         Address offset: 0x18 */
-	SPI_I2SCFGR_REG	I2SCFGR;	/*!< SPI_I2S configuration register,                     Address offset: 0x1C */
-	SPI_I2SPR_REG	I2SPR;		/*!< SPI_I2S prescaler register,                         Address offset: 0x20 */
 } CFG_BITS_SPI_TypeDef;
+
+#define SPI_CFG(SPI_CPHA, SPI_CPOL, SPI_MSTR, SPI_BR, SPI_LSBFIRST, SPI_SSI, SPI_SSM, SPI_RXONLY, SPI_DFF, SPI_CRCEN, SPI_BIDIOE, SPI_BIDIMODE, SPI_RXDMAEN, SPI_TXDMAEN, SPI_SSOE, SPI_FRF, SPI_ERRIE, SPI_RXNEIE, SPI_TXEIE) {\
+		.CR1.bit.CPHA = SPI_CPHA,/*CR1 Bit 0*/\
+		.CR1.bit.CPOL = SPI_CPOL,/*CR1 Bit 1*/\
+		.CR1.bit.MSTR = SPI_MSTR,/*CR1 Bit 2*/\
+		.CR1.bit.BR = SPI_BR,/*CR1 Bits 5:3*/\
+		.CR1.bit.SPE = SPI_SPE_DIS,/*CR1 Bit 6*/\
+		.CR1.bit.LSBFIRST = SPI_LSBFIRST,/*CR1 Bit 7*/\
+		.CR1.bit.SSI = SPI_SSI,/*CR1 Bit 8*/\
+		.CR1.bit.SSM = SPI_SSM,/*CR1 Bit 9*/\
+		.CR1.bit.RXONLY = SPI_RXONLY,/*CR1 Bit 10*/\
+		.CR1.bit.DFF = SPI_DFF,/*CR1 Bit 11*/\
+		.CR1.bit.CRCNEXT = SPI_CRCNEXT_DATA_PHASE,/*CR1 Bit 12*/\
+		.CR1.bit.CRCEN = SPI_CRCEN,/*CR1 Bit 13*/\
+		.CR1.bit.BIDIOE = SPI_BIDIOE,/*CR1 Bit 14*/\
+		.CR1.bit.BIDIMODE = SPI_BIDIMODE,/*CR1 Bit 15*/\
+		\
+		.CR2.bit.RXDMAEN = SPI_RXDMAEN,/*CR2 Bit 0*/\
+		.CR2.bit.TXDMAEN = SPI_TXDMAEN,/*CR2 Bit 1*/\
+		.CR2.bit.SSOE = SPI_SSOE,/*Bit 2*/\
+		.CR2.bit.FRF = SPI_FRF,/*CR2 Bit 4*/\
+		.CR2.bit.ERRIE = SPI_ERRIE,/*CR2 Bit 5*/\
+		.CR2.bit.RXNEIE = SPI_RXNEIE,/*CR2 Bit 6*/\
+		.CR2.bit.TXEIE = SPI_TXEIE/*CR2 Bit 7*/\
+}
 
 #endif /* INC_SPI_H_ */

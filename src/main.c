@@ -1,42 +1,37 @@
 #include "init.h"
 #include "spi.h"
 
+const CFG_BITS_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
+		SPI_CPHA_SECOND,
+		SPI_CPOL_IDLE_LOW,
+		SPI_MSTR_MASTER,
+		SPI_BR_FPCLK_128,
+		SPI_LSBFIRST_MSB_FIRST,
+		SPI_SSI_NSEL,
+		SPI_SSM_ENA,
+		SPI_RXONLY_DIS,
+		SPI_DFF_8,
+		SPI_CRCEN_DIS,
+		SPI_BIDIOE_RX,
+		SPI_BIDIMODE_UNIDIR,
+		SPI_RXDMAEN_DIS,
+		SPI_TXDMAEN_DIS,
+		SPI_SSOE_DIS,
+		SPI_FRF_MOTOROLA,
+		SPI_ERRIE_DIS,
+		SPI_RXNEIE_DIS,
+		SPI_TXEIE_DIS);
+
 void spi4_init() {
 	BITS_SPI_TypeDef *spi_bits = (BITS_SPI_TypeDef*) SPI5;
-	spi_bits->CR1.bit.CPHA = SPI_CPHA_SECOND;
-	spi_bits->CR1.bit.CPOL = SPI_CPOL_IDLE_LOW;
-	spi_bits->CR1.bit.MSTR = SPI_MSTR_MASTER;
-	spi_bits->CR1.bit.BR = SPI_BR_FPCLK_128;
-	spi_bits->CR1.bit.LSBFIRST = SPI_LSBFIRST_MSB_FIRST;
-	spi_bits->CR1.bit.SSI = SPI_SSI_NSEL;
-	spi_bits->CR1.bit.SSM = SPI_SSM_ENA;
-	spi_bits->CR1.bit.RXONLY = SPI_RXONLY_DIS;
-	spi_bits->CR1.bit.DFF = SPI_DFF_8;
-	spi_bits->CR1.bit.CRCNEXT = SPI_CRCNEXT_DATA_PHASE;
-	spi_bits->CR1.bit.BIDIOE = SPI_BIDIOE_RX;
-	spi_bits->CR1.bit.BIDIMODE = SPI_BIDIMODE_UNIDIR;
-
-	spi_bits->CR2.bit.RXDMAEN = SPI_RXDMAEN_DIS;
-	spi_bits->CR2.bit.TXDMAEN = SPI_TXDMAEN_DIS;
-	spi_bits->CR2.bit.SSOE = SPI_SSOE_DIS;
-	spi_bits->CR2.bit.FRF = SPI_FRF_MOTOROLA;
-	spi_bits->CR2.bit.ERRIE = SPI_ERRIE_DIS;
-	spi_bits->CR2.bit.RXNEIE = SPI_RXNEIE_DIS;
-	spi_bits->CR2.bit.TXEIE = SPI_TXEIE_DIS;
-
-	spi_bits->I2SCFGR.all = 0;
-	spi_bits->I2SPR.all = 0;
+	spi_bits->CR1.all = spi_tic12400_cfg.CR1.all;
+	spi_bits->CR2.all = spi_tic12400_cfg.CR2.all;
 }
 
 int main(void) {
 	rcc_init();
 	gpio_init();
 	spi4_init();
-	SPI5->CR1 |= SPI_CR1_SPE;
-	while(1) {
-		if(SPI5->SR & SPI_SR_TXE) {
-			SPI5->DR = 0x0F;
-		}
-	}
+	while(1);
 	return 0;
 }
