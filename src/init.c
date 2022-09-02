@@ -8,6 +8,7 @@
 #include "init.h"
 
 void rcc_init(void) {
+	//GPIO
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
@@ -19,8 +20,13 @@ void rcc_init(void) {
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOIEN;
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOJEN;
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOKEN;
+
+	//SPI4
+	RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
+	//SPI5
+	RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
 }
 
 void gpio_init(void) {
-	gpio_pins_cfg_setup(gpio_init_array, 2);
+	gpio_pins_cfg_setup(gpio_init_array, GPIO_INIT_PINS_COUNT);
 }

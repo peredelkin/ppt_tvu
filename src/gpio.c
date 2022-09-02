@@ -58,6 +58,7 @@ void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 
 void gpio_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		const gpio_cfg_t *cfg) {
+	if(gpio == NULL) return;
 	gpio_pin_setup(gpio, pin_n, cfg->pin_mode, cfg->pin_otype, cfg->pin_ospeed,
 			cfg->pin_pupd, cfg->pin_af);
 }

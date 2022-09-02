@@ -241,17 +241,17 @@ typedef union _GPIO_AFRH_REG {
 } GPIO_AFRH_REG;
 
 typedef struct {
-	__IO GPIO_MODER_REG MODER; /*!< GPIO port mode register,               Address offset: 0x00	*/
-	__IO GPIO_OTYPER_REG OTYPER; /*!< GPIO port output type register,        Address offset: 0x04	*/
-	__IO GPIO_OSPEEDR_REG OSPEEDR; /*!< GPIO port output speed register,       Address offset: 0x08	*/
-	__IO GPIO_PUPDR_REG PUPDR; /*!< GPIO port pull-up/pull-down register,  Address offset: 0x0C	*/
-	__IO GPIO_IDR_REG IDR; /*!< GPIO port input data register,         Address offset: 0x10	*/
-	__IO GPIO_ODR_REG ODR; /*!< GPIO port output data register,        Address offset: 0x14	*/
-	__IO uint16_t BSRRL; /*!< GPIO port bit set/reset low register,  Address offset: 0x18	*/
-	__IO uint16_t BSRRH; /*!< GPIO port bit set/reset high register, Address offset: 0x1A	*/
-	__IO GPIO_LCKR_REG LCKR; /*!< GPIO port configuration lock register, Address offset: 0x1C	*/
-	__IO GPIO_AFRL_REG AFRL; /*!< GPIO alternate function registers,     Address offset: 0x20	*/
-	__IO GPIO_AFRH_REG AFRH; /*!< GPIO alternate function registers,     Address offset: 0x24	*/
+	__IO GPIO_MODER_REG		MODER;		/*!< GPIO port mode register,               Address offset: 0x00	*/
+	__IO GPIO_OTYPER_REG	OTYPER;		/*!< GPIO port output type register,        Address offset: 0x04	*/
+	__IO GPIO_OSPEEDR_REG	OSPEEDR;	/*!< GPIO port output speed register,       Address offset: 0x08	*/
+	__IO GPIO_PUPDR_REG		PUPDR;		/*!< GPIO port pull-up/pull-down register,  Address offset: 0x0C	*/
+	__IO GPIO_IDR_REG		IDR;		/*!< GPIO port input data register,         Address offset: 0x10	*/
+	__IO GPIO_ODR_REG		ODR;		/*!< GPIO port output data register,        Address offset: 0x14	*/
+	__IO uint16_t			BSRRL;		/*!< GPIO port bit set/reset low register,  Address offset: 0x18	*/
+	__IO uint16_t			BSRRH;		/*!< GPIO port bit set/reset high register, Address offset: 0x1A	*/
+	__IO GPIO_LCKR_REG		LCKR;		/*!< GPIO port configuration lock register, Address offset: 0x1C	*/
+	__IO GPIO_AFRL_REG		AFRL;		/*!< GPIO alternate function registers,     Address offset: 0x20	*/
+	__IO GPIO_AFRH_REG		AFRH;		/*!< GPIO alternate function registers,     Address offset: 0x24	*/
 } BITS_GPIO_TypeDef;
 
 //! Маска пина.

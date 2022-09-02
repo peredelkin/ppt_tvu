@@ -10,6 +10,8 @@
 
 #include "gpio.h"
 
-extern const gpio_pin_cfg_t gpio_init_array[5];
+#define GPIO_INIT_PINS_COUNT 19
+
+extern const gpio_pin_cfg_t gpio_init_array[GPIO_INIT_PINS_COUNT];
 
 #endif /* INC_GPIO_INIT_H_ */

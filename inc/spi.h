@@ -12,8 +12,6 @@
 #include "defs.h"
 #include "stm32f4xx.h"
 
-//TODO: проверить размер каждой структуры
-
 #define SPI_CR1_T_SIZE 2
 #define SPI_CR2_T_SIZE 2
 #define SPI_SR_T_SIZE 2
@@ -124,8 +122,8 @@ typedef enum _SPI_CR1_CRCEN spi_cr1_crcen_t;
 
 //Включение выхода в дрвунаправленном режиме
 enum _SPI_CR1_BIDIOE {
-	SPI_BIDIOE_DIS = 0,
-	SPI_BIDIOE_ENA = 1
+	SPI_BIDIOE_RX = 0,
+	SPI_BIDIOE_TX = 1
 };
 
 typedef enum _SPI_CR1_BIDIOE spi_cr1_bidioe_t;
@@ -345,6 +343,20 @@ typedef struct
   uint16_t				RESERVED7;	/*!< Reserved, 0x1E                                                           */
   __IO SPI_I2SPR_REG	I2SPR;		/*!< SPI_I2S prescaler register,                         Address offset: 0x20 */
   uint16_t				RESERVED8;	/*!< Reserved, 0x22                                                           */
-} spi_typedef;
+} BITS_SPI_TypeDef;
+
+//заготовка структуры настроек
+typedef struct
+{
+	SPI_CR1_REG		CR1;		/*!< SPI control register 1 (not used in I2S mode),      Address offset: 0x00 */
+	SPI_CR2_REG		CR2;		/*!< SPI control register 2,                             Address offset: 0x04 */
+	SPI_SR_REG		SR;			/*!< SPI status register,                                Address offset: 0x08 */
+	SPI_DR_REG		DR;			/*!< SPI data register,                                  Address offset: 0x0C */
+	SPI_CRCPR_REG	CRCPR;		/*!< SPI CRC polynomial register (not used in I2S mode), Address offset: 0x10 */
+	SPI_RXCRCR_REG	RXCRCR;		/*!< SPI RX CRC register (not used in I2S mode),         Address offset: 0x14 */
+	SPI_TXCRCR_REG	TXCRCR;		/*!< SPI TX CRC register (not used in I2S mode),         Address offset: 0x18 */
+	SPI_I2SCFGR_REG	I2SCFGR;	/*!< SPI_I2S configuration register,                     Address offset: 0x1C */
+	SPI_I2SPR_REG	I2SPR;		/*!< SPI_I2S prescaler register,                         Address offset: 0x20 */
+} CFG_BITS_SPI_TypeDef;
 
 #endif /* INC_SPI_H_ */

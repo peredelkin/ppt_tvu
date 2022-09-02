@@ -6,3 +6,9 @@
  */
 
 #include "spi.h"
+
+/*
+void spi_configuration_bits_setup(SPI_TypeDef * spi) {
+	BITS_SPI_TypeDef *spi_bits = (BITS_SPI_TypeDef*) spi;
+}
+*/
