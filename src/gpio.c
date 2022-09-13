@@ -42,6 +42,8 @@ gpio_pin_state_t gpio_output_data_bit_read(GPIO_TypeDef *gpio,
 void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_state_t pin_state);
 
+void gpio_output_bit_setup(const gpio_pin_t *pin, gpio_pin_state_t pin_state);
+
 void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_af_t pin_af);
 
@@ -461,6 +463,10 @@ void gpio_output_data_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		break;
 	}
 
+}
+
+void gpio_output_bit_setup(const gpio_pin_t *pin, gpio_pin_state_t pin_state) {
+	gpio_output_data_bit_setup(pin->gpio, pin->pin_n, pin_state);
 }
 
 void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,

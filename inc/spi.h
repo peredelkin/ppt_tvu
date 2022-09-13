@@ -322,7 +322,7 @@ typedef union _SPI_I2SPR_REG {
 	struct SPI_I2SPR_BITS bit;
 } SPI_I2SPR_REG;
 
-
+//структура регистров SPI с битовыми полями
 typedef struct
 {
   __IO SPI_CR1_REG		CR1;		/*!< SPI control register 1 (not used in I2S mode),      Address offset: 0x00 */
@@ -345,13 +345,14 @@ typedef struct
   uint16_t				RESERVED8;	/*!< Reserved, 0x22                                                           */
 } BITS_SPI_TypeDef;
 
-//заготовка структуры настроек
+//структура настроек
 typedef struct
 {
-	SPI_CR1_REG		CR1;		/*!< SPI control register 1 (not used in I2S mode),      Address offset: 0x00 */
-	SPI_CR2_REG		CR2;		/*!< SPI control register 2,                             Address offset: 0x04 */
+	SPI_CR1_REG		CR1;
+	SPI_CR2_REG		CR2;
 } CFG_BITS_SPI_TypeDef;
 
+//макрос заполнения структуры настроек
 #define SPI_CFG(SPI_CPHA, SPI_CPOL, SPI_MSTR, SPI_BR, SPI_LSBFIRST, SPI_SSI, SPI_SSM, SPI_RXONLY, SPI_DFF, SPI_CRCEN, SPI_BIDIOE, SPI_BIDIMODE, SPI_RXDMAEN, SPI_TXDMAEN, SPI_SSOE, SPI_FRF, SPI_ERRIE, SPI_RXNEIE, SPI_TXEIE) {\
 		.CR1.bit.CPHA = SPI_CPHA,/*CR1 Bit 0*/\
 		.CR1.bit.CPOL = SPI_CPOL,/*CR1 Bit 1*/\
@@ -376,5 +377,7 @@ typedef struct
 		.CR2.bit.RXNEIE = SPI_RXNEIE,/*CR2 Bit 6*/\
 		.CR2.bit.TXEIE = SPI_TXEIE/*CR2 Bit 7*/\
 }
+
+extern void spi_cfg_setup(SPI_TypeDef *spi, const CFG_BITS_SPI_TypeDef* spi_cfg);
 
 #endif /* INC_SPI_H_ */
