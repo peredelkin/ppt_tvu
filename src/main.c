@@ -25,14 +25,6 @@ const CFG_BITS_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		SPI_RXNEIE_DIS,
 		SPI_TXEIE_DIS);
 
-//GPIO DI
-const gpio_pin_t spi_di_int = GPIO_PIN(GPIOI, GPIO_PIN_10); /*12, PI10, GPIO_Input, Int_DI_App*/
-const gpio_pin_t spi_di_rst = GPIO_PIN(GPIOI, GPIO_PIN_9); /*11, PI9, GPIO_Output, Reset_DI_App*/
-const gpio_pin_t spi_di_cs = GPIO_PIN(GPIOI, GPIO_PIN_8); /*7, PI8, GPIO_Output, CS_DI_App*/
-//GPIO DO
-const gpio_pin_t spi_do_en = GPIO_PIN(GPIOA, GPIO_PIN_0); /*40, PA0/WKUP, GPIO_Output, EN_DO_App*/
-const gpio_pin_t spi_do_cs = GPIO_PIN(GPIOE, GPIO_PIN_4); /*3, PE4, SPI4_NSS, CS_DO_App*/
-
 void spi_tic12400_exchange_test() {
 	TIC12400_TX_FRAME tx_data;
 	tx_data.bit.rw = 0;
@@ -61,15 +53,6 @@ void spi_tic12400_exchange_test() {
 	TIC12400_DEVICE_ID_REG id;
 	id.all = rx_data.bit.data;
 
-}
-
-void gpio_state() {
-	//DI
-	gpio_output_bit_setup(&spi_di_cs, GPIO_STATE_ON);
-	gpio_output_bit_setup(&spi_di_rst, GPIO_STATE_OFF);
-	//DO
-	gpio_output_bit_setup(&spi_do_en, GPIO_STATE_OFF);
-	gpio_output_bit_setup(&spi_do_cs, GPIO_STATE_ON);
 }
 
 int main(void) {

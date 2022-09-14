@@ -27,6 +27,15 @@ void rcc_init(void) {
 	RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
 }
 
+void gpio_init_state() {
+	//DI
+	gpio_output_bit_setup(&spi_di_cs, GPIO_STATE_ON);
+	gpio_output_bit_setup(&spi_di_rst, GPIO_STATE_OFF);
+	//DO
+	gpio_output_bit_setup(&spi_do_en, GPIO_STATE_OFF);
+	gpio_output_bit_setup(&spi_do_cs, GPIO_STATE_ON);
+}
+
 void gpio_init(void) {
 	gpio_pins_cfg_setup(gpio_init_array, GPIO_INIT_PINS_COUNT);
 }
