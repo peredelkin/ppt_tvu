@@ -36,7 +36,7 @@ void spi_tic12400_exchange_test() {
 
 	SPI4->CR1 |= SPI_CR1_SPE;
 
-	gpio_output_bit_setup(&spi_di_cs, GPIO_STATE_OFF);
+	//gpio_output_bit_setup(&spi_di_cs, GPIO_STATE_OFF);
 
 	uint8_t data_n;
 	for(data_n = 4; data_n ; data_n--) {
@@ -46,7 +46,7 @@ void spi_tic12400_exchange_test() {
 		rx_data.byte[data_n-1] = SPI4->DR;
 	}
 
-	gpio_output_bit_setup(&spi_di_cs, GPIO_STATE_ON);
+	//gpio_output_bit_setup(&spi_di_cs, GPIO_STATE_ON);
 
 	SPI4->CR1 &= ~SPI_CR1_SPE;
 
@@ -57,10 +57,10 @@ void spi_tic12400_exchange_test() {
 
 int main(void) {
 	rcc_init();
-	gpio_state();
+	gpio_preinit();
 	gpio_init();
-	spi_cfg_setup(SPI4, &spi_tic12400_cfg);
-	spi_tic12400_exchange_test();
+	//spi_cfg_setup(SPI4, &spi_tic12400_cfg);
+	//spi_tic12400_exchange_test(); не вызывать до написания предварительной инициализации пинов
 	while(1);
 	return 0;
 }

@@ -1,5 +1,5 @@
 #include "gpio_init.h"
-//TODO: проверить соответствие префиксов
+//TODO: проверить соответствие префиксов и, возможно, объединить в структуру(ы)
 //
 const gpio_pin_t GPO_Chr_Batt_App = GPIO_PIN(GPIOE, GPIO_PIN_3); /*2, PE3, GPIO_Output, Chr_Batt_App*/
 const gpio_pin_t GPO_CS_DO_App = GPIO_PIN(GPIOE, GPIO_PIN_4); /*3, PE4, GPIO_Output, CS_DO_App*/
