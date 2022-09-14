@@ -356,6 +356,7 @@ typedef struct _GPIO_CFG {
 	gpio_pin_ospeed_t pin_ospeed;
 	gpio_pin_pupd_t pin_pupd;
 	gpio_pin_af_t pin_af;
+	gpio_pin_state_t pin_state;
 } gpio_cfg_t;
 
 typedef struct _GPIO_PIN_CFG {
@@ -369,7 +370,7 @@ typedef struct _GPIO_PORT_CFG {
 	gpio_cfg_t cfg[GPIO_PORT_PIN_COUNT];
 } gpio_port_cfg_t;
 
-#define GPIO_PIN_CFG(PORT, N, MODE, OTYPE, OSPEED, PUPD, AF)\
+#define GPIO_PIN_CFG(PORT, N, MODE, OTYPE, OSPEED, PUPD, AF, STATE)\
 {\
 	.gpio = PORT,\
 	.pin_n = N,\
@@ -377,7 +378,8 @@ typedef struct _GPIO_PORT_CFG {
 	.cfg.pin_otype = OTYPE,\
 	.cfg.pin_ospeed = OSPEED,\
 	.cfg.pin_pupd = PUPD,\
-	.cfg.pin_af = AF\
+	.cfg.pin_af = AF,\
+	.cfg.pin_state = STATE\
 }
 
 typedef struct _GPIO_PIN {
@@ -394,7 +396,8 @@ typedef struct _GPIO_PIN {
 extern void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype,
 		gpio_pin_ospeed_t pin_ospeed, gpio_pin_pupd_t pin_pupd,
-		gpio_pin_af_t pin_af);
+		gpio_pin_af_t pin_af,
+		gpio_pin_state_t pin_state);
 
 extern void gpio_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		const gpio_cfg_t *cfg);

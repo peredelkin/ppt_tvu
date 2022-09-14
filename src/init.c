@@ -27,10 +27,6 @@ void rcc_init(void) {
 	RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
 }
 
-void gpio_preinit(void) {
-	//TODO: добавить инит по умолчанию выходных пинов
-}
-
 void gpio_init(void) {
 	gpio_pins_cfg_setup(gpio_init_array, GPIO_INIT_PINS_COUNT);
 }

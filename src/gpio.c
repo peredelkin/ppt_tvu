@@ -10,7 +10,8 @@
 void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype,
 		gpio_pin_ospeed_t pin_ospeed, gpio_pin_pupd_t pin_pupd,
-		gpio_pin_af_t pin_af);
+		gpio_pin_af_t pin_af,
+		gpio_pin_state_t pin_state);
 
 void gpio_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		const gpio_cfg_t *cfg);
@@ -50,7 +51,9 @@ void gpio_alternate_function_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_mode_t pin_mode, gpio_pin_otype_t pin_otype,
 		gpio_pin_ospeed_t pin_ospeed, gpio_pin_pupd_t pin_pupd,
-		gpio_pin_af_t pin_af) {
+		gpio_pin_af_t pin_af,
+		gpio_pin_state_t pin_state) {
+	gpio_output_data_bit_setup(gpio, pin_n, pin_state);
 	gpio_mode_bit_setup(gpio, pin_n, pin_mode);
 	gpio_output_type_bit_setup(gpio, pin_n, pin_otype);
 	gpio_output_speed_bit_setup(gpio, pin_n, pin_ospeed);
@@ -62,7 +65,7 @@ void gpio_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		const gpio_cfg_t *cfg) {
 	if(gpio == NULL) return;
 	gpio_pin_setup(gpio, pin_n, cfg->pin_mode, cfg->pin_otype, cfg->pin_ospeed,
-			cfg->pin_pupd, cfg->pin_af);
+			cfg->pin_pupd, cfg->pin_af, cfg->pin_state);
 }
 
 void gpio_pin_cfg_setup(const gpio_pin_cfg_t *pin) {

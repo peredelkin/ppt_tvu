@@ -57,7 +57,6 @@ void spi_tic12400_exchange_test() {
 
 int main(void) {
 	rcc_init();
-	gpio_preinit();
 	gpio_init();
 	//spi_cfg_setup(SPI4, &spi_tic12400_cfg);
 	//spi_tic12400_exchange_test(); не вызывать до написания предварительной инициализации пинов
