@@ -109,6 +109,7 @@ typedef struct PACKED TIC12400_DEVICE_ID_BITS {
 } tic12400_dev_id_data_t;
 static_assert(sizeof(tic12400_dev_id_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_dev_id_data_t!");
 
+//TODO: дописать для остальных структур
 typedef union _TIC12400_DEVICE_ID_REG {
 	unsigned all : 24;
 	struct TIC12400_DEVICE_ID_BITS bit;
@@ -355,6 +356,11 @@ typedef struct PACKED TIC12400_CS_SELECT{
 } tic12400_cs_select_data_t;
 static_assert(sizeof(tic12400_cs_select_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_cs_select_data_t!");
 
+typedef union _TIC12400_CS_SELECT_REG{
+	unsigned all : 24;
+	struct TIC12400_CS_SELECT bit;
+} TIC12400_CS_SELECT_REG;
+
 //структура данных Wetting Current Configuration 0
 typedef struct PACKED TIC12400_WC_CFG0 {
 	unsigned wc_in0_in1 : 3;
@@ -367,6 +373,11 @@ typedef struct PACKED TIC12400_WC_CFG0 {
 	unsigned wc_in11 : 3;
 } tic12400_wc_cfg0_data_t;
 static_assert(sizeof(tic12400_wc_cfg0_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_wc_cfg0_data_t!");
+
+typedef union _TIC12400_WC_CFG0_REG{
+	unsigned all : 24;
+	struct TIC12400_WC_CFG0 bit;
+} TIC12400_WC_CFG0_REG;
 
 //структура данных Wetting Current Configuration 1
 typedef struct PACKED TIC12400_WC_CFG1 {
