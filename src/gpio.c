@@ -53,12 +53,12 @@ void gpio_pin_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 		gpio_pin_ospeed_t pin_ospeed, gpio_pin_pupd_t pin_pupd,
 		gpio_pin_af_t pin_af,
 		gpio_pin_state_t pin_state) {
-	gpio_output_data_bit_setup(gpio, pin_n, pin_state);
-	gpio_mode_bit_setup(gpio, pin_n, pin_mode);
-	gpio_output_type_bit_setup(gpio, pin_n, pin_otype);
-	gpio_output_speed_bit_setup(gpio, pin_n, pin_ospeed);
-	gpio_pull_updown_bit_setup(gpio, pin_n, pin_pupd);
-	gpio_alternate_function_bit_setup(gpio, pin_n, pin_af);
+	gpio_output_speed_bit_setup(gpio, pin_n, pin_ospeed); //скорость
+	gpio_output_type_bit_setup(gpio, pin_n, pin_otype); //тип
+	gpio_pull_updown_bit_setup(gpio, pin_n, pin_pupd); //подтяжка
+	gpio_output_data_bit_setup(gpio, pin_n, pin_state); //состояние
+	gpio_alternate_function_bit_setup(gpio, pin_n, pin_af); //альт.
+	gpio_mode_bit_setup(gpio, pin_n, pin_mode); //режим
 }
 
 void gpio_cfg_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
