@@ -4,7 +4,7 @@
 #include "parity.h"
 #include "tic12400.h"
 
-const CFG_BITS_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
+const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		SPI_CPHA_SECOND,
 		SPI_CPOL_IDLE_LOW,
 		SPI_MSTR_MASTER,
@@ -24,6 +24,10 @@ const CFG_BITS_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		SPI_ERRIE_DIS,
 		SPI_RXNEIE_DIS,
 		SPI_TXEIE_DIS);
+
+void SPI4_IRQHandler() {
+
+}
 
 void spi_tic12400_wc_cfg0_write() {
 	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);

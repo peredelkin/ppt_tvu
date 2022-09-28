@@ -11,6 +11,7 @@
 #include <assert.h>
 #include "defs.h"
 #include "stm32f4xx.h"
+#include "gpio.h"
 
 #define SPI_CR1_T_SIZE 2
 #define SPI_CR2_T_SIZE 2
@@ -350,7 +351,7 @@ typedef struct
 {
 	SPI_CR1_REG		CR1;
 	SPI_CR2_REG		CR2;
-} CFG_BITS_SPI_TypeDef;
+} CFG_REG_SPI_TypeDef;
 
 //макрос заполнения структуры настроек
 #define SPI_CFG(SPI_CPHA, SPI_CPOL, SPI_MSTR, SPI_BR, SPI_LSBFIRST, SPI_SSI, SPI_SSM, SPI_RXONLY, SPI_DFF, SPI_CRCEN, SPI_BIDIOE, SPI_BIDIMODE, SPI_RXDMAEN, SPI_TXDMAEN, SPI_SSOE, SPI_FRF, SPI_ERRIE, SPI_RXNEIE, SPI_TXEIE) {\
@@ -378,6 +379,22 @@ typedef struct
 		.CR2.bit.TXEIE = SPI_TXEIE/*CR2 Bit 7*/\
 }
 
-extern void spi_cfg_setup(SPI_TypeDef *spi, const CFG_BITS_SPI_TypeDef* spi_cfg);
+//структура приема/передачи SPI
+typedef struct {
+	void* data;
+	size_t count;
+	size_t counter;
+} SPI_TRX_Typedef;
+
+//структура SPI
+typedef struct {
+	BITS_SPI_TypeDef* spi;
+	CFG_REG_SPI_TypeDef* cfg;
+	SPI_TRX_Typedef tx;
+	SPI_TRX_Typedef rx;
+	gpio_pin_t* nss;
+} SPI_BUS_TypeDef;
+
+extern void spi_cfg_setup(SPI_TypeDef *spi, const CFG_REG_SPI_TypeDef* spi_cfg);
 
 #endif /* INC_SPI_H_ */

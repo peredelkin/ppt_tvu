@@ -7,7 +7,7 @@
 
 #include "spi.h"
 
-void spi_cfg_setup(SPI_TypeDef *spi, const CFG_BITS_SPI_TypeDef* spi_cfg) {
+void spi_cfg_setup(SPI_TypeDef *spi, const CFG_REG_SPI_TypeDef* spi_cfg) {
 	BITS_SPI_TypeDef *spi_bits = (BITS_SPI_TypeDef*) spi;
 	//выключение SPI перед настройкой
 	spi_bits->CR1.bit.SPE = SPI_SPE_DIS;
