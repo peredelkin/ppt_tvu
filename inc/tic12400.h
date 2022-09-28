@@ -101,6 +101,14 @@ enum TIC12400_ADDR {
 };
 
 
+//union заготовка
+/*
+typedef union __REG {
+	unsigned all : 24;
+	struct  bit;
+} _REG;
+*/
+
 //структура данных Device ID
 typedef struct PACKED TIC12400_DEVICE_ID_BITS {
 	unsigned minor : 4;
@@ -109,11 +117,11 @@ typedef struct PACKED TIC12400_DEVICE_ID_BITS {
 } tic12400_dev_id_data_t;
 static_assert(sizeof(tic12400_dev_id_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_dev_id_data_t!");
 
-//TODO: дописать для остальных структур
 typedef union _TIC12400_DEVICE_ID_REG {
 	unsigned all : 24;
 	struct TIC12400_DEVICE_ID_BITS bit;
 } TIC12400_DEVICE_ID_REG;
+
 
 //структура данных Interrupt Status
 typedef struct PACKED TIC12400_INT_STAT_BITS {
@@ -135,12 +143,24 @@ typedef struct PACKED TIC12400_INT_STAT_BITS {
 } tic12400_int_stat_data_t;
 static_assert(sizeof(tic12400_int_stat_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_int_stat_data_t!");
 
+typedef union _TIC12400_INT_STAT_BITS_REG {
+	unsigned all : 24;
+	struct TIC12400_INT_STAT_BITS bit;
+} TIC12400_INT_STAT_BITS_REG;
+
+
 //структура данных CRC
 typedef struct PACKED TIC12400_CRC {
 	unsigned crc : 16;
 	unsigned reserved : 8;
 } tic12400_crc_data_t;
 static_assert(sizeof(tic12400_crc_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_crc_t!");
+
+typedef union _TIC12400_CRC_REG {
+	unsigned all : 24;
+	struct TIC12400_CRC bit;
+} TIC12400_CRC_REG;
+
 
 //структура данных Miscellaneous Status
 typedef struct PACKED TIC12400_IN_STAT_MISC {
@@ -158,6 +178,12 @@ typedef struct PACKED TIC12400_IN_STAT_MISC {
 	unsigned reserved : 11;
 } tic12400_in_stat_misc_data_t;
 static_assert(sizeof(tic12400_in_stat_misc_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_in_stat_misc_data_t!");
+
+typedef union _TIC12400_IN_STAT_MISC_REG {
+	unsigned all : 24;
+	struct TIC12400_IN_STAT_MISC bit;
+} TIC12400_IN_STAT_MISC_REG;
+
 
 //структура данных Comparator Status
 typedef struct PACKED TIC12400_IN_STAT_COMP {
@@ -188,6 +214,12 @@ typedef struct PACKED TIC12400_IN_STAT_COMP {
 } tic12400_in_stat_comp_data_t;
 static_assert(sizeof(tic12400_in_stat_comp_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_in_stat_comp_data_t!");
 
+typedef union _TIC12400_IN_STAT_COMP_REG {
+	unsigned all : 24;
+	struct TIC12400_IN_STAT_COMP bit;
+} TIC12400_IN_STAT_COMP_REG;
+
+
 //структура данных ADC0 Status
 typedef struct PACKED TIC12400_IN_STAT_ADC0 {
 	unsigned ina_0 : 1;
@@ -211,6 +243,12 @@ typedef struct PACKED TIC12400_IN_STAT_ADC0 {
 } tic12400_in_stat_adc0_data_t;
 static_assert(sizeof(tic12400_in_stat_adc0_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_in_stat_adc0_data_t!");
 
+typedef union _TIC12400_IN_STAT_ADC0_REG {
+	unsigned all : 24;
+	struct TIC12400_IN_STAT_ADC0 bit;
+} TIC12400_IN_STAT_ADC0_REG;
+
+
 //структура данных ADC1 Status
 typedef struct PACKED TIC12400_IN_STAT_ADC1 {
 	unsigned ina_18 : 2;
@@ -222,6 +260,12 @@ typedef struct PACKED TIC12400_IN_STAT_ADC1 {
 	unsigned reserved : 11;
 } tic12400_in_stat_adc1_data_t;
 static_assert(sizeof(tic12400_in_stat_adc1_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_in_stat_adc1_data_t!");
+
+typedef union _TIC12400_IN_STAT_ADC1_REG {
+	unsigned all : 24;
+	struct TIC12400_IN_STAT_ADC1 bit;
+} TIC12400_IN_STAT_ADC1_REG;
+
 
 //структура данных Matrix0 Status
 typedef struct PACKED TIC12400_IN_STAT_MATRIX0 {
@@ -252,6 +296,12 @@ typedef struct PACKED TIC12400_IN_STAT_MATRIX0 {
 } tic12400_in_stat_matrix0_data_t;
 static_assert(sizeof(tic12400_in_stat_matrix0_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_in_stat_matrix0_data_t!");
 
+typedef union _TIC12400_IN_STAT_MATRIX0_REG {
+	unsigned all : 24;
+	struct TIC12400_IN_STAT_MATRIX0 bit;
+} TIC12400_IN_STAT_MATRIX0_REG;
+
+
 //структура данных Matrix1 Status
 typedef struct PACKED TIC12400_IN_STAT_MATRIX1 {
 	unsigned inmat_14_in4 : 1;
@@ -281,6 +331,12 @@ typedef struct PACKED TIC12400_IN_STAT_MATRIX1 {
 } tic12400_in_stat_matrix1_data_t;
 static_assert(sizeof(tic12400_in_stat_matrix1_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_in_stat_matrix1_data_t!");
 
+typedef union _TIC12400_IN_STAT_MATRIX1_REG {
+	unsigned all : 24;
+	struct TIC12400_IN_STAT_MATRIX1 bit;
+} TIC12400_IN_STAT_MATRIX1_REG;
+
+
 //структура данных ADC Raw Code
 typedef struct PACKED TIC12400_ANA_STAT {
 	unsigned in0_ana : 10;
@@ -288,6 +344,12 @@ typedef struct PACKED TIC12400_ANA_STAT {
 	unsigned reserved : 4;
 } tic12400_ana_stat_data_t;
 static_assert(sizeof(tic12400_ana_stat_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_ana_stat_data_t!");
+
+typedef union _TIC12400_ANA_STAT_REG {
+	unsigned all : 24;
+	struct TIC12400_ANA_STAT bit;
+} TIC12400_ANA_STAT_REG;
+
 
 //структура данных Device Global Configuration
 typedef struct PACKED TIC12400_CONFIG {
@@ -310,6 +372,11 @@ typedef struct PACKED TIC12400_CONFIG {
 	unsigned vs_ratio : 1;
 } tic12400_config_data_t;
 static_assert(sizeof(tic12400_config_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_config_data_t!");
+
+typedef union _TIC12400_CONFIG_REG {
+	unsigned all : 24;
+	struct TIC12400_CONFIG bit;
+} TIC12400_CONFIG_REG;
 
 //структура данных Input Enable
 typedef struct PACKED TIC12400_IN_EN {
@@ -339,6 +406,12 @@ typedef struct PACKED TIC12400_IN_EN {
 	unsigned in_en_23 : 1;
 } tic12400_in_en_data_t;
 static_assert(sizeof(tic12400_in_en_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_in_en_data_t!");
+
+typedef union _TIC12400_IN_EN_REG {
+	unsigned all : 24;
+	struct TIC12400_IN_EN bit;
+} TIC12400_IN_EN_REG;
+
 
 //структура данных Current Source/Sink Selection
 typedef struct PACKED TIC12400_CS_SELECT{
@@ -394,6 +467,12 @@ typedef struct PACKED TIC12400_WC_CFG1 {
 } tic12400_wc_cfg1_data_t;
 static_assert(sizeof(tic12400_wc_cfg1_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_wc_cfg1_data_t!");
 
+typedef union _TIC12400_WC_CFG1_REG {
+	unsigned all : 24;
+	struct TIC12400_WC_CFG1 bit;
+} TIC12400_WC_CFG1_REG;
+
+
 //структура данных Clean Current Polling 0
 typedef struct PACKED TIC12400_CCP_CFG0 {
 	unsigned wc_ccp0 : 1;
@@ -404,6 +483,12 @@ typedef struct PACKED TIC12400_CCP_CFG0 {
 	unsigned reserved : 17;
 } tic12400_ccp_cfg0_data_t;
 static_assert(sizeof(tic12400_ccp_cfg0_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_ccp_cfg0_data_t!");
+
+typedef union _TIC12400_CCP_CFG0_REG {
+	unsigned all : 24;
+	struct TIC12400_CCP_CFG0 bit;
+} TIC12400_CCP_CFG0_REG;
+
 
 //структура данных Clean Current Polling 1
 typedef struct PACKED TIC12400_CCP_CFG1 {
@@ -434,6 +519,12 @@ typedef struct PACKED TIC12400_CCP_CFG1 {
 } tic12400_ccp_cfg1_data_t;
 static_assert(sizeof(tic12400_ccp_cfg1_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_ccp_cfg1_data_t!");
 
+typedef union _TIC12400_CCP_CFG1_REG {
+	unsigned all : 24;
+	struct TIC12400_CCP_CFG1 bit;
+} TIC12400_CCP_CFG1_REG;
+
+
 //структура данных Comparator Threshold Control
 typedef struct PACKED TIC12400_THRES_COMP {
 	unsigned thres_comp_in0_in3 : 2;
@@ -445,6 +536,12 @@ typedef struct PACKED TIC12400_THRES_COMP {
 	unsigned reserved : 12;
 } tic12400_thres_comp_data_t;
 static_assert(sizeof(tic12400_thres_comp_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_thres_comp_data_t!");
+
+typedef union _TIC12400_THRES_COMP_REG {
+	unsigned all : 24;
+	struct TIC12400_THRES_COMP bit;
+} TIC12400_THRES_COMP_REG;
+
 
 //структура данных Comparator Input Interrupt Generation 1
 typedef struct PACKED TIC12400_INT_EN_COMP1 {
@@ -463,6 +560,12 @@ typedef struct PACKED TIC12400_INT_EN_COMP1 {
 } tic12400_ent_en_comp1_data_t;
 static_assert(sizeof(tic12400_ent_en_comp1_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_ent_en_comp1_data_t!");
 
+typedef union _TIC12400_INT_EN_COMP1_REG {
+	unsigned all : 24;
+	struct TIC12400_INT_EN_COMP1 bit;
+} TIC12400_INT_EN_COMP1_REG;
+
+
 //структура данных Comparator Input Interrupt Generation 2
 typedef struct PACKED TIC12400_INT_EN_COMP2{
 	unsigned inc_en_12 : 2;
@@ -479,6 +582,12 @@ typedef struct PACKED TIC12400_INT_EN_COMP2{
 	unsigned inc_en_23 : 2;
 } tic12400_ent_en_comp2_data_t;
 static_assert(sizeof(tic12400_ent_en_comp2_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_ent_en_comp2_data_t!");
+
+typedef union _TIC12400_INT_EN_COMP2_REG {
+	unsigned all : 24;
+	struct TIC12400_INT_EN_COMP2 bit;
+} TIC12400_INT_EN_COMP2_REG;
+
 
 //структура данных Global Interrupt Generation Control 0
 typedef struct PACKED TIC12400_INT_EN_CFG0 {
@@ -498,6 +607,12 @@ typedef struct PACKED TIC12400_INT_EN_CFG0 {
 } tic12400_int_en_cfg0_data_t;
 static_assert(sizeof(tic12400_int_en_cfg0_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_int_en_cfg0_data_t!");
 
+typedef union _TIC12400_INT_EN_CFG0_REG {
+	unsigned all : 24;
+	struct TIC12400_INT_EN_CFG0 bit;
+} TIC12400_INT_EN_CFG0_REG;
+
+
 //структура данных ADC Input Interrupt Generation Control 1
 typedef struct PACKED TIC12400_INT_EN_CFG1 {
 	unsigned in0_en : 2;
@@ -515,6 +630,12 @@ typedef struct PACKED TIC12400_INT_EN_CFG1 {
 } tic12400_int_en_cfg1_data_t;
 static_assert(sizeof(tic12400_int_en_cfg1_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_int_en_cfg1_data_t!");
 
+typedef union _TIC12400_INT_EN_CFG1_REG {
+	unsigned all : 24;
+	struct TIC12400_INT_EN_CFG1 bit;
+} TIC12400_INT_EN_CFG1_REG;
+
+
 //структура данных ADC Input Interrupt Generation Control 2
 typedef struct PACKED TIC12400_INT_EN_CFG2 {
 	unsigned in12_en : 4;
@@ -526,6 +647,12 @@ typedef struct PACKED TIC12400_INT_EN_CFG2 {
 } tic12400_int_en_cfg2_data_t;
 static_assert(sizeof(tic12400_int_en_cfg2_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_int_en_cfg2_data_t!");
 
+typedef union _TIC12400_INT_EN_CFG2_REG {
+	unsigned all : 24;
+	struct TIC12400_INT_EN_CFG2 bit;
+} TIC12400_INT_EN_CFG2_REG;
+
+
 //структура данных ADC Input Interrupt Generation Control 3
 typedef struct PACKED TIC12400_INT_EN_CFG3 {
 	unsigned in18_en : 6;
@@ -534,6 +661,12 @@ typedef struct PACKED TIC12400_INT_EN_CFG3 {
 	unsigned in21_en : 6;
 } tic12400_int_en_cfg3_data_t;
 static_assert(sizeof(tic12400_int_en_cfg3_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_int_en_cfg3_data_t!");
+
+typedef union _TIC12400_INT_EN_CFG3_REG {
+	unsigned all : 24;
+	struct TIC12400_INT_EN_CFG3 bit;
+} TIC12400_INT_EN_CFG3_REG;
+
 
 //структура данных ADC Input Interrupt Generation Control 4
 typedef struct PACKED TIC12400_INT_EN_CFG4 {
@@ -544,6 +677,12 @@ typedef struct PACKED TIC12400_INT_EN_CFG4 {
 } tic12400_int_en_cfg4_data_t;
 static_assert(sizeof(tic12400_int_en_cfg4_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_int_en_cfg4_data_t!");
 
+typedef union _TIC12400_INT_EN_CFG4_REG {
+	unsigned all : 24;
+	struct TIC12400_INT_EN_CFG4 bit;
+} TIC12400_INT_EN_CFG4_REG;
+
+
 //структура данных ADC Threshold Control
 typedef struct PACKED TIC12400_THRES_CFG0 {
 	unsigned thres0 : 10;
@@ -551,6 +690,12 @@ typedef struct PACKED TIC12400_THRES_CFG0 {
 	unsigned reserved : 4;
 } tic12400_thres_cfg_data_t;
 static_assert(sizeof(tic12400_thres_cfg_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_thres_cfg_data_t!");
+
+typedef union _TIC12400_THRES_CFG0_REG {
+	unsigned all : 24;
+	struct TIC12400_THRES_CFG0 bit;
+} TIC12400_THRES_CFG0_REG;
+
 
 //структура данных ADC Threshold Mapping 0
 typedef struct PACKED TIC12400_THRESMAP_CFG0 {
@@ -565,6 +710,12 @@ typedef struct PACKED TIC12400_THRESMAP_CFG0 {
 } tic12400_thresmap_cfg0_data_t;
 static_assert(sizeof(tic12400_thresmap_cfg0_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_thresmap_cfg0_data_t!");
 
+typedef union _TIC12400_THRESMAP_CFG0_REG {
+	unsigned all : 24;
+	struct TIC12400_THRESMAP_CFG0 bit;
+} TIC12400_THRESMAP_CFG0_REG;
+
+
 //структура данных ADC Threshold Mapping 1
 typedef struct PACKED TIC12400_THRESMAP_CFG1 {
 	unsigned thresmap_in8 : 3;
@@ -576,6 +727,12 @@ typedef struct PACKED TIC12400_THRESMAP_CFG1 {
 	unsigned reservred : 6;
 } tic12400_thresmap_cfg1_data_t;
 static_assert(sizeof(tic12400_thresmap_cfg1_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_thresmap_cfg1_data_t!");
+
+typedef union _TIC12400_THRESMAP_CFG1_REG {
+	unsigned all : 24;
+	struct TIC12400_THRESMAP_CFG1 bit;
+} TIC12400_THRESMAP_CFG1_REG;
+
 
 //структура данных ADC Threshold Mapping 2
 typedef struct PACKED TIC12400_THRESMAP_CFG2{
@@ -590,6 +747,12 @@ typedef struct PACKED TIC12400_THRESMAP_CFG2{
 } tic12400_thresmap_cfg2_data_t;
 static_assert(sizeof(tic12400_thresmap_cfg2_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_thresmap_cfg2_data_t!");
 
+typedef union _TIC12400_THRESMAP_CFG2_REG {
+	unsigned all : 24;
+	struct TIC12400_THRESMAP_CFG2 bit;
+} TIC12400_THRESMAP_CFG2_REG;
+
+
 //структура данных Matrix Setting
 typedef struct PACKED TIC12400_MATRIX {
 	unsigned poll_act_time_m : 3;
@@ -599,6 +762,12 @@ typedef struct PACKED TIC12400_MATRIX {
 	unsigned reserved : 7;
 } tic12400_matrix_data_t;
 static_assert(sizeof(tic12400_matrix_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_matrix_data_t!");
+
+typedef union _TIC12400_MATRIX_REG {
+	unsigned all : 24;
+	struct TIC12400_MATRIX bit;
+} TIC12400_MATRIX_REG;
+
 
 //структура данных Mode Setting
 typedef struct PACKED TIC12400_MODE {
@@ -629,6 +798,12 @@ typedef struct PACKED TIC12400_MODE {
 } tic12400_mode_data_t;
 static_assert(sizeof(tic12400_mode_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_mode_data_t!");
 
+typedef union _TIC12400_MODE_REG {
+	unsigned all : 24;
+	struct TIC12400_MODE bit;
+} TIC12400_MODE_REG;
+
+
 //структура фрейма передачи
 typedef struct PACKED TIC12400_TX {
 	unsigned par : 1;
@@ -643,6 +818,7 @@ typedef union _TIC12400_TX_FRAME {
 	uint8_t byte[4];
 	struct TIC12400_TX bit;
 } TIC12400_TX_FRAME;
+
 
 //структура фрейма приема
 typedef struct PACKED TIC12400_RX {
