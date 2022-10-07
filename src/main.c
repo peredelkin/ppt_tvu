@@ -23,89 +23,40 @@ const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		SPI_FRF_MOTOROLA,
 		SPI_ERRIE_DIS,
 		SPI_RXNEIE_DIS,
-		SPI_TXEIE_DIS);
+		SPI_TXEIE_DIS,
+		GPO_CS_DI_App);
+
+SPI_BUS_TypeDef SPI_DIO_Bus;
+uint8_t spi_dio_bus_rx_buffer[4];
+uint8_t spi_dio_bus_tx_buffer[4];
 
 void SPI4_IRQHandler() {
-
+	SPI_IRQHandler(&SPI_DIO_Bus);
 }
 
-void spi_tic12400_wc_cfg0_write() {
-	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
+void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi, const CFG_REG_SPI_TypeDef *cfg, uint8_t *rx_buffer, uint8_t *tx_buffer) {
+	bus->spi = (BITS_SPI_TypeDef*)spi;
 
-	TIC12400_WC_CFG0_REG rw_data;
+	bus->spi->CR1.bit.SPE = SPI_SPE_DIS;
 
-	rw_data.all = 0;
-	rw_data.bit.wc_in8_in9 = 1;
+	bus->spi->CR1.all = cfg->CR1.all;
+	bus->spi->CR2.all = cfg->CR2.all;
 
-	TIC12400_TX_FRAME tx_data;
-	tx_data.bit.rw = 1;
-	tx_data.bit.addr = TIC12400_WC_CFG0;
-	tx_data.bit.data = rw_data.all;
-	tx_data.bit.par = calc_parity(tx_data.all, 32, PARITY_ODD);
+	bus->nss = cfg->NSS;
 
-	TIC12400_RX_FRAME rx_data;
+	bus->rx.data = rx_buffer;
+	bus->rx.counter = 0;
+	bus->rx.busy = false;
 
-	SPI4->CR1 |= SPI_CR1_SPE;
-
-	gpio_output_bit_setup(&GPO_CS_DI_App, GPIO_STATE_OFF);
-
-	uint8_t data_n;
-	for(data_n = 4; data_n ; data_n--) {
-		while(!(SPI4->SR & SPI_SR_TXE));
-		SPI4->DR = tx_data.byte[data_n-1];
-		while(!(SPI4->SR & SPI_SR_RXNE));
-		rx_data.byte[data_n-1] = SPI4->DR;
-	}
-
-	gpio_output_bit_setup(&GPO_CS_DI_App, GPIO_STATE_ON);
-
-	SPI4->CR1 &= ~SPI_CR1_SPE;
-
-	rw_data.all = rx_data.bit.data;
-
-}
-
-void spi_tic12400_wc_cfg0_read() {
-	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
-
-	TIC12400_WC_CFG0_REG rw_data;
-
-	rw_data.all = 0;
-
-	TIC12400_TX_FRAME tx_data;
-	tx_data.bit.rw = 0;
-	tx_data.bit.addr = TIC12400_WC_CFG0;
-	tx_data.bit.data = rw_data.all;
-	tx_data.bit.par = calc_parity(tx_data.all, 32, PARITY_ODD);
-
-	TIC12400_RX_FRAME rx_data;
-
-	SPI4->CR1 |= SPI_CR1_SPE;
-
-	gpio_output_bit_setup(&GPO_CS_DI_App, GPIO_STATE_OFF);
-
-	uint8_t data_n;
-	for(data_n = 4; data_n ; data_n--) {
-		while(!(SPI4->SR & SPI_SR_TXE));
-		SPI4->DR = tx_data.byte[data_n-1];
-		while(!(SPI4->SR & SPI_SR_RXNE));
-		rx_data.byte[data_n-1] = SPI4->DR;
-	}
-
-	gpio_output_bit_setup(&GPO_CS_DI_App, GPIO_STATE_ON);
-
-	SPI4->CR1 &= ~SPI_CR1_SPE;
-
-	rw_data.all = rx_data.bit.data;
-
+	bus->tx.data = tx_buffer;
+	bus->tx.counter = 0;
+	bus->tx.busy = false;
 }
 
 int main(void) {
 	rcc_init();
 	gpio_init();
-	spi_cfg_setup(SPI4, &spi_tic12400_cfg);
-	spi_tic12400_wc_cfg0_write();
-	spi_tic12400_wc_cfg0_read();
+	spi_bus_init(&SPI_DIO_Bus, SPI4, &spi_tic12400_cfg, spi_dio_bus_rx_buffer, spi_dio_bus_tx_buffer);
 	while(1);
 	return 0;
 }

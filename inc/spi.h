@@ -9,6 +9,7 @@
 #define INC_SPI_H_
 
 #include <assert.h>
+#include <stdbool.h>
 #include "defs.h"
 #include "stm32f4xx.h"
 #include "gpio.h"
@@ -349,12 +350,13 @@ typedef struct
 //структура настроек
 typedef struct
 {
-	SPI_CR1_REG		CR1;
-	SPI_CR2_REG		CR2;
+	SPI_CR1_REG			CR1;
+	SPI_CR2_REG			CR2;
+	const gpio_pin_t	*NSS;
 } CFG_REG_SPI_TypeDef;
 
 //макрос заполнения структуры настроек
-#define SPI_CFG(SPI_CPHA, SPI_CPOL, SPI_MSTR, SPI_BR, SPI_LSBFIRST, SPI_SSI, SPI_SSM, SPI_RXONLY, SPI_DFF, SPI_CRCEN, SPI_BIDIOE, SPI_BIDIMODE, SPI_RXDMAEN, SPI_TXDMAEN, SPI_SSOE, SPI_FRF, SPI_ERRIE, SPI_RXNEIE, SPI_TXEIE) {\
+#define SPI_CFG(SPI_CPHA, SPI_CPOL, SPI_MSTR, SPI_BR, SPI_LSBFIRST, SPI_SSI, SPI_SSM, SPI_RXONLY, SPI_DFF, SPI_CRCEN, SPI_BIDIOE, SPI_BIDIMODE, SPI_RXDMAEN, SPI_TXDMAEN, SPI_SSOE, SPI_FRF, SPI_ERRIE, SPI_RXNEIE, SPI_TXEIE, SPI_NSS) {\
 		.CR1.bit.CPHA = SPI_CPHA,/*CR1 Bit 0*/\
 		.CR1.bit.CPOL = SPI_CPOL,/*CR1 Bit 1*/\
 		.CR1.bit.MSTR = SPI_MSTR,/*CR1 Bit 2*/\
@@ -376,25 +378,26 @@ typedef struct
 		.CR2.bit.FRF = SPI_FRF,/*CR2 Bit 4*/\
 		.CR2.bit.ERRIE = SPI_ERRIE,/*CR2 Bit 5*/\
 		.CR2.bit.RXNEIE = SPI_RXNEIE,/*CR2 Bit 6*/\
-		.CR2.bit.TXEIE = SPI_TXEIE/*CR2 Bit 7*/\
+		.CR2.bit.TXEIE = SPI_TXEIE,/*CR2 Bit 7*/\
+		.NSS = &SPI_NSS/*NSS pin pointer*/\
 }
 
-//структура приема/передачи SPI
+//структура приема/передачи
 typedef struct {
-	void* data;
-	size_t count;
+	uint8_t *data;
 	size_t counter;
-} SPI_TRX_Typedef;
+	bool busy;
+} SPI_BUS_TRX_TypeDef;
 
-//структура SPI
+//структура SPI BUS
 typedef struct {
-	BITS_SPI_TypeDef* spi;
-	CFG_REG_SPI_TypeDef* cfg;
-	SPI_TRX_Typedef tx;
-	SPI_TRX_Typedef rx;
-	gpio_pin_t* nss;
+	BITS_SPI_TypeDef	*spi;
+	const gpio_pin_t	*nss;
+	SPI_BUS_TRX_TypeDef	tx;
+	SPI_BUS_TRX_TypeDef	rx;
+	size_t				last;
 } SPI_BUS_TypeDef;
 
-extern void spi_cfg_setup(SPI_TypeDef *spi, const CFG_REG_SPI_TypeDef* spi_cfg);
+extern void SPI_IRQHandler(SPI_BUS_TypeDef *bus);
 
 #endif /* INC_SPI_H_ */

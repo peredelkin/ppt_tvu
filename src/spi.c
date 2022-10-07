@@ -7,11 +7,24 @@
 
 #include "spi.h"
 
-void spi_cfg_setup(SPI_TypeDef *spi, const CFG_REG_SPI_TypeDef* spi_cfg) {
-	BITS_SPI_TypeDef *spi_bits = (BITS_SPI_TypeDef*) spi;
-	//выключение SPI перед настройкой
-	spi_bits->CR1.bit.SPE = SPI_SPE_DIS;
-	//запись настроек
-	spi_bits->CR1.all = spi_cfg->CR1.all;
-	spi_bits->CR2.all = spi_cfg->CR2.all;
+void SPI_IRQHandler(SPI_BUS_TypeDef *bus) {
+	if(bus->spi->SR.bit.RXNE) {
+		if(bus->rx.counter == bus->last) {
+			bus->rx.data[bus->rx.counter] = bus->spi->DR.all;
+			bus->spi->CR2.bit.RXNEIE = SPI_RXNEIE_DIS;
+			bus->rx.busy = false;
+		} else {
+			bus->rx.data[bus->rx.counter++] = bus->spi->DR.all;
+		}
+	}
+
+	if(bus->spi->SR.bit.TXE) {
+		if(bus->tx.counter == bus->last) {
+			bus->spi->DR.all = bus->tx.data[bus->tx.counter];
+			bus->spi->CR2.bit.TXEIE = SPI_TXEIE_DIS;
+			bus->tx.busy = false;
+		} else {
+			bus->spi->DR.all = bus->tx.data[bus->tx.counter++];
+		}
+	}
 }
