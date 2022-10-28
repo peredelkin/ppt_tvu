@@ -30,3 +30,7 @@ void rcc_init(void) {
 void gpio_init(void) {
 	gpio_pins_cfg_setup(gpio_init_array, GPIO_INIT_PINS_COUNT);
 }
+
+void nvic_init(void) {
+	NVIC_EnableIRQ(SPI4_IRQn);
+}

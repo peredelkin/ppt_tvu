@@ -34,7 +34,13 @@ void SPI4_IRQHandler() {
 	SPI_IRQHandler(&SPI_DIO_Bus);
 }
 
-void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi, const CFG_REG_SPI_TypeDef *cfg, uint8_t *rx_buffer, uint8_t *tx_buffer) {
+void spi_bus_init(
+		SPI_BUS_TypeDef *bus,
+		SPI_TypeDef *spi,
+		const CFG_REG_SPI_TypeDef *cfg,
+		uint8_t *rx_buffer,
+		uint8_t *tx_buffer,
+		SPI_BUS_Callback_TypeDef callback) {
 	bus->spi = (BITS_SPI_TypeDef*)spi;
 
 	bus->spi->CR1.bit.SPE = SPI_SPE_DIS;
@@ -46,17 +52,75 @@ void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi, const CFG_REG_SPI_Type
 
 	bus->rx.data = rx_buffer;
 	bus->rx.counter = 0;
-	bus->rx.busy = false;
+	bus->rx.done = true;
 
 	bus->tx.data = tx_buffer;
 	bus->tx.counter = 0;
-	bus->tx.busy = false;
+	bus->tx.done = true;
+
+	bus->count = 0;
+
+	bus->callback = callback;
+
+	bus->done = true;
+}
+
+void tic12400_wc_cfg0_write(SPI_BUS_TypeDef *spi_bus) {
+	spi_bus->spi->CR1.bit.SPE = 1;
+
+	TIC12400_WC_CFG0_REG rw_data;
+	rw_data.all = 0;
+	rw_data.bit.wc_in8_in9 = 1;
+
+	TIC12400_TX_FRAME tx_data;
+	tx_data.bit.rw = 1;
+	tx_data.bit.addr = TIC12400_WC_CFG0;
+	tx_data.bit.data = rw_data.all;
+	tx_data.bit.par = calc_parity(tx_data.all, 32, PARITY_ODD);
+
+	spi_bus->tx.data[0] = tx_data.byte[3];
+	spi_bus->tx.data[1] = tx_data.byte[2];
+	spi_bus->tx.data[2] = tx_data.byte[1];
+	spi_bus->tx.data[0] = tx_data.byte[0];
+
+	gpio_output_bit_setup(spi_bus->nss, GPIO_STATE_OFF);
+
+	spi_bus->rx.counter = 0;
+	spi_bus->rx.done = false;
+
+	spi_bus->tx.counter = 0;
+	spi_bus->tx.done = false;
+
+	spi_bus->count = 4;
+	spi_bus->done = false;
+
+	spi_bus->spi->CR2.bit.RXNEIE = 1;
+	spi_bus->spi->CR2.bit.TXEIE = 1;
+}
+
+void tic12400_callback(void *SPI_BUS) {
+	SPI_BUS_TypeDef *spi_bus = SPI_BUS;
+
+	TIC12400_RX_FRAME rx_data;
+
+	rx_data.byte[0] = spi_bus->rx.data[3];
+	rx_data.byte[1] = spi_bus->rx.data[2];
+	rx_data.byte[2] = spi_bus->rx.data[1];
+	rx_data.byte[3] = spi_bus->rx.data[0];
+
+	gpio_output_bit_setup(spi_bus->nss, GPIO_STATE_ON);
+
+	spi_bus->spi->CR1.bit.SPE = 0;
+	spi_bus->done = true;
 }
 
 int main(void) {
 	rcc_init();
 	gpio_init();
-	spi_bus_init(&SPI_DIO_Bus, SPI4, &spi_tic12400_cfg, spi_dio_bus_rx_buffer, spi_dio_bus_tx_buffer);
+	nvic_init();
+	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
+	spi_bus_init(&SPI_DIO_Bus, SPI4, &spi_tic12400_cfg, spi_dio_bus_rx_buffer, spi_dio_bus_tx_buffer, &tic12400_callback);
+	tic12400_wc_cfg0_write(&SPI_DIO_Bus);
 	while(1);
 	return 0;
 }

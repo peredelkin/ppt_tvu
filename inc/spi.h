@@ -382,11 +382,14 @@ typedef struct
 		.NSS = &SPI_NSS/*NSS pin pointer*/\
 }
 
+//тип функции обратного вызова
+typedef void (*SPI_BUS_Callback_TypeDef)(void*);
+
 //структура приема/передачи
 typedef struct {
 	uint8_t *data;
 	size_t counter;
-	bool busy;
+	bool done;
 } SPI_BUS_TRX_TypeDef;
 
 //структура SPI BUS
@@ -395,7 +398,9 @@ typedef struct {
 	const gpio_pin_t	*nss;
 	SPI_BUS_TRX_TypeDef	tx;
 	SPI_BUS_TRX_TypeDef	rx;
-	size_t				last;
+	size_t				count;
+	SPI_BUS_Callback_TypeDef callback;
+	bool				done;
 } SPI_BUS_TypeDef;
 
 extern void SPI_IRQHandler(SPI_BUS_TypeDef *bus);

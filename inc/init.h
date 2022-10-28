@@ -12,7 +12,7 @@
 #include "gpio_init.h"
 
 extern void rcc_init(void);
-extern void gpio_preinit(void);
 extern void gpio_init(void);
+extern void nvic_init(void);
 
 #endif /* INC_INIT_H_ */
