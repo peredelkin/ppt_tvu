@@ -16,7 +16,7 @@
 //! Период таймера в тиках.
 #define SYS_TIMER_PERIOD_TICKS 1000000
 //! Предделитель таймера.
-#define SYS_TIMER_PRESCALER 45
+#define SYS_TIMER_PRESCALER 90
 
 
 

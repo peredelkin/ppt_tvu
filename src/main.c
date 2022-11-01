@@ -124,11 +124,39 @@ void tic12400_callback(void *SPI_BUS) {
 	spi_bus->done = true;
 }
 
+void systimer_delay(struct timeval* tv_dt)
+{
+    if(tv_dt == NULL) return;
+
+    struct timeval tv_cur;
+    struct timeval tv_end;
+
+    sys_timer_value(&tv_cur);
+    timeradd(&tv_cur, tv_dt, &tv_end);
+
+    while(timercmp(&tv_cur, &tv_end, <)){
+    	sys_timer_value(&tv_cur);
+    }
+}
+
+void led_link() {
+	struct timeval tv;
+	tv.tv_sec = 1;
+	tv.tv_usec = 0;
+	while(1) {
+		systimer_delay(&tv);
+		gpio_output_bit_setup(bgr_led, GPIO_STATE_OFF);
+		systimer_delay(&tv);
+		gpio_output_bit_setup(bgr_led, GPIO_STATE_ON);
+	}
+}
+
 int main(void) {
 	rcc_init();
 	nvic_init();
 	system_timer_init();
 	gpio_init();
+	led_link();
 	//gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
 	//spi_bus_init(&SPI_DIO_Bus, SPI4, &spi_tic12400_cfg, spi_dio_bus_rx_buffer, spi_dio_bus_tx_buffer, &tic12400_callback);
 	//tic12400_wc_cfg0_write(&SPI_DIO_Bus);
