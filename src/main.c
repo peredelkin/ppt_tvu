@@ -124,15 +124,16 @@ void tic12400_callback(void *SPI_BUS) {
 	spi_bus->done = true;
 }
 
-void systimer_delay(struct timeval* tv_dt)
-{
-    if(tv_dt == NULL) return;
-
-    struct timeval tv_cur;
+void sys_timer_delay(time_t sec, suseconds_t usec) {
+	struct timeval tv_cur;
+    struct timeval tv_dt;
     struct timeval tv_end;
 
+    tv_dt.tv_sec = sec;
+    tv_dt.tv_usec = usec;
+
     sys_timer_value(&tv_cur);
-    timeradd(&tv_cur, tv_dt, &tv_end);
+    timeradd(&tv_cur, &tv_dt, &tv_end);
 
     while(timercmp(&tv_cur, &tv_end, <)){
     	sys_timer_value(&tv_cur);
@@ -140,13 +141,10 @@ void systimer_delay(struct timeval* tv_dt)
 }
 
 void led_link() {
-	struct timeval tv;
-	tv.tv_sec = 1;
-	tv.tv_usec = 0;
 	while(1) {
-		systimer_delay(&tv);
+		systimer_delay(1, 0);
 		gpio_output_bit_setup(bgr_led, GPIO_STATE_OFF);
-		systimer_delay(&tv);
+		systimer_delay(1, 0);
 		gpio_output_bit_setup(bgr_led, GPIO_STATE_ON);
 	}
 }
