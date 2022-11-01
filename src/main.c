@@ -4,6 +4,16 @@
 #include "parity.h"
 #include "tic12400.h"
 
+gpio_pin_t bgr_led[3] = {
+		GPIO_PIN(GPIOH, GPIO_PIN_10),
+		GPIO_PIN(GPIOH, GPIO_PIN_11),
+		GPIO_PIN(GPIOH, GPIO_PIN_12)
+};
+
+void TIM2_IRQHandler() {
+	sys_timer_irq_handler();
+}
+
 const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		SPI_CPHA_SECOND,
 		SPI_CPOL_IDLE_LOW,
@@ -116,11 +126,12 @@ void tic12400_callback(void *SPI_BUS) {
 
 int main(void) {
 	rcc_init();
-	gpio_init();
 	nvic_init();
-	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
-	spi_bus_init(&SPI_DIO_Bus, SPI4, &spi_tic12400_cfg, spi_dio_bus_rx_buffer, spi_dio_bus_tx_buffer, &tic12400_callback);
-	tic12400_wc_cfg0_write(&SPI_DIO_Bus);
+	system_timer_init();
+	gpio_init();
+	//gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
+	//spi_bus_init(&SPI_DIO_Bus, SPI4, &spi_tic12400_cfg, spi_dio_bus_rx_buffer, spi_dio_bus_tx_buffer, &tic12400_callback);
+	//tic12400_wc_cfg0_write(&SPI_DIO_Bus);
 	while(1);
 	return 0;
 }

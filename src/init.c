@@ -8,6 +8,9 @@
 #include "init.h"
 
 void rcc_init(void) {
+	//TIM2
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+
 	//GPIO
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
@@ -27,10 +30,22 @@ void rcc_init(void) {
 	RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
 }
 
-void gpio_init(void) {
-	gpio_pins_cfg_setup(gpio_init_array, GPIO_INIT_PINS_COUNT);
+void nvic_init(void) {
+	NVIC_SetPriorityGrouping(0b000);
+
+	NVIC_SetPriority(TIM2_IRQn, 7);
+	NVIC_EnableIRQ(TIM2_IRQn);
+
+	NVIC_SetPriority(SPI4_IRQn, 8);
+	NVIC_EnableIRQ(SPI4_IRQn);
 }
 
-void nvic_init(void) {
-	NVIC_EnableIRQ(SPI4_IRQn);
+void system_timer_init(void) {
+	sys_timer_init(TIM2);
+	sys_timer_irq_enable();
+	sys_timer_start();
+}
+
+void gpio_init(void) {
+	gpio_pins_cfg_setup(gpio_init_array, GPIO_INIT_PINS_COUNT);
 }

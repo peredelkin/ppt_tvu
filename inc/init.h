@@ -10,9 +10,11 @@
 
 #include "stm32f4xx.h"
 #include "gpio_init.h"
+#include "sys_timer.h"
 
 extern void rcc_init(void);
-extern void gpio_init(void);
 extern void nvic_init(void);
+extern void system_timer_init(void);
+extern void gpio_init(void);
 
 #endif /* INC_INIT_H_ */
