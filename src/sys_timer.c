@@ -127,3 +127,19 @@ void sys_timer_value(struct timeval* tv)
     tv->tv_sec = cnt_s;
 }
 
+void sys_timer_delay(uint32_t sec, uint32_t usec) {
+	struct timeval tv_cur;
+    struct timeval tv_dt;
+    struct timeval tv_end;
+
+    tv_dt.tv_sec = (time_t)sec;
+    tv_dt.tv_usec = (suseconds_t)usec;
+
+    sys_timer_value(&tv_cur);
+    timeradd(&tv_cur, &tv_dt, &tv_end);
+
+    while(timercmp(&tv_cur, &tv_end, <)){
+    	sys_timer_value(&tv_cur);
+    }
+}
+

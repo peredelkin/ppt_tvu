@@ -95,10 +95,17 @@ extern void sys_timer_reset(void);
 
 /**
  * Получает время работы таймера.
- * Переполняется каждые 4294967.295 секунд.
+ * Переполняется каждые 4294967296 секунд.
  * @param tv Время.
  */
 extern void sys_timer_value(struct timeval* tv);
+
+/**
+ * Функция задержки
+ * @param sec Время задержки в секундах.
+ * @param usec Время задержки в микросекундах.
+ */
+extern void sys_timer_delay(uint32_t sec, uint32_t usec);
 
 #endif /* DRIVE_HIRES_TIMER_H */
 
