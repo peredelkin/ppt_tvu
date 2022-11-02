@@ -18,7 +18,7 @@ const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		SPI_CPHA_SECOND,
 		SPI_CPOL_IDLE_LOW,
 		SPI_MSTR_MASTER,
-		SPI_BR_FPCLK_8,
+		SPI_BR_FPCLK_64,
 		SPI_LSBFIRST_MSB_FIRST,
 		SPI_SSI_NSEL,
 		SPI_SSM_ENA,
@@ -76,6 +76,7 @@ void spi_bus_init(
 }
 
 void tic12400_wc_cfg0_write(SPI_BUS_TypeDef *spi_bus) {
+	while(spi_bus->done == false);
 	TIC12400_WC_CFG0_REG WC_CFG0;
 	WC_CFG0.all = 0;
 	WC_CFG0.bit.wc_in8_in9 = 1;
@@ -84,7 +85,7 @@ void tic12400_wc_cfg0_write(SPI_BUS_TypeDef *spi_bus) {
 	tx_data.bit.rw = 1;
 	tx_data.bit.addr = TIC12400_WC_CFG0;
 	tx_data.bit.data = WC_CFG0.all;
-	tx_data.bit.par = calc_parity(tx_data.all, 32, PARITY_ODD);
+	tx_data.bit.par = calc_parity(tx_data.all, 32, PARITY_EVEN);
 
 	spi_bus->tx.data[0] = tx_data.byte[3];
 	spi_bus->tx.data[1] = tx_data.byte[2];
@@ -92,7 +93,7 @@ void tic12400_wc_cfg0_write(SPI_BUS_TypeDef *spi_bus) {
 	spi_bus->tx.data[0] = tx_data.byte[0];
 
 	spi_bus->spi->CR1.bit.SPE = 1;
-	sys_timer_delay(0, 5000);
+	sys_timer_delay(0, 2);
 	gpio_output_bit_setup(spi_bus->nss, GPIO_STATE_OFF);
 	sys_timer_delay(0, 1);
 
@@ -145,14 +146,18 @@ int main(void) {
 	system_timer_init();
 	gpio_init();
 
-	sys_timer_delay(0, 100);
+	sys_timer_delay(0, 10000);
 	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_ON);
-	sys_timer_delay(0, 100);
+	sys_timer_delay(0, 10000);
 	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
-	sys_timer_delay(0, 100);
+	sys_timer_delay(0, 10000);
 
 	spi_bus_init(&SPI_DIO_Bus, SPI4, &spi_tic12400_cfg, spi_dio_bus_rx_buffer, spi_dio_bus_tx_buffer, &tic12400_callback);
+
 	tic12400_wc_cfg0_write(&SPI_DIO_Bus);
+
+	tic12400_wc_cfg0_write(&SPI_DIO_Bus);
+
 	led_link();
 	while(1);
 	return 0;
