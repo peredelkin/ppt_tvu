@@ -85,12 +85,12 @@ void tic12400_wc_cfg0_write(SPI_BUS_TypeDef *spi_bus) {
 	tx_data.bit.rw = 1;
 	tx_data.bit.addr = TIC12400_WC_CFG0;
 	tx_data.bit.data = WC_CFG0.all;
-	tx_data.bit.par = calc_parity(tx_data.all, 32, PARITY_EVEN);
+	tx_data.bit.par = calc_parity(tx_data.all, 32, PARITY_ODD);
 
 	spi_bus->tx.data[0] = tx_data.byte[3];
 	spi_bus->tx.data[1] = tx_data.byte[2];
 	spi_bus->tx.data[2] = tx_data.byte[1];
-	spi_bus->tx.data[0] = tx_data.byte[0];
+	spi_bus->tx.data[3] = tx_data.byte[0];
 
 	spi_bus->spi->CR1.bit.SPE = 1;
 	sys_timer_delay(0, 2);
@@ -154,9 +154,11 @@ int main(void) {
 
 	spi_bus_init(&SPI_DIO_Bus, SPI4, &spi_tic12400_cfg, spi_dio_bus_rx_buffer, spi_dio_bus_tx_buffer, &tic12400_callback);
 
-	tic12400_wc_cfg0_write(&SPI_DIO_Bus);
+	//tic12400_wc_cfg0_write(&SPI_DIO_Bus);
 
-	tic12400_wc_cfg0_write(&SPI_DIO_Bus);
+	while(1){
+		tic12400_wc_cfg0_write(&SPI_DIO_Bus);
+	}
 
 	led_link();
 	while(1);
