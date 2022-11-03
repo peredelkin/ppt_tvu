@@ -13,6 +13,7 @@
 #include "defs.h"
 #include "stm32f4xx.h"
 #include "gpio.h"
+#include "sys_timer.h"
 
 #define SPI_CR1_T_SIZE 2
 #define SPI_CR2_T_SIZE 2
@@ -382,8 +383,11 @@ typedef struct
 		.NSS = &SPI_NSS/*NSS pin pointer*/\
 }
 
+//декларация структуры SPI BUS
+struct _SPI_BUS_TypeDef;
+
 //тип функции обратного вызова
-typedef void (*SPI_BUS_Callback_TypeDef)(void*);
+typedef void (*SPI_BUS_Callback_TypeDef)(struct _SPI_BUS_TypeDef *bus);
 
 //структура приема/передачи
 typedef struct {
@@ -392,17 +396,25 @@ typedef struct {
 	bool done;
 } SPI_BUS_TRX_TypeDef;
 
-//структура SPI BUS
+//структура управления NSS
 typedef struct {
+	const gpio_pin_t *pin;
+	uint32_t leading_delay_usec; //время ожидания после опускания NSS
+	uint32_t trailing_delay_usec; //время ожидания перед поднятием NSS
+} SPI_BUS_NSS_TypeDef;
+
+//структура SPI BUS
+typedef struct _SPI_BUS_TypeDef {
 	BITS_SPI_TypeDef	*spi;
-	const gpio_pin_t	*nss;
 	SPI_BUS_TRX_TypeDef	tx;
 	SPI_BUS_TRX_TypeDef	rx;
 	size_t				count;
+	bool				busy;
+	SPI_BUS_NSS_TypeDef nss;
 	SPI_BUS_Callback_TypeDef callback;
-	bool				done;
 } SPI_BUS_TypeDef;
 
+//Обработчик прерывания SPI
 extern void SPI_IRQHandler(SPI_BUS_TypeDef *bus);
 
 #endif /* INC_SPI_H_ */
