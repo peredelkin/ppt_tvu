@@ -354,9 +354,12 @@ typedef struct
 	SPI_CR1_REG			CR1;
 	SPI_CR2_REG			CR2;
 	const gpio_pin_t	*NSS;
+	uint32_t LD_USEC;
+	uint32_t TD_USEC;
 } CFG_REG_SPI_TypeDef;
 
 //макрос заполнения структуры настроек
+//TODO: дописать
 #define SPI_CFG(SPI_CPHA, SPI_CPOL, SPI_MSTR, SPI_BR, SPI_LSBFIRST, SPI_SSI, SPI_SSM, SPI_RXONLY, SPI_DFF, SPI_CRCEN, SPI_BIDIOE, SPI_BIDIMODE, SPI_RXDMAEN, SPI_TXDMAEN, SPI_SSOE, SPI_FRF, SPI_ERRIE, SPI_RXNEIE, SPI_TXEIE, SPI_NSS) {\
 		.CR1.bit.CPHA = SPI_CPHA,/*CR1 Bit 0*/\
 		.CR1.bit.CPOL = SPI_CPOL,/*CR1 Bit 1*/\

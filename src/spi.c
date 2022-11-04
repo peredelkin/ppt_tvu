@@ -38,6 +38,45 @@ void SPI_IRQHandler(SPI_BUS_TypeDef *bus) {
 	}
 }
 
+//инициализация SPI
+void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi) {
+	bus->spi = (BITS_SPI_TypeDef*)spi;
+
+	bus->tx.data = NULL;
+	bus->tx.counter = 0;
+	bus->tx.done = true;
+
+	bus->rx.data = NULL;
+	bus->rx.counter = 0;
+	bus->rx.done = true;
+
+	bus->count = 0;
+
+	bus->busy = false;
+
+	bus->nss.pin = NULL;
+	bus->nss.leading_delay_usec = 0;
+	bus->nss.trailing_delay_usec = 0;
+
+	bus->callback = NULL;
+}
+
+//Настройка SPI
+void spi_bus_config(SPI_BUS_TypeDef *bus, CFG_REG_SPI_TypeDef* cfg) {
+	//выключить SPI перед настройкой
+	bus->spi->CR1.bit.SPE = 0;
+
+	//копирование настроек SPI
+	bus->spi->CR1 = cfg->CR1;
+	bus->spi->CR2 = cfg->CR2;
+
+	//настройка NSS
+	bus->nss.pin = cfg->NSS;
+	bus->nss.leading_delay_usec = cfg->LD_USEC;
+	bus->nss.trailing_delay_usec = cfg->TD_USEC;
+}
+
+
 void spi_bus_transfer(SPI_BUS_TypeDef *bus, void *tx, void *rx, size_t size) {
 	//подождать освобождения шины
 	while(bus->busy);
@@ -70,4 +109,21 @@ void spi_bus_transfer(SPI_BUS_TypeDef *bus, void *tx, void *rx, size_t size) {
 	//разрешить прерывание TXE
 	bus->spi->CR2.bit.TXEIE = 1;
 }
+
+
+void spi_bus_free(SPI_BUS_TypeDef *bus) {
+	//подождать перед поднятием NSS
+	sys_timer_delay(0, bus->nss.trailing_delay_usec);
+	//поднять NSS
+	gpio_output_bit_setup(bus->nss.pin, GPIO_STATE_ON);
+
+	//выключить SPI
+	bus->spi->CR1.bit.SPE = 0;
+
+	//освободить шину
+	bus->busy = false;
+}
+
+
+
 
