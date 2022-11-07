@@ -356,6 +356,7 @@ typedef struct
 	const gpio_pin_t	*NSS;
 	uint32_t LD_USEC;
 	uint32_t TD_USEC;
+	uint32_t IWD_USEC;
 } CFG_REG_SPI_TypeDef;
 
 //макрос заполнения структуры настроек
@@ -392,29 +393,39 @@ struct _SPI_BUS_TypeDef;
 //тип функции обратного вызова
 typedef void (*SPI_BUS_Callback_TypeDef)(struct _SPI_BUS_TypeDef *bus);
 
-//структура приема/передачи
+//структура приемника/передатчика
 typedef struct {
+	uint8_t stub;
 	uint8_t *data;
 	size_t counter;
 	bool done;
-} SPI_BUS_TRX_TypeDef;
+} SPI_BUS_RXTX_TypeDef;
 
 //структура управления NSS
 typedef struct {
-	const gpio_pin_t *pin;
-	uint32_t leading_delay_usec; //время ожидания после опускания NSS
-	uint32_t trailing_delay_usec; //время ожидания перед поднятием NSS
+	const gpio_pin_t *pin; //NSS pin
+	uint32_t leading_delay_usec; //delay after low NSS
+	uint32_t trailing_delay_usec; //delay before high NSS
+	uint32_t inter_word_delay_usec; //delay after high NSS
 } SPI_BUS_NSS_TypeDef;
+
+//структура приема/передачи
+typedef struct {
+	BITS_SPI_TypeDef	*spi;
+	SPI_BUS_RXTX_TypeDef tx;
+	SPI_BUS_RXTX_TypeDef rx;
+	size_t				count;
+	SPI_BUS_NSS_TypeDef nss;
+} SPI_BUS_TRX_TypeDef;
+
+//структура сообщений
+typedef struct {
+
+} SPI_BUS_Message_TypeDef;
 
 //структура SPI BUS
 typedef struct _SPI_BUS_TypeDef {
-	BITS_SPI_TypeDef	*spi;
-	SPI_BUS_TRX_TypeDef	tx;
-	SPI_BUS_TRX_TypeDef	rx;
-	size_t				count;
-	bool				busy;
-	SPI_BUS_NSS_TypeDef nss;
-	SPI_BUS_Callback_TypeDef callback;
+	SPI_BUS_TRX_TypeDef	trx;
 } SPI_BUS_TypeDef;
 
 //Обработчик прерывания SPI
