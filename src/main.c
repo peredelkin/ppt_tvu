@@ -39,7 +39,7 @@ const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 SPI_BUS_TypeDef SPI_DIO_Bus;
 
 void SPI4_IRQHandler() {
-	SPI_IRQHandler(&SPI_DIO_Bus);
+	SPI_BUS_IRQHandler(&SPI_DIO_Bus);
 }
 
 void led_blink() {

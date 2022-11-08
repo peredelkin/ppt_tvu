@@ -356,11 +356,11 @@ typedef struct
 	const gpio_pin_t	*NSS;
 	uint32_t LD_USEC;
 	uint32_t TD_USEC;
-	uint32_t IWD_USEC;
+	uint32_t NFD_USEC;
 } CFG_REG_SPI_TypeDef;
 
 //макрос заполнения структуры настроек
-//TODO: дописать
+//TODO: дописать/изменить
 #define SPI_CFG(SPI_CPHA, SPI_CPOL, SPI_MSTR, SPI_BR, SPI_LSBFIRST, SPI_SSI, SPI_SSM, SPI_RXONLY, SPI_DFF, SPI_CRCEN, SPI_BIDIOE, SPI_BIDIMODE, SPI_RXDMAEN, SPI_TXDMAEN, SPI_SSOE, SPI_FRF, SPI_ERRIE, SPI_RXNEIE, SPI_TXEIE, SPI_NSS) {\
 		.CR1.bit.CPHA = SPI_CPHA,/*CR1 Bit 0*/\
 		.CR1.bit.CPOL = SPI_CPOL,/*CR1 Bit 1*/\
@@ -406,7 +406,7 @@ typedef struct {
 	const gpio_pin_t *pin; //NSS pin
 	uint32_t leading_delay_usec; //delay after low NSS
 	uint32_t trailing_delay_usec; //delay before high NSS
-	uint32_t inter_word_delay_usec; //delay after high NSS
+	uint32_t next_frame_delay_usec; //delay after high NSS
 } SPI_BUS_NSS_TypeDef;
 
 //структура приема/передачи
@@ -420,15 +420,21 @@ typedef struct {
 
 //структура сообщений
 typedef struct {
-
+	uint8_t* tx_data;
+	uint8_t* rx_data;
+	size_t data_count;
 } SPI_BUS_Message_TypeDef;
 
 //структура SPI BUS
 typedef struct _SPI_BUS_TypeDef {
 	SPI_BUS_TRX_TypeDef	trx;
+	SPI_BUS_Message_TypeDef *message;
+	size_t message_counter;
+	size_t message_count;
+	bool done;
 } SPI_BUS_TypeDef;
 
 //Обработчик прерывания SPI
-extern void SPI_IRQHandler(SPI_BUS_TypeDef *bus);
+extern void SPI_BUS_IRQHandler(SPI_BUS_TypeDef *bus);
 
 #endif /* INC_SPI_H_ */
