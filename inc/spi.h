@@ -393,14 +393,6 @@ struct _SPI_BUS_TypeDef;
 //тип функции обратного вызова
 typedef void (*SPI_BUS_Callback_TypeDef)(struct _SPI_BUS_TypeDef *bus);
 
-//структура приемника/передатчика
-typedef struct {
-	uint8_t stub;
-	uint8_t *data;
-	size_t counter;
-	bool done;
-} SPI_BUS_RXTX_TypeDef;
-
 //структура управления NSS
 typedef struct {
 	const gpio_pin_t *pin; //NSS pin
@@ -409,29 +401,44 @@ typedef struct {
 	uint32_t next_frame_delay_usec; //delay after high NSS
 } SPI_BUS_NSS_TypeDef;
 
-//структура приема/передачи
 typedef struct {
-	BITS_SPI_TypeDef	*spi;
-	SPI_BUS_RXTX_TypeDef tx;
-	SPI_BUS_RXTX_TypeDef rx;
-	size_t				count;
-	SPI_BUS_NSS_TypeDef nss;
-} SPI_BUS_TRX_TypeDef;
+	uint8_t *tx;
+	uint8_t *rx;
+	size_t count;
+} SPI_BUS_DATA_TypeDef;
 
-//структура сообщений
 typedef struct {
-	uint8_t* tx_data;
-	uint8_t* rx_data;
-	size_t data_count;
-} SPI_BUS_Message_TypeDef;
+	uint8_t stub;
+	size_t counter;
+	bool done;
+} SPI_BUS_SERVICE_TypeDef;
+
+typedef struct {
+	SPI_BUS_SERVICE_TypeDef tx;
+	SPI_BUS_SERVICE_TypeDef rx;
+} SPI_BUS_DATA_SERVICE_TypeDef;
+
+typedef struct {
+	SPI_BUS_DATA_TypeDef *pointer;
+	SPI_BUS_DATA_SERVICE_TypeDef service;
+} SPI_BUS_MESSAGE_DATA_TypeDef;
+
+typedef struct {
+	size_t counter;
+	size_t count;
+} SPI_BUS_MESSAGE_SERVICE_TypeDef;
+
+typedef struct {
+	SPI_BUS_MESSAGE_DATA_TypeDef data;
+	SPI_BUS_MESSAGE_SERVICE_TypeDef service;
+} SPI_BUS_MESSAGE_TypeDef;
 
 //структура SPI BUS
 typedef struct _SPI_BUS_TypeDef {
-	SPI_BUS_TRX_TypeDef	trx;
-	SPI_BUS_Message_TypeDef *message;
-	size_t message_counter;
-	size_t message_count;
+	BITS_SPI_TypeDef *spi;
+	SPI_BUS_NSS_TypeDef nss;
 	bool done;
+	SPI_BUS_MESSAGE_TypeDef message;
 } SPI_BUS_TypeDef;
 
 //Обработчик прерывания SPI
