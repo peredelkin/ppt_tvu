@@ -18,18 +18,18 @@ void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi) {
 
 	bus->done = true;
 
-	bus->message.data.pointer = NULL;
+	bus->frame.data = NULL;
 
-	bus->message.data.service.tx.stub = 0;
-	bus->message.data.service.tx.counter = 0;
-	bus->message.data.service.tx.done = true;
+	bus->frame.data_service.tx.stub = 0;
+	bus->frame.data_service.tx.counter = 0;
+	bus->frame.data_service.tx.done = true;
 
-	bus->message.data.service.rx.stub = 0;
-	bus->message.data.service.rx.counter = 0;
-	bus->message.data.service.rx.done = true;
+	bus->frame.data_service.rx.stub = 0;
+	bus->frame.data_service.rx.counter = 0;
+	bus->frame.data_service.rx.done = true;
 
-	bus->message.service.counter = 0;
-	bus->message.service.count = 0;
+	bus->frame_service.counter = 0;
+	bus->frame_service.count = 0;
 }
 
 //Настройка SPI
@@ -95,42 +95,72 @@ void spi_bus_transfer_stop(SPI_BUS_TypeDef *bus) {
 	spi_bus_nss_on(bus);
 }
 
+//чтение в заглушку
+void spi_bus_read_to_stub(SPI_BUS_TypeDef *bus) {
+	bus->frame.data_service.rx.stub = (uint8_t) (bus->spi->DR.all);
+}
+
+//чтение во фрейм
+void spi_bus_read_to_frame_data(SPI_BUS_TypeDef *bus, size_t frame_n, size_t data_n) {
+	bus->frame.data[frame_n].rx[data_n] = (uint8_t) (bus->spi->DR.all);
+}
+
+//чтение завершено
+void spi_bus_read_done(SPI_BUS_TypeDef *bus) {
+	bus->spi->CR2.bit.RXNEIE = 0;
+	bus->frame.data_service.rx.done = true;
+}
+
+//запись из заглушки
+void spi_bus_write_from_stub(SPI_BUS_TypeDef *bus) {
+	(bus->spi->DR.all) = (uint16_t) (bus->frame.data_service.tx.stub);
+}
+
+//запись из фрейма
+void spi_bus_write_from_frame_data(SPI_BUS_TypeDef *bus, size_t frame_n, size_t data_n) {
+	(bus->spi->DR.all) = (uint16_t) (bus->frame.data[frame_n].tx[data_n]);
+}
+
+//запись завершена
+void spi_bus_write_done(SPI_BUS_TypeDef *bus) {
+	bus->spi->CR2.bit.TXEIE = 0;
+	bus->frame.data_service.tx.done = true;
+}
+
 //Обработчик прерывания SPI
 void SPI_BUS_IRQHandler(SPI_BUS_TypeDef *bus) {
 	if (bus->spi->SR.bit.RXNE) {
 		if (bus->spi->CR2.bit.RXNEIE) {
-			if(bus->message.data.pointer[bus->message.service.counter].rx == NULL) {
-				bus->message.data.service.rx.stub = (uint8_t) (bus->spi->DR.all);
+			if(bus->frame.data[bus->frame_service.counter].rx == NULL) {
+				spi_bus_read_to_stub(bus);
 			} else {
-				bus->message.data.pointer[bus->message.service.counter].rx[bus->message.data.service.rx.counter] = (uint8_t) (bus->spi->DR.all);
+				spi_bus_read_to_frame_data(bus, bus->frame_service.counter, bus->frame.data_service.rx.counter);
 			}
-			bus->message.data.service.rx.counter++;
-			if(bus->message.data.service.rx.counter >= bus->message.data.pointer[bus->message.service.counter].count) {
-				bus->spi->CR2.bit.RXNEIE = 0;
-				bus->message.data.service.rx.done = true;
+			bus->frame.data_service.rx.counter++;
+			if(bus->frame.data_service.rx.counter >= bus->frame.data[bus->frame_service.counter].count) {
+				spi_bus_read_done(bus);
 			}
 		}
 	}
 
 	if (bus->spi->SR.bit.TXE) {
 		if (bus->spi->CR2.bit.TXEIE) {
-			if(bus->message.data.pointer[bus->message.service.counter].tx == NULL) {
-				(bus->spi->DR.all) = (uint16_t) (bus->message.data.service.tx.stub);
+			if(bus->frame.data[bus->frame_service.counter].tx == NULL) {
+				spi_bus_write_from_stub(bus);
 			} else {
-				(bus->spi->DR.all) = (uint16_t) (bus->message.data.pointer[bus->message.service.counter].tx[bus->message.data.service.tx.counter]);
+				spi_bus_write_from_frame_data(bus, bus->frame_service.counter, bus->frame.data_service.tx.counter);
 			}
-			bus->message.data.service.tx.counter++;
-			if(bus->message.data.service.tx.counter >= bus->message.data.pointer[bus->message.service.counter].count) {
-				bus->spi->CR2.bit.TXEIE = 0;
-				bus->message.data.service.tx.done = true;
+			bus->frame.data_service.tx.counter++;
+			if(bus->frame.data_service.tx.counter >= bus->frame.data[bus->frame_service.counter].count) {
+				spi_bus_write_done(bus);
 			}
 		}
 	}
 
-	if((bus->message.data.service.rx.done) && (bus->message.data.service.tx.done)) {
+	if((bus->frame.data_service.rx.done) && (bus->frame.data_service.tx.done)) {
 		spi_bus_transfer_stop(bus);
-		bus->message.service.counter++;
-		if(bus->message.service.counter >= bus->message.service.count) {
+		bus->frame_service.counter++;
+		if(bus->frame_service.counter >= bus->frame_service.count) {
 			bus->done = true;
 			//TODO: колбек или еще что-то по окончании приема/передачи сообщений
 		} else {

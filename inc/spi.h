@@ -419,26 +419,22 @@ typedef struct {
 } SPI_BUS_DATA_SERVICE_TypeDef;
 
 typedef struct {
-	SPI_BUS_DATA_TypeDef *pointer;
-	SPI_BUS_DATA_SERVICE_TypeDef service;
-} SPI_BUS_MESSAGE_DATA_TypeDef;
-
-typedef struct {
 	size_t counter;
 	size_t count;
-} SPI_BUS_MESSAGE_SERVICE_TypeDef;
+} SPI_BUS_FRAME_SERVICE_TypeDef;
 
 typedef struct {
-	SPI_BUS_MESSAGE_DATA_TypeDef data;
-	SPI_BUS_MESSAGE_SERVICE_TypeDef service;
-} SPI_BUS_MESSAGE_TypeDef;
+	SPI_BUS_DATA_TypeDef *data;
+	SPI_BUS_DATA_SERVICE_TypeDef data_service;
+} SPI_BUS_FRAME_TypeDef;
 
 //структура SPI BUS
 typedef struct _SPI_BUS_TypeDef {
 	BITS_SPI_TypeDef *spi;
 	SPI_BUS_NSS_TypeDef nss;
 	bool done;
-	SPI_BUS_MESSAGE_TypeDef message;
+	SPI_BUS_FRAME_TypeDef frame;
+	SPI_BUS_FRAME_SERVICE_TypeDef frame_service;
 } SPI_BUS_TypeDef;
 
 //Обработчик прерывания SPI
