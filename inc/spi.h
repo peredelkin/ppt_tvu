@@ -360,8 +360,7 @@ typedef struct
 } CFG_REG_SPI_TypeDef;
 
 //макрос заполнения структуры настроек
-//TODO: дописать/изменить
-#define SPI_CFG(SPI_CPHA, SPI_CPOL, SPI_MSTR, SPI_BR, SPI_LSBFIRST, SPI_SSI, SPI_SSM, SPI_RXONLY, SPI_DFF, SPI_CRCEN, SPI_BIDIOE, SPI_BIDIMODE, SPI_RXDMAEN, SPI_TXDMAEN, SPI_SSOE, SPI_FRF, SPI_ERRIE, SPI_RXNEIE, SPI_TXEIE, SPI_NSS) {\
+#define SPI_CFG(SPI_CPHA, SPI_CPOL, SPI_MSTR, SPI_BR, SPI_LSBFIRST, SPI_SSI, SPI_SSM, SPI_RXONLY, SPI_DFF, SPI_CRCEN, SPI_BIDIOE, SPI_BIDIMODE, SPI_RXDMAEN, SPI_TXDMAEN, SPI_SSOE, SPI_FRF, SPI_ERRIE, SPI_NSS, LD, TD, NFD) {\
 		.CR1.bit.CPHA = SPI_CPHA,/*CR1 Bit 0*/\
 		.CR1.bit.CPOL = SPI_CPOL,/*CR1 Bit 1*/\
 		.CR1.bit.MSTR = SPI_MSTR,/*CR1 Bit 2*/\
@@ -382,9 +381,12 @@ typedef struct
 		.CR2.bit.SSOE = SPI_SSOE,/*Bit 2*/\
 		.CR2.bit.FRF = SPI_FRF,/*CR2 Bit 4*/\
 		.CR2.bit.ERRIE = SPI_ERRIE,/*CR2 Bit 5*/\
-		.CR2.bit.RXNEIE = SPI_RXNEIE,/*CR2 Bit 6*/\
-		.CR2.bit.TXEIE = SPI_TXEIE,/*CR2 Bit 7*/\
-		.NSS = &SPI_NSS/*NSS pin pointer*/\
+		.CR2.bit.RXNEIE = SPI_RXNEIE_DIS,/*CR2 Bit 6*/\
+		.CR2.bit.TXEIE = SPI_TXEIE_DIS,/*CR2 Bit 7*/\
+		.NSS = &SPI_NSS,/*NSS pin pointer*/\
+		.LD_USEC = LD,\
+		.TD_USEC = TD,\
+		.NFD_USEC = NFD\
 }
 
 //декларация структуры SPI BUS
@@ -437,7 +439,16 @@ typedef struct _SPI_BUS_TypeDef {
 	SPI_BUS_FRAME_SERVICE_TypeDef frame_service;
 } SPI_BUS_TypeDef;
 
+//инициализация SPI
+extern void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi);
+
+//Настройка SPI
+extern void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *cfg);
+
 //Обработчик прерывания SPI
 extern void SPI_BUS_IRQHandler(SPI_BUS_TypeDef *bus);
+
+//TODO: убрать
+extern void spi_bus_transfer_start(SPI_BUS_TypeDef *bus);
 
 #endif /* INC_SPI_H_ */

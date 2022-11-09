@@ -33,7 +33,7 @@ void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi) {
 }
 
 //Настройка SPI
-void spi_bus_configure(SPI_BUS_TypeDef *bus, CFG_REG_SPI_TypeDef *cfg) {
+void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *cfg) {
 	while(bus->done == false);
 	//выключение SPI перед настройкой
 	bus->spi->CR1.bit.SPE = 0;
@@ -84,8 +84,17 @@ void spi_bus_interrupt_enable(SPI_BUS_TypeDef *bus) {
 	bus->spi->CR2.all = CR2.all;
 }
 
+//сброс сервисных переменных для приема/передачи
+void spi_bus_transfer_start_service(SPI_BUS_SERVICE_TypeDef *service) {
+	service->stub = 0;
+	service->counter = 0;
+	service->done = false;
+}
+
 //старт приема/передачи фрейма
 void spi_bus_transfer_start(SPI_BUS_TypeDef *bus) {
+	spi_bus_transfer_start_service(&(bus->frame.data_service.tx));
+	spi_bus_transfer_start_service(&(bus->frame.data_service.rx));
 	spi_bus_nss_off(bus);
 	spi_bus_interrupt_enable(bus);
 }

@@ -35,7 +35,7 @@ const gpio_pin_t GPO_EN_DO_App = GPIO_PIN(GPIOA, GPIO_PIN_0); /*40, PA0/WKUP, GP
 const gpio_pin_t GPO_ETH_Reset_App = GPIO_PIN(GPIOH, GPIO_PIN_2); /*43, PH2, GPIO_Output, ETH_Reset_App*/
 const gpio_pin_t GPI_Board_In1_App = GPIO_PIN(GPIOH, GPIO_PIN_3); /*44, PH3, GPIO_Input, Board_In1_App*/
 const gpio_pin_t GPI_Board_In2_App = GPIO_PIN(GPIOH, GPIO_PIN_4); /*45, PH4, GPIO_Input, Board_In2_App*/
-//
+const gpio_pin_t GPO_CS_SPI5_App = GPIO_PIN(GPIOH, GPIO_PIN_5); /*46, PH5, GPIO_Output, ON, CS_SPI5_App*/
 //
 //
 //

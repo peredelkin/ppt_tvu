@@ -12,7 +12,11 @@
 
 #define GPIO_INIT_PINS_COUNT 19
 
-//привет мир
+//Socket 3
+extern const gpio_pin_t GPO_OE_App;
+extern const gpio_pin_t GPO_CS_SPI5_App;
+
+//DIO
 extern const gpio_pin_t GPO_Reset_DI_App;
 extern const gpio_pin_t GPO_CS_DI_App;
 
