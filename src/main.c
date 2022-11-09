@@ -35,7 +35,7 @@ const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		GPO_CS_DI_App,
 		1,
 		1,
-		2);
+		1);
 
 const CFG_REG_SPI_TypeDef spi_spi5_cfg = SPI_CFG(
 		SPI_CPHA_SECOND,
@@ -58,7 +58,7 @@ const CFG_REG_SPI_TypeDef spi_spi5_cfg = SPI_CFG(
 		GPO_CS_SPI5_App,
 		1,
 		1,
-		2);
+		1);
 
 SPI_BUS_TypeDef SPI_DIO_Bus;
 
@@ -120,8 +120,11 @@ int main(void) {
 	gpio_init();
 	//включение буферов 3 сокета
 	gpio_output_bit_setup(&GPO_OE_App, GPIO_STATE_OFF);
+
 	spi_bus_init(&SPI_DIO_Bus, SPI5);
 	spi_bus_configure(&SPI_DIO_Bus, &spi_spi5_cfg);
+
+	sys_timer_delay(1, 0);
 
 	SPI_DIO_Bus.frame.data = spi5_data;
 	SPI_DIO_Bus.frame_service.count = 2;
@@ -132,6 +135,7 @@ int main(void) {
 	spi_bus_transfer_start(&SPI_DIO_Bus);
 
 	while(SPI_DIO_Bus.done == false);
+	SPI_DIO_Bus.spi->CR1.bit.SPE = 0;
 
 	led_blink();
 	while(1);
