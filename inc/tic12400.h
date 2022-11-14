@@ -593,7 +593,7 @@ typedef union _TIC12400_INT_EN_COMP2_REG {
 //структура данных Global Interrupt Generation Control 0
 typedef struct PACKED _TIC12400_INT_EN_CFG0 {
 	unsigned spi_fail_en : 1;
-	unsigned par_fail_en : 1;
+	unsigned prty_fail_en : 1;
 	unsigned ssc_en : 1;
 	unsigned tsd_en : 1;
 	unsigned tw_en : 1;
@@ -723,8 +723,8 @@ typedef struct PACKED _TIC12400_THRESMAP_CFG1 {
 	unsigned thresmap_in9 : 3;
 	unsigned thresmap_in10 : 3;
 	unsigned thresmap_in11 : 3;
-	unsigned thresmap_in12_in17_2a : 3;
-	unsigned thresmap_in12_in17_2b : 3;
+	unsigned thresmap_in12_in17_thres2a : 3;
+	unsigned thresmap_in12_in17_thres2b : 3;
 	unsigned reservred : 6;
 } tic12400_thresmap_cfg1_data_t;
 static_assert(sizeof(tic12400_thresmap_cfg1_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_thresmap_cfg1_data_t!");
@@ -737,13 +737,13 @@ typedef union _TIC12400_THRESMAP_CFG1_REG {
 
 //структура данных ADC Threshold Mapping 2
 typedef struct PACKED _TIC12400_THRESMAP_CFG2{
-	unsigned thresmap_in18_in23_3a : 3;
-	unsigned thresmap_in18_in23_3b : 3;
-	unsigned thresmap_in18_in23_3c : 3;
-	unsigned thresmap_vs0_thres_2a : 3;
-	unsigned thresmap_vs0_thres_2b : 3;
-	unsigned thresmap_vs1_thres_2a : 3;
-	unsigned thresmap_vs1_thres_2b : 3;
+	unsigned thresmap_in18_in23_thres3a : 3;
+	unsigned thresmap_in18_in23_thres3b : 3;
+	unsigned thresmap_in18_in23_thres3c : 3;
+	unsigned thresmap_vs0_thres2a : 3;
+	unsigned thresmap_vs0_thres2b : 3;
+	unsigned thresmap_vs1_thres2a : 3;
+	unsigned thresmap_vs1_thres2b : 3;
 	unsigned reserved : 3;
 } tic12400_thresmap_cfg2_data_t;
 static_assert(sizeof(tic12400_thresmap_cfg2_data_t) == TIC12400_DATA_SIZE, "Invalid size of tic12400_thresmap_cfg2_data_t!");
