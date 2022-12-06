@@ -76,13 +76,13 @@ uint8_t spi5_data_tx[2][2] = {
 
 uint8_t spi5_data_rx[2][2] = {
 	{
-		4,
-		3
+		0,
+		0
 	},
 
 	{
-		2,
-		1
+		0,
+		0
 	}
 };
 
@@ -129,6 +129,7 @@ int main(void) {
 	SPI_DIO_Bus.frame.data = spi5_data;
 	SPI_DIO_Bus.frame_service.count = 2;
 	SPI_DIO_Bus.frame_service.counter = 0;
+	SPI_DIO_Bus.frame.data_service.byte_order = SPI_BYTE_ORDER_REVERSE;
 
 	SPI_DIO_Bus.done = false;
 

@@ -389,6 +389,12 @@ typedef struct
 		.NFD_USEC = NFD\
 }
 
+//тип порядка байт
+typedef enum {
+	SPI_BYTE_ORDER_NORMAL,
+	SPI_BYTE_ORDER_REVERSE
+} spi_byte_order_t;
+
 //декларация структуры SPI BUS
 struct _SPI_BUS_TypeDef;
 
@@ -418,6 +424,7 @@ typedef struct {
 typedef struct {
 	SPI_BUS_SERVICE_TypeDef tx;
 	SPI_BUS_SERVICE_TypeDef rx;
+	spi_byte_order_t byte_order;
 } SPI_BUS_DATA_SERVICE_TypeDef;
 
 typedef struct {
@@ -434,9 +441,9 @@ typedef struct {
 typedef struct _SPI_BUS_TypeDef {
 	BITS_SPI_TypeDef *spi;
 	SPI_BUS_NSS_TypeDef nss;
-	bool done;
 	SPI_BUS_FRAME_TypeDef frame;
 	SPI_BUS_FRAME_SERVICE_TypeDef frame_service;
+	bool done;
 } SPI_BUS_TypeDef;
 
 //инициализация SPI

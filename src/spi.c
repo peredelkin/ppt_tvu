@@ -111,7 +111,11 @@ void spi_bus_read_to_stub(SPI_BUS_TypeDef *bus) {
 
 //чтение во фрейм
 void spi_bus_read_to_frame_data(SPI_BUS_TypeDef *bus, size_t frame_n, size_t data_n) {
-	bus->frame.data[frame_n].rx[data_n] = (uint8_t) (bus->spi->DR.all);
+	if(bus->frame.data_service.byte_order == SPI_BYTE_ORDER_REVERSE) {
+		bus->frame.data[frame_n].rx[(bus->frame_service.count - 1) - data_n] = (uint8_t) (bus->spi->DR.all);
+	} else {
+		bus->frame.data[frame_n].rx[data_n] = (uint8_t) (bus->spi->DR.all);
+	}
 }
 
 //чтение завершено
@@ -127,7 +131,11 @@ void spi_bus_write_from_stub(SPI_BUS_TypeDef *bus) {
 
 //запись из фрейма
 void spi_bus_write_from_frame_data(SPI_BUS_TypeDef *bus, size_t frame_n, size_t data_n) {
-	(bus->spi->DR.all) = (uint16_t) (bus->frame.data[frame_n].tx[data_n]);
+	if(bus->frame.data_service.byte_order == SPI_BYTE_ORDER_REVERSE) {
+		(bus->spi->DR.all) = (uint16_t) (bus->frame.data[frame_n].tx[(bus->frame_service.count - 1) - data_n]);
+	} else {
+		(bus->spi->DR.all) = (uint16_t) (bus->frame.data[frame_n].tx[data_n]);
+	}
 }
 
 //запись завершена
