@@ -267,8 +267,43 @@ const TIC12400_SETTINGS_TypeDef tic124_settings_const = {
 		.MODE.bit.m_in23 = 0x0 /*Comparator mode for ResDI_6*/
 };
 
+#define TIC124_SETTINGS_TX_FRAME_FILL(FRAME,CFG,INDEX,ADDR)\
+		FRAME[INDEX].bit.rw = 1;\
+		FRAME[INDEX].bit.addr = TIC12400_##ADDR;\
+		FRAME[INDEX].bit.data = CFG.ADDR.all;\
+		FRAME[INDEX].bit.par = calc_parity(FRAME[INDEX].all, 32, PARITY_ODD);\
+		index++;
 
 void tic124_settings_tx_frame_fill(void) {
+	size_t index = 0;
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,CONFIG);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,IN_EN);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,CS_SELECT);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,WC_CFG0);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,WC_CFG1);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,CCP_CFG0);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,CCP_CFG1);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,THRES_COMP);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,INT_EN_COMP1);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,INT_EN_COMP2);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,INT_EN_CFG0);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,INT_EN_CFG1);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,INT_EN_CFG2);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,INT_EN_CFG3);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,INT_EN_CFG4);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,THRES_CFG0);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,THRES_CFG1);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,THRES_CFG2);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,THRES_CFG3);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,THRES_CFG4);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,THRESMAP_CFG0);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,THRESMAP_CFG1);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,THRESMAP_CFG2);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,MATRIX);
+	TIC124_SETTINGS_TX_FRAME_FILL(tic124_settings_tx_frame,tic124_settings_const,index,MODE);
+}
+
+void tic124_settings_tx_frame_fill_2(void) {
 	size_t index = 0;
 
 	tic124_settings_tx_frame[index].bit.rw = 1;
@@ -276,6 +311,7 @@ void tic124_settings_tx_frame_fill(void) {
 	tic124_settings_tx_frame[index].bit.data = tic124_settings_const.CONFIG.all;
 	tic124_settings_tx_frame[index].bit.par = calc_parity(tic124_settings_tx_frame[index].all, 32, PARITY_ODD);
 	index++;
+
 
 	tic124_settings_tx_frame[index].bit.rw = 1;
 	tic124_settings_tx_frame[index].bit.addr = TIC12400_IN_EN;
@@ -419,7 +455,6 @@ void tic124_settings_tx_frame_fill(void) {
     tic124_settings_tx_frame[index].bit.addr = TIC12400_MODE;
     tic124_settings_tx_frame[index].bit.data = tic124_settings_const.MODE.all;
     tic124_settings_tx_frame[index].bit.par = calc_parity(tic124_settings_tx_frame[index].all, 32, PARITY_ODD);
-
 }
 
 
