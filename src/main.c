@@ -3,6 +3,7 @@
 #include "spi.h"
 #include "parity.h"
 #include "tic12400.h"
+#include "tic12400_settings.h"
 
 gpio_pin_t bgr_led[3] = {
 		GPIO_PIN(GPIOH, GPIO_PIN_10),
@@ -62,41 +63,17 @@ const CFG_REG_SPI_TypeDef spi_spi5_cfg = SPI_CFG(
 
 SPI_BUS_TypeDef SPI_DIO_Bus;
 
-uint8_t spi5_data_tx[2][2] = {
+SPI_BUS_DATA_TypeDef spi5_data[25] = {
 	{
-		1,
-		2
+		.tx = (uint8_t*)&tic124_settings_tx_frame[0].all,
+		.rx = (uint8_t*)&tic124_settings_rx_frame[0].all,
+		.count = 4
 	},
 
 	{
-		3,
-		4
-	}
-};
-
-uint8_t spi5_data_rx[2][2] = {
-	{
-		0,
-		0
-	},
-
-	{
-		0,
-		0
-	}
-};
-
-SPI_BUS_DATA_TypeDef spi5_data[2] = {
-	{
-		.tx = &spi5_data_tx[0][0],
-		.rx = &spi5_data_rx[0][0],
-		.count = 2
-	},
-
-	{
-		.tx = &spi5_data_tx[1][0],
-		.rx = &spi5_data_rx[1][0],
-		.count = 2
+		.tx = (uint8_t*)&tic124_settings_tx_frame[1].all,
+		.rx = (uint8_t*)&tic124_settings_rx_frame[1].all,
+		.count = 4
 	}
 };
 
@@ -125,6 +102,8 @@ int main(void) {
 	spi_bus_configure(&SPI_DIO_Bus, &spi_spi5_cfg);
 
 	sys_timer_delay(1, 0);
+
+	tic124_settings_tx_frame_fill();
 
 	spi_bus_transfer(&SPI_DIO_Bus, spi5_data, 2, SPI_BYTE_ORDER_REVERSE);
 

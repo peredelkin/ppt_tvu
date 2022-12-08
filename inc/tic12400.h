@@ -844,7 +844,7 @@ typedef struct PACKED TIC12400_TX {
 } tic12400_tx_t;
 static_assert(sizeof(tic12400_tx_t) == TIC12400_FRAME_SIZE, "Invalid size of tic12400_tx_t!");
 
-typedef union _TIC12400_TX_FRAME {
+typedef union PACKED _TIC12400_TX_FRAME {
 	uint32_t all;
 	uint8_t byte[4];
 	struct TIC12400_TX bit;
@@ -865,7 +865,7 @@ typedef struct PACKED TIC12400_RX {
 } tic12400_rx_t;
 static_assert(sizeof(tic12400_rx_t) == TIC12400_FRAME_SIZE, "Invalid size of tic12400_rx_t!");
 
-typedef union _TIC12400_RX_FRAME {
+typedef union PACKED _TIC12400_RX_FRAME {
 	uint32_t all;
 	uint8_t byte[4];
 	struct TIC12400_RX bit;
