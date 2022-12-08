@@ -7,6 +7,9 @@
 
 #include "spi.h"
 
+//объявление функций
+void spi_bus_transfer_start(SPI_BUS_TypeDef *bus);
+
 //инициализация SPI
 void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi) {
 	bus->spi = (BITS_SPI_TypeDef*) spi;
@@ -51,6 +54,25 @@ void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *cfg) {
 	//включение SPI после настройки
 	bus->spi->CR1.bit.SPE = 1;
 }
+
+//Настройка и запуск приема/передачи
+void spi_bus_transfer(
+		SPI_BUS_TypeDef* bus,
+		SPI_BUS_DATA_TypeDef* frame_control_array_pointer,
+		size_t frame_control_array_amount,
+		spi_byte_order_t frame_byte_order) {
+
+	while(bus->done == false);
+	bus->done = false;
+
+	bus->frame.data = frame_control_array_pointer;
+	bus->frame_service.count = frame_control_array_amount;
+	bus->frame_service.counter = 0;
+	bus->frame.data_service.byte_order = frame_byte_order;
+
+	spi_bus_transfer_start(bus);
+}
+
 
 //NSS off
 void spi_bus_nss_off(SPI_BUS_TypeDef *bus) {

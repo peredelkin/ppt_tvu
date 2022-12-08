@@ -455,7 +455,10 @@ extern void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *c
 //Обработчик прерывания SPI
 extern void SPI_BUS_IRQHandler(SPI_BUS_TypeDef *bus);
 
-//TODO: убрать
-extern void spi_bus_transfer_start(SPI_BUS_TypeDef *bus);
+extern void spi_bus_transfer(
+		SPI_BUS_TypeDef* bus,
+		SPI_BUS_DATA_TypeDef* frame_control_array_pointer,
+		size_t frame_control_array_amount,
+		spi_byte_order_t frame_byte_order);
 
 #endif /* INC_SPI_H_ */

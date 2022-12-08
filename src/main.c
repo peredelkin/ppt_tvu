@@ -126,14 +126,7 @@ int main(void) {
 
 	sys_timer_delay(1, 0);
 
-	SPI_DIO_Bus.frame.data = spi5_data;
-	SPI_DIO_Bus.frame_service.count = 2;
-	SPI_DIO_Bus.frame_service.counter = 0;
-	SPI_DIO_Bus.frame.data_service.byte_order = SPI_BYTE_ORDER_REVERSE;
-
-	SPI_DIO_Bus.done = false;
-
-	spi_bus_transfer_start(&SPI_DIO_Bus);
+	spi_bus_transfer(&SPI_DIO_Bus, spi5_data, 2, SPI_BYTE_ORDER_REVERSE);
 
 	while(SPI_DIO_Bus.done == false);
 	SPI_DIO_Bus.spi->CR1.bit.SPE = 0;
