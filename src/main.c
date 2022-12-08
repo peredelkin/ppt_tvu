@@ -63,19 +63,15 @@ const CFG_REG_SPI_TypeDef spi_spi5_cfg = SPI_CFG(
 
 SPI_BUS_TypeDef SPI_DIO_Bus;
 
-SPI_BUS_DATA_TypeDef spi5_data[25] = {
-	{
-		.tx = (uint8_t*)&tic124_settings_tx_frame[0].all,
-		.rx = (uint8_t*)&tic124_settings_rx_frame[0].all,
-		.count = 4
-	},
+SPI_BUS_DATA_TypeDef spi5_data[25];
 
-	{
-		.tx = (uint8_t*)&tic124_settings_tx_frame[1].all,
-		.rx = (uint8_t*)&tic124_settings_rx_frame[1].all,
-		.count = 4
+void spi5_data_fill(void) {
+	for(int i = 0; i < 25; i++) {
+		spi5_data[i].tx = (uint8_t*)&tic124_settings_tx_frame[i].all;
+		spi5_data[i].rx = (uint8_t*)&tic124_settings_rx_frame[i].all;
+		spi5_data[i].count = 4;
 	}
-};
+}
 
 void SPI5_IRQHandler() {
 	SPI_BUS_IRQHandler(&SPI_DIO_Bus);
@@ -105,7 +101,9 @@ int main(void) {
 
 	tic124_settings_tx_frame_fill();
 
-	spi_bus_transfer(&SPI_DIO_Bus, spi5_data, 2, SPI_BYTE_ORDER_REVERSE);
+	spi5_data_fill();
+
+	spi_bus_transfer(&SPI_DIO_Bus, spi5_data, 25, SPI_BYTE_ORDER_REVERSE);
 
 	while(SPI_DIO_Bus.done == false);
 	SPI_DIO_Bus.spi->CR1.bit.SPE = 0;
