@@ -38,6 +38,7 @@ const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		1,
 		1);
 
+/*
 const CFG_REG_SPI_TypeDef spi_spi5_cfg = SPI_CFG(
 		SPI_CPHA_SECOND,
 		SPI_CPOL_IDLE_LOW,
@@ -60,20 +61,37 @@ const CFG_REG_SPI_TypeDef spi_spi5_cfg = SPI_CFG(
 		1,
 		1,
 		1);
+*/
 
 SPI_BUS_TypeDef SPI_DIO_Bus;
 
-SPI_BUS_DATA_TypeDef spi5_data[25];
+SPI_BUS_DATA_TypeDef tic124_settings_spi_bus_data_control_array[25];
 
-void spi5_data_fill(void) {
+void tic124_settings_spi_bus_data_control_array_fill(void) {
 	for(int i = 0; i < 25; i++) {
-		spi5_data[i].tx = (uint8_t*)&tic124_settings_tx_frame[i].all;
-		spi5_data[i].rx = (uint8_t*)&tic124_settings_rx_frame[i].all;
-		spi5_data[i].count = 4;
+		tic124_settings_spi_bus_data_control_array[i].tx = (uint8_t*)&tic124_settings_tx_frame[i].all;
+		tic124_settings_spi_bus_data_control_array[i].rx = (uint8_t*)&tic124_settings_rx_frame[i].all;
+		tic124_settings_spi_bus_data_control_array[i].count = 4;
 	}
 }
 
-void SPI5_IRQHandler() {
+void tic124_start_normal_operation() {
+	while(SPI_DIO_Bus.done == false);
+
+	TIC12400_CONFIG_REG config;
+	config.all = tic124_settings_tx_frame[0].bit.data;
+	config.bit.poll_en = 0x1; /*Polling enabled*/
+	config.bit.trigger = 0x1; /*Start TIC12400-Q1 to normal operation*/
+	tic124_settings_tx_frame[0].bit.data = config.all;
+
+	spi_bus_transfer(&SPI_DIO_Bus, tic124_settings_spi_bus_data_control_array, 1, SPI_BYTE_ORDER_REVERSE);
+}
+
+void tic124_stop_normal_operation() {
+
+}
+
+void SPI4_IRQHandler() {
 	SPI_BUS_IRQHandler(&SPI_DIO_Bus);
 }
 
@@ -94,16 +112,20 @@ int main(void) {
 	//включение буферов 3 сокета
 	gpio_output_bit_setup(&GPO_OE_App, GPIO_STATE_OFF);
 
-	spi_bus_init(&SPI_DIO_Bus, SPI5);
-	spi_bus_configure(&SPI_DIO_Bus, &spi_spi5_cfg);
+	spi_bus_init(&SPI_DIO_Bus, SPI4);
+	spi_bus_configure(&SPI_DIO_Bus, &spi_tic12400_cfg);
 
 	sys_timer_delay(1, 0);
 
 	tic124_settings_tx_frame_fill();
 
-	spi5_data_fill();
+	tic124_settings_spi_bus_data_control_array_fill();
 
-	spi_bus_transfer(&SPI_DIO_Bus, spi5_data, 25, SPI_BYTE_ORDER_REVERSE);
+	spi_bus_transfer(&SPI_DIO_Bus, tic124_settings_spi_bus_data_control_array, 25, SPI_BYTE_ORDER_REVERSE);
+
+	spi_bus_transfer(&SPI_DIO_Bus, tic124_settings_spi_bus_data_control_array, 25, SPI_BYTE_ORDER_REVERSE);
+
+	tic124_start_normal_operation();
 
 	while(SPI_DIO_Bus.done == false);
 	SPI_DIO_Bus.spi->CR1.bit.SPE = 0;

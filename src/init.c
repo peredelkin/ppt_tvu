@@ -36,8 +36,8 @@ void nvic_init(void) {
 	NVIC_SetPriority(TIM2_IRQn, 7);
 	NVIC_EnableIRQ(TIM2_IRQn);
 
-	NVIC_SetPriority(SPI5_IRQn, 8);
-	NVIC_EnableIRQ(SPI5_IRQn);
+	NVIC_SetPriority(SPI4_IRQn, 8);
+	NVIC_EnableIRQ(SPI4_IRQn);
 }
 
 void system_timer_init(void) {
