@@ -7,6 +7,9 @@
 
 #include "tic12400_settings.h"
 
+TIC12400_TX_FRAME tic124_in_stat_comp_tx_frame;
+TIC12400_RX_FRAME tic124_in_stat_comp_rx_frame;
+
 TIC12400_TX_FRAME tic124_settings_tx_frame[25];
 TIC12400_RX_FRAME tic124_settings_rx_frame[25];
 
@@ -15,7 +18,6 @@ const TIC12400_DEVICE_ID_REG tic12400_device_id_const = {
 		.bit.major = 0x2
 };
 
-//TODO: перепроверить
 const TIC12400_SETTINGS_TypeDef tic124_settings_const = {
 		.CONFIG.bit.reset = 0x0,			/*No reset*/
 		.CONFIG.bit.poll_time = 0x2,		/*8ms(how frequently each input is sampled)*/
@@ -71,22 +73,22 @@ const TIC12400_SETTINGS_TypeDef tic124_settings_const = {
 		.CS_SELECT.bit.cs_in8 = 0x0,		/*Current Source (CSO)*/
 		.CS_SELECT.bit.cs_in9 = 0x0,		/*Current Source (CSO)*/
 
-		.WC_CFG0.bit.wc_in0_in1 = 0x1,		/*1mA wetting current ResDI_4 and ResDI_2*/
+		.WC_CFG0.bit.wc_in0_in1 = 0x0,		/*0mA wetting current ResDI_4 and ResDI_2*/
 		.WC_CFG0.bit.wc_in2_in3 = 0x0,		/*0mA wetting current NTC5 and NTC6*/
 		.WC_CFG0.bit.wc_in4 = 0x0, 			/*0mA wetting current NTC4*/
 		.WC_CFG0.bit.wc_in5 = 0x0,			/*0mA wetting current NTC1*/
 		.WC_CFG0.bit.wc_in6_in7 = 0x0,		/*0mA wetting current NTC3 and NTC2*/
-		.WC_CFG0.bit.wc_in8_in9 = 0x1,		/*1mA wetting current DI1 and DI2*/
-		.WC_CFG0.bit.wc_in10 = 0x1,			/*1mA wetting current DI3*/
-		.WC_CFG0.bit.wc_in11 = 0x1,			/*1mA wetting current DI4*/
+		.WC_CFG0.bit.wc_in8_in9 = 0x0,		/*0mA wetting current DI1 and DI2*/
+		.WC_CFG0.bit.wc_in10 = 0x0,			/*0mA wetting current DI3*/
+		.WC_CFG0.bit.wc_in11 = 0x0,			/*0mA wetting current DI4*/
 
-		.WC_CFG1.bit.wc_in12_in13 = 0x1,	/*1mA wetting current DI5 and DI6*/
-		.WC_CFG1.bit.wc_in14_in15 = 0x1,	/*1mA wetting current DI7 and DI8*/
+		.WC_CFG1.bit.wc_in12_in13 = 0x0,	/*0mA wetting current DI5 and DI6*/
+		.WC_CFG1.bit.wc_in14_in15 = 0x0,	/*0mA wetting current DI7 and DI8*/
 		.WC_CFG1.bit.wc_in16_in17 = 0x0,	/*0mA wetting current NC and NC*/
 		.WC_CFG1.bit.wc_in18_in19 = 0x0,	/*0mA wetting current 5VREF and DI9*/
-		.WC_CFG1.bit.wc_in20_in21 = 0x1,	/*1mA wetting current DI10 and ResDI_10*/
-		.WC_CFG1.bit.wc_in22 = 0x1, 		/*1mA wetting current ResDI_8*/
-		.WC_CFG1.bit.wc_in23 = 0x1, 		/*1mA wetting current ResDI_6*/
+		.WC_CFG1.bit.wc_in20_in21 = 0x0,	/*0mA wetting current DI10 and ResDI_10*/
+		.WC_CFG1.bit.wc_in22 = 0x0, 		/*0mA wetting current ResDI_8*/
+		.WC_CFG1.bit.wc_in23 = 0x0, 		/*0mA wetting current ResDI_6*/
 		.WC_CFG1.bit.auto_scale_dis_cso = 0x0, /*Enable CSO wetting current auto-scaling*/
 		.WC_CFG1.bit.auto_scale_dis_csi = 0x0, /*Enable CSI wetting current auto-scaling*/
 

@@ -13,6 +13,9 @@
 
 extern void tic124_settings_tx_frame_fill(void);
 
+extern TIC12400_TX_FRAME tic124_in_stat_comp_tx_frame;
+extern TIC12400_RX_FRAME tic124_in_stat_comp_rx_frame;
+
 extern TIC12400_TX_FRAME tic124_settings_tx_frame[25];
 extern TIC12400_RX_FRAME tic124_settings_rx_frame[25];
 
