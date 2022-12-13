@@ -150,6 +150,10 @@ int main(void) {
 	spi_bus_configure(&SPI_DIO_Bus, &spi_tic12400_cfg);
 
 	sys_timer_delay(1, 0);
+	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_ON);
+	sys_timer_delay(1, 0);
+	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
+	sys_timer_delay(1, 0);
 
 	tic124_settings_tx_frame_fill();
 
@@ -159,7 +163,11 @@ int main(void) {
 
 	spi_bus_transfer(&SPI_DIO_Bus, tic124_settings_spi_bus_data_control_array, 25, SPI_BYTE_ORDER_REVERSE);
 
+	while(SPI_DIO_Bus.done == false);
+
 	spi_bus_transfer(&SPI_DIO_Bus, tic124_settings_spi_bus_data_control_array, 25, SPI_BYTE_ORDER_REVERSE);
+
+	while(SPI_DIO_Bus.done == false);
 
 	tic124_start_normal_operation();
 
