@@ -80,6 +80,16 @@ void tic124_in_stat_comp_read(void) {
 	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE);
 }
 
+void tic124_ana_stat1_read(void) {
+	while(SPI_DIO_Bus.done == false);
+	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT1], 1, SPI_BYTE_ORDER_REVERSE);
+}
+
+void tic124_ana_stat9_read(void) {
+	while(SPI_DIO_Bus.done == false);
+	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT9], 1, SPI_BYTE_ORDER_REVERSE);
+}
+
 void tic124_start_normal_operation(void) {
 	while(SPI_DIO_Bus.done == false);
 
@@ -107,14 +117,13 @@ void SPI4_IRQHandler() {
 }
 
 void led_blink() {
+	TIC12400_ANA_STAT_REG ana_stat1;
 	while(1) {
-		sys_timer_delay(0, 100000);
-		if(tic124_rx_frame[TIC12400_IN_STAT_COMP].bit.data & 256) {
-			gpio_output_bit_setup(&bgr_led[0], GPIO_STATE_OFF);
-		} else {
-			gpio_output_bit_setup(&bgr_led[0], GPIO_STATE_ON);
-		}
-		tic124_in_stat_comp_read();
+		sys_timer_delay(0, 10000);
+		ana_stat1.all = tic124_rx_frame[TIC12400_ANA_STAT1].bit.data;
+		if(ana_stat1.bit.in0_ana < 590) gpio_output_bit_setup(&bgr_led[0], GPIO_STATE_OFF);
+		if(ana_stat1.bit.in0_ana > 600) gpio_output_bit_setup(&bgr_led[0], GPIO_STATE_ON);
+		tic124_ana_stat1_read();
 	}
 }
 
