@@ -116,11 +116,16 @@ void SPI4_IRQHandler() {
 	SPI_BUS_IRQHandler(&SPI_DIO_Bus);
 }
 
+uint16_t ntc5_data;
+uint16_t ntc6_data;
+
 void led_blink() {
-	TIC12400_ANA_STAT_REG ana_stat1;
 	while(1) {
 		sys_timer_delay(0, 10000);
+		TIC12400_ANA_STAT_REG ana_stat1;
 		ana_stat1.all = tic124_rx_frame[TIC12400_ANA_STAT1].bit.data;
+		ntc5_data = ana_stat1.bit.in0_ana;
+		ntc6_data = ana_stat1.bit.in1_ana;
 		if(ana_stat1.bit.in0_ana < 590) gpio_output_bit_setup(&bgr_led[0], GPIO_STATE_OFF);
 		if(ana_stat1.bit.in0_ana > 600) gpio_output_bit_setup(&bgr_led[0], GPIO_STATE_ON);
 		tic124_ana_stat1_read();
