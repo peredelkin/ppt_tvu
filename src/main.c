@@ -4,6 +4,7 @@
 #include "parity.h"
 #include "tic12400.h"
 #include "tic12400_settings.h"
+#include "b57891s0103f008.h"
 
 gpio_pin_t bgr_led[3] = {
 		GPIO_PIN(GPIOH, GPIO_PIN_10),
@@ -116,18 +117,27 @@ void SPI4_IRQHandler() {
 	SPI_BUS_IRQHandler(&SPI_DIO_Bus);
 }
 
-uint16_t ntc5_data;
-uint16_t ntc6_data;
+TIC12400_ANA_STAT_REG ana_stat1;
+
+uint32_t in2_ana;
+uint32_t in2_index;
+int32_t ntc5_temp;
+
+uint32_t in3_ana;
+uint32_t in3_index;
+int32_t ntc6_temp;
+
+void ntc_temp_calc() {
+	in2_ana = ana_stat1.bit.in0_ana;
+	in2_index = in2_ana >> 4;
+	ntc5_temp = b57891s0103f008_table[in2_index] - (((b57891s0103f008_table[in2_index] - b57891s0103f008_table[in2_index + 1]) * (in2_ana - (in2_index << 4))) >> 4);
+}
 
 void led_blink() {
 	while(1) {
 		sys_timer_delay(0, 10000);
-		TIC12400_ANA_STAT_REG ana_stat1;
 		ana_stat1.all = tic124_rx_frame[TIC12400_ANA_STAT1].bit.data;
-		ntc5_data = ana_stat1.bit.in0_ana;
-		ntc6_data = ana_stat1.bit.in1_ana;
-		if(ana_stat1.bit.in0_ana < 590) gpio_output_bit_setup(&bgr_led[0], GPIO_STATE_OFF);
-		if(ana_stat1.bit.in0_ana > 600) gpio_output_bit_setup(&bgr_led[0], GPIO_STATE_ON);
+		ntc_temp_calc();
 		tic124_ana_stat1_read();
 	}
 }
