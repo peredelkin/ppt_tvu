@@ -102,55 +102,42 @@ void SPI4_IRQHandler() {
 	SPI_BUS_IRQHandler(&SPI_DIO_Bus);
 }
 
-uint8_t tic12400_digital_input[24];
+uint8_t tic12400_digital_input[10];
 uint16_t tic12400_analog_input[6];
-
-TIC12400_IN_STAT_COMP_REG tic12400_in_stat_comp;
-TIC12400_ANA_STAT_REG tic12400_ana_stat;
 
 void tic12400_stat_read() {
 	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE);
 	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT1], 3, SPI_BYTE_ORDER_REVERSE);
 	while(SPI_DIO_Bus.done == false);
 
-	tic12400_in_stat_comp.all = tic124_rx_frame[TIC12400_IN_STAT_COMP].bit.data;
+	TIC12400_IN_STAT_COMP_REG in_stat_comp;
 
-	tic12400_digital_input[0] = tic12400_in_stat_comp.bit.inc_0;
-	tic12400_digital_input[1] = tic12400_in_stat_comp.bit.inc_1;
-	tic12400_digital_input[2] = tic12400_in_stat_comp.bit.inc_2;
-	tic12400_digital_input[3] = tic12400_in_stat_comp.bit.inc_3;
-	tic12400_digital_input[4] = tic12400_in_stat_comp.bit.inc_4;
-	tic12400_digital_input[5] = tic12400_in_stat_comp.bit.inc_5;
-	tic12400_digital_input[6] = tic12400_in_stat_comp.bit.inc_6;
-	tic12400_digital_input[7] = tic12400_in_stat_comp.bit.inc_7;
-	tic12400_digital_input[8] = tic12400_in_stat_comp.bit.inc_8;
-	tic12400_digital_input[9] = tic12400_in_stat_comp.bit.inc_9;
-	tic12400_digital_input[10] = tic12400_in_stat_comp.bit.inc_10;
-	tic12400_digital_input[11] = tic12400_in_stat_comp.bit.inc_11;
-	tic12400_digital_input[12] = tic12400_in_stat_comp.bit.inc_12;
-	tic12400_digital_input[13] = tic12400_in_stat_comp.bit.inc_13;
-	tic12400_digital_input[14] = tic12400_in_stat_comp.bit.inc_14;
-	tic12400_digital_input[15] = tic12400_in_stat_comp.bit.inc_15;
-	tic12400_digital_input[16] = tic12400_in_stat_comp.bit.inc_16;
-	tic12400_digital_input[17] = tic12400_in_stat_comp.bit.inc_17;
-	tic12400_digital_input[18] = tic12400_in_stat_comp.bit.inc_18;
-	tic12400_digital_input[19] = tic12400_in_stat_comp.bit.inc_19;
-	tic12400_digital_input[20] = tic12400_in_stat_comp.bit.inc_20;
-	tic12400_digital_input[21] = tic12400_in_stat_comp.bit.inc_21;
-	tic12400_digital_input[22] = tic12400_in_stat_comp.bit.inc_22;
-	tic12400_digital_input[23] = tic12400_in_stat_comp.bit.inc_23;
+	in_stat_comp.all = tic124_rx_frame[TIC12400_IN_STAT_COMP].bit.data;
 
-	tic12400_ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT1].bit.data;
-	tic12400_analog_input[0] = tic12400_ana_stat.bit.in0_ana;
-	tic12400_analog_input[1] = tic12400_ana_stat.bit.in1_ana;
+	tic12400_digital_input[0] = in_stat_comp.bit.inc_8;		//DI1
+	tic12400_digital_input[1] = in_stat_comp.bit.inc_9;		//DI2
+	tic12400_digital_input[2] = in_stat_comp.bit.inc_10;	//DI3
+	tic12400_digital_input[3] = in_stat_comp.bit.inc_11;	//DI4
+	tic12400_digital_input[4] = in_stat_comp.bit.inc_12;	//DI5
+	tic12400_digital_input[5] = in_stat_comp.bit.inc_13;	//DI6
+	tic12400_digital_input[6] = in_stat_comp.bit.inc_14;	//DI7
+	tic12400_digital_input[7] = in_stat_comp.bit.inc_15;	//DI8
+	tic12400_digital_input[8] = in_stat_comp.bit.inc_19;	//DI9
+	tic12400_digital_input[9] = in_stat_comp.bit.inc_20;	//DI10
 
-	tic12400_ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT2].bit.data;
-	tic12400_analog_input[2] = tic12400_ana_stat.bit.in0_ana;
-	tic12400_analog_input[3] = tic12400_ana_stat.bit.in1_ana;
+	TIC12400_ANA_STAT_REG ana_stat;
 
-	tic12400_ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT3].bit.data;
-	tic12400_analog_input[4] = tic12400_ana_stat.bit.in0_ana;
-	tic12400_analog_input[5] = tic12400_ana_stat.bit.in1_ana;
+	ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT1].bit.data;
+	tic12400_analog_input[0] = ana_stat.bit.in0_ana;	//NTC5
+	tic12400_analog_input[1] = ana_stat.bit.in1_ana;	//NTC6
+
+	ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT2].bit.data;
+	tic12400_analog_input[2] = ana_stat.bit.in0_ana;	//NTC4
+	tic12400_analog_input[3] = ana_stat.bit.in1_ana;	//NTC1
+
+	ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT3].bit.data;
+	tic12400_analog_input[4] = ana_stat.bit.in0_ana;	//NTC3
+	tic12400_analog_input[5] = ana_stat.bit.in1_ana;	//NTC2
 }
 
 int main(void) {
