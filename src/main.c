@@ -76,21 +76,6 @@ void tic124_spi_bus_data_control_array_fill(void) {
 	}
 }
 
-void tic124_in_stat_comp_read(void) {
-	while(SPI_DIO_Bus.done == false);
-	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE);
-}
-
-void tic124_ana_stat1_read(void) {
-	while(SPI_DIO_Bus.done == false);
-	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT1], 1, SPI_BYTE_ORDER_REVERSE);
-}
-
-void tic124_ana_stat9_read(void) {
-	while(SPI_DIO_Bus.done == false);
-	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT9], 1, SPI_BYTE_ORDER_REVERSE);
-}
-
 void tic124_start_normal_operation(void) {
 	while(SPI_DIO_Bus.done == false);
 
@@ -117,29 +102,55 @@ void SPI4_IRQHandler() {
 	SPI_BUS_IRQHandler(&SPI_DIO_Bus);
 }
 
-TIC12400_ANA_STAT_REG ana_stat1;
+uint8_t tic12400_digital_input[24];
+uint16_t tic12400_analog_input[6];
 
-uint32_t in2_ana;
-uint32_t in2_index;
-int32_t ntc5_temp;
+TIC12400_IN_STAT_COMP_REG tic12400_in_stat_comp;
+TIC12400_ANA_STAT_REG tic12400_ana_stat;
 
-uint32_t in3_ana;
-uint32_t in3_index;
-int32_t ntc6_temp;
+void tic12400_stat_read() {
+	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE);
+	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT1], 3, SPI_BYTE_ORDER_REVERSE);
+	while(SPI_DIO_Bus.done == false);
 
-void ntc_temp_calc() {
-	in2_ana = ana_stat1.bit.in0_ana;
-	in2_index = in2_ana >> 4;
-	ntc5_temp = b57891s0103f008_table[in2_index] - (((b57891s0103f008_table[in2_index] - b57891s0103f008_table[in2_index + 1]) * (in2_ana - (in2_index << 4))) >> 4);
-}
+	tic12400_in_stat_comp.all = tic124_rx_frame[TIC12400_IN_STAT_COMP].bit.data;
 
-void led_blink() {
-	while(1) {
-		sys_timer_delay(0, 10000);
-		ana_stat1.all = tic124_rx_frame[TIC12400_ANA_STAT1].bit.data;
-		ntc_temp_calc();
-		tic124_ana_stat1_read();
-	}
+	tic12400_digital_input[0] = tic12400_in_stat_comp.bit.inc_0;
+	tic12400_digital_input[1] = tic12400_in_stat_comp.bit.inc_1;
+	tic12400_digital_input[2] = tic12400_in_stat_comp.bit.inc_2;
+	tic12400_digital_input[3] = tic12400_in_stat_comp.bit.inc_3;
+	tic12400_digital_input[4] = tic12400_in_stat_comp.bit.inc_4;
+	tic12400_digital_input[5] = tic12400_in_stat_comp.bit.inc_5;
+	tic12400_digital_input[6] = tic12400_in_stat_comp.bit.inc_6;
+	tic12400_digital_input[7] = tic12400_in_stat_comp.bit.inc_7;
+	tic12400_digital_input[8] = tic12400_in_stat_comp.bit.inc_8;
+	tic12400_digital_input[9] = tic12400_in_stat_comp.bit.inc_9;
+	tic12400_digital_input[10] = tic12400_in_stat_comp.bit.inc_10;
+	tic12400_digital_input[11] = tic12400_in_stat_comp.bit.inc_11;
+	tic12400_digital_input[12] = tic12400_in_stat_comp.bit.inc_12;
+	tic12400_digital_input[13] = tic12400_in_stat_comp.bit.inc_13;
+	tic12400_digital_input[14] = tic12400_in_stat_comp.bit.inc_14;
+	tic12400_digital_input[15] = tic12400_in_stat_comp.bit.inc_15;
+	tic12400_digital_input[16] = tic12400_in_stat_comp.bit.inc_16;
+	tic12400_digital_input[17] = tic12400_in_stat_comp.bit.inc_17;
+	tic12400_digital_input[18] = tic12400_in_stat_comp.bit.inc_18;
+	tic12400_digital_input[19] = tic12400_in_stat_comp.bit.inc_19;
+	tic12400_digital_input[20] = tic12400_in_stat_comp.bit.inc_20;
+	tic12400_digital_input[21] = tic12400_in_stat_comp.bit.inc_21;
+	tic12400_digital_input[22] = tic12400_in_stat_comp.bit.inc_22;
+	tic12400_digital_input[23] = tic12400_in_stat_comp.bit.inc_23;
+
+	tic12400_ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT1].bit.data;
+	tic12400_analog_input[0] = tic12400_ana_stat.bit.in0_ana;
+	tic12400_analog_input[1] = tic12400_ana_stat.bit.in1_ana;
+
+	tic12400_ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT2].bit.data;
+	tic12400_analog_input[2] = tic12400_ana_stat.bit.in0_ana;
+	tic12400_analog_input[3] = tic12400_ana_stat.bit.in1_ana;
+
+	tic12400_ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT3].bit.data;
+	tic12400_analog_input[4] = tic12400_ana_stat.bit.in0_ana;
+	tic12400_analog_input[5] = tic12400_ana_stat.bit.in1_ana;
 }
 
 int main(void) {
@@ -167,15 +178,13 @@ int main(void) {
 
 	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE);
 
-	while(SPI_DIO_Bus.done == false);
-
 	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE);
-
-	while(SPI_DIO_Bus.done == false);
 
 	tic124_start_normal_operation();
 
-	led_blink();
-	while(1);
+	while(1) {
+		sys_timer_delay(0, 50000);
+		tic12400_stat_read();
+	}
 	return 0;
 }

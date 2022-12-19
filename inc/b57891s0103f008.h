@@ -10,6 +10,6 @@
 
 #include "stdint.h"
 
-extern const int16_t b57891s0103f008_table[64];
+extern const int16_t b57891s0103f008_table[256];
 
 #endif /* INC_B57891S0103F008_H_ */
