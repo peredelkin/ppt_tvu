@@ -16,9 +16,12 @@
 extern const gpio_pin_t GPO_OE_App;
 extern const gpio_pin_t GPO_CS_SPI5_App;
 
-//DIO
+//DI
 extern const gpio_pin_t GPO_Reset_DI_App;
 extern const gpio_pin_t GPO_CS_DI_App;
+
+//DO
+extern const gpio_pin_t GPO_CS_DO_App;
 
 extern const gpio_pin_cfg_t gpio_init_array[GPIO_INIT_PINS_COUNT];
 

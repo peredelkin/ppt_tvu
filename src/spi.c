@@ -37,7 +37,11 @@ void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi) {
 
 //Настройка SPI
 void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *cfg) {
+	//ожидание особождении шины
 	while(bus->done == false);
+	//занять шину
+	bus->done = false;
+
 	//выключение SPI перед настройкой
 	bus->spi->CR1.bit.SPE = 0;
 
@@ -53,6 +57,9 @@ void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *cfg) {
 
 	//включение SPI после настройки
 	bus->spi->CR1.bit.SPE = 1;
+
+	//освобождение шины
+	bus->done = true;
 }
 
 //Настройка и запуск приема/передачи

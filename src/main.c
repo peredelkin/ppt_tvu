@@ -20,7 +20,7 @@ const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		SPI_CPHA_SECOND,
 		SPI_CPOL_IDLE_LOW,
 		SPI_MSTR_MASTER,
-		SPI_BR_FPCLK_64,
+		SPI_BR_FPCLK_32,
 		SPI_LSBFIRST_MSB_FIRST,
 		SPI_SSI_NSEL,
 		SPI_SSM_ENA,
@@ -35,6 +35,29 @@ const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
 		SPI_FRF_MOTOROLA,
 		SPI_ERRIE_DIS,
 		GPO_CS_DI_App,
+		1,
+		1,
+		3);
+
+const CFG_REG_SPI_TypeDef spi_ncv7608_cfg = SPI_CFG(
+		SPI_CPHA_SECOND,
+		SPI_CPOL_IDLE_LOW,
+		SPI_MSTR_MASTER,
+		SPI_BR_FPCLK_128,
+		SPI_LSBFIRST_LSB_FIRST,
+		SPI_SSI_NSEL,
+		SPI_SSM_ENA,
+		SPI_RXONLY_DIS,
+		SPI_DFF_8,
+		SPI_CRCEN_DIS,
+		SPI_BIDIOE_RX,
+		SPI_BIDIMODE_UNIDIR,
+		SPI_RXDMAEN_DIS,
+		SPI_TXDMAEN_DIS,
+		SPI_SSOE_DIS,
+		SPI_FRF_MOTOROLA,
+		SPI_ERRIE_DIS,
+		GPO_CS_DO_App,
 		1,
 		1,
 		3);
@@ -140,16 +163,24 @@ void tic12400_stat_read() {
 	tic12400_analog_input[5] = ana_stat.bit.in1_ana;	//NTC2
 }
 
+uint8_t ncv7608_tx[2];
+uint16_t ncv7608_rx;
+SPI_BUS_DATA_TypeDef ncv7608_spi_bus_data_control_array = {
+		.tx = (uint8_t*)&ncv7608_tx,
+		.rx = (uint8_t*)&ncv7608_rx,
+		.count = 2
+};
+
 int main(void) {
 	rcc_init();
 	nvic_init();
 	system_timer_init();
 	gpio_init();
 
-	//включение буферов 3 сокета
-	gpio_output_bit_setup(&GPO_OE_App, GPIO_STATE_OFF);
-
 	spi_bus_init(&SPI_DIO_Bus, SPI4);
+	spi_bus_configure(&SPI_DIO_Bus, &spi_ncv7608_cfg);
+
+	/*
 	spi_bus_configure(&SPI_DIO_Bus, &spi_tic12400_cfg);
 
 	//сброс tic12400
@@ -169,9 +200,13 @@ int main(void) {
 
 	tic124_start_normal_operation();
 
+	tic12400_stat_read();
+	*/
+
 	while(1) {
-		sys_timer_delay(0, 50000);
-		tic12400_stat_read();
+		ncv7608_tx[0]++;
+		spi_bus_transfer(&SPI_DIO_Bus, &ncv7608_spi_bus_data_control_array, 1, SPI_BYTE_ORDER_NORMAL);
+		sys_timer_delay(0, 500000);
 	}
 	return 0;
 }
