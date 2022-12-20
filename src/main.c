@@ -5,6 +5,7 @@
 #include "tic12400.h"
 #include "tic12400_settings.h"
 #include "b57891s0103f008.h"
+#include "ncv7608.h"
 
 gpio_pin_t bgr_led[3] = {
 		GPIO_PIN(GPIOH, GPIO_PIN_10),
@@ -163,11 +164,11 @@ void tic12400_stat_read() {
 	tic12400_analog_input[5] = ana_stat.bit.in1_ana;	//NTC2
 }
 
-uint8_t ncv7608_tx[2];
-uint16_t ncv7608_rx;
+NCV7608_INPUT_DATA_REG ncv7608_tx;
+NCV7608_OUTPUT_DATA_REG ncv7608_rx;
 SPI_BUS_DATA_TypeDef ncv7608_spi_bus_data_control_array = {
-		.tx = (uint8_t*)&ncv7608_tx,
-		.rx = (uint8_t*)&ncv7608_rx,
+		.tx = (uint8_t*)&ncv7608_tx.all,
+		.rx = (uint8_t*)&ncv7608_rx.all,
 		.count = 2
 };
 
@@ -204,9 +205,16 @@ int main(void) {
 	*/
 
 	while(1) {
-		ncv7608_tx[0]++;
+		ncv7608_tx.bit.driver_2_ena = ncv7608_tx.bit.driver_1_ena;
+		ncv7608_tx.bit.driver_1_ena = ncv7608_tx.bit.driver_3_ena;
+		ncv7608_tx.bit.driver_3_ena = ncv7608_tx.bit.driver_4_ena;
+		ncv7608_tx.bit.driver_4_ena = ncv7608_tx.bit.driver_8_ena;
+		ncv7608_tx.bit.driver_8_ena = ncv7608_tx.bit.driver_7_ena;
+		ncv7608_tx.bit.driver_7_ena = ncv7608_tx.bit.driver_5_ena;
+		ncv7608_tx.bit.driver_5_ena = ncv7608_tx.bit.driver_6_ena;
+		ncv7608_tx.bit.driver_6_ena = !ncv7608_tx.bit.driver_2_ena;
 		spi_bus_transfer(&SPI_DIO_Bus, &ncv7608_spi_bus_data_control_array, 1, SPI_BYTE_ORDER_NORMAL);
-		sys_timer_delay(0, 500000);
+		sys_timer_delay(0, 100000);
 	}
 	return 0;
 }
