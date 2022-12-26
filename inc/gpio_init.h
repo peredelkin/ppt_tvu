@@ -10,7 +10,7 @@
 
 #include "gpio.h"
 
-#define GPIO_INIT_PINS_COUNT 19
+#define GPIO_INIT_PINS_COUNT 25
 
 //Socket 3
 extern const gpio_pin_t GPO_OE_App;
@@ -22,6 +22,11 @@ extern const gpio_pin_t GPO_CS_DI_App;
 
 //DO
 extern const gpio_pin_t GPO_CS_DO_App;
+
+//AO
+extern const gpio_pin_t GPO_SYNCAO_App;
+extern const gpio_pin_t GPO_nLDAC_App;
+extern const gpio_pin_t GPO_nCLR_App;
 
 extern const gpio_pin_cfg_t gpio_init_array[GPIO_INIT_PINS_COUNT];
 

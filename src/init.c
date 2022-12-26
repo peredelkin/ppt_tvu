@@ -24,6 +24,8 @@ void rcc_init(void) {
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOJEN;
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOKEN;
 
+	//SPI2
+	RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
 	//SPI4
 	RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
 	//SPI5
@@ -35,6 +37,9 @@ void nvic_init(void) {
 
 	NVIC_SetPriority(TIM2_IRQn, 7);
 	NVIC_EnableIRQ(TIM2_IRQn);
+
+	NVIC_SetPriority(SPI2_IRQn, 8);
+	NVIC_EnableIRQ(SPI2_IRQn);
 
 	NVIC_SetPriority(SPI4_IRQn, 8);
 	NVIC_EnableIRQ(SPI4_IRQn);

@@ -1,11 +1,12 @@
 #include "init.h"
 #include "gpio.h"
 #include "spi.h"
+#include "spi_settings.h"
 #include "parity.h"
 #include "tic12400.h"
 #include "tic12400_settings.h"
-#include "b57891s0103f008.h"
 #include "ncv7608.h"
+#include "dac7562.h"
 
 gpio_pin_t bgr_led[3] = {
 		GPIO_PIN(GPIOH, GPIO_PIN_10),
@@ -13,82 +14,20 @@ gpio_pin_t bgr_led[3] = {
 		GPIO_PIN(GPIOH, GPIO_PIN_12)
 };
 
+SPI_BUS_TypeDef SPI_AIO_Bus;
+SPI_BUS_TypeDef SPI_DIO_Bus;
+
 void TIM2_IRQHandler() {
 	sys_timer_irq_handler();
 }
 
-const CFG_REG_SPI_TypeDef spi_tic12400_cfg = SPI_CFG(
-		SPI_CPHA_SECOND,
-		SPI_CPOL_IDLE_LOW,
-		SPI_MSTR_MASTER,
-		SPI_BR_FPCLK_32,
-		SPI_LSBFIRST_MSB_FIRST,
-		SPI_SSI_NSEL,
-		SPI_SSM_ENA,
-		SPI_RXONLY_DIS,
-		SPI_DFF_8,
-		SPI_CRCEN_DIS,
-		SPI_BIDIOE_RX,
-		SPI_BIDIMODE_UNIDIR,
-		SPI_RXDMAEN_DIS,
-		SPI_TXDMAEN_DIS,
-		SPI_SSOE_DIS,
-		SPI_FRF_MOTOROLA,
-		SPI_ERRIE_DIS,
-		GPO_CS_DI_App,
-		1,
-		1,
-		3);
+void SPI2_IRQHandler() {
+	SPI_BUS_IRQHandler(&SPI_AIO_Bus);
+}
 
-const CFG_REG_SPI_TypeDef spi_ncv7608_cfg = SPI_CFG(
-		SPI_CPHA_SECOND,
-		SPI_CPOL_IDLE_LOW,
-		SPI_MSTR_MASTER,
-		SPI_BR_FPCLK_128,
-		SPI_LSBFIRST_LSB_FIRST,
-		SPI_SSI_NSEL,
-		SPI_SSM_ENA,
-		SPI_RXONLY_DIS,
-		SPI_DFF_8,
-		SPI_CRCEN_DIS,
-		SPI_BIDIOE_RX,
-		SPI_BIDIMODE_UNIDIR,
-		SPI_RXDMAEN_DIS,
-		SPI_TXDMAEN_DIS,
-		SPI_SSOE_DIS,
-		SPI_FRF_MOTOROLA,
-		SPI_ERRIE_DIS,
-		GPO_CS_DO_App,
-		1,
-		1,
-		3);
-
-/*
-const CFG_REG_SPI_TypeDef spi_spi5_cfg = SPI_CFG(
-		SPI_CPHA_SECOND,
-		SPI_CPOL_IDLE_LOW,
-		SPI_MSTR_MASTER,
-		SPI_BR_FPCLK_64,
-		SPI_LSBFIRST_MSB_FIRST,
-		SPI_SSI_NSEL,
-		SPI_SSM_ENA,
-		SPI_RXONLY_DIS,
-		SPI_DFF_8,
-		SPI_CRCEN_DIS,
-		SPI_BIDIOE_RX,
-		SPI_BIDIMODE_UNIDIR,
-		SPI_RXDMAEN_DIS,
-		SPI_TXDMAEN_DIS,
-		SPI_SSOE_DIS,
-		SPI_FRF_MOTOROLA,
-		SPI_ERRIE_DIS,
-		GPO_CS_SPI5_App,
-		1,
-		1,
-		1);
-*/
-
-SPI_BUS_TypeDef SPI_DIO_Bus;
+void SPI4_IRQHandler() {
+	SPI_BUS_IRQHandler(&SPI_DIO_Bus);
+}
 
 SPI_BUS_DATA_TypeDef tic124_spi_bus_data_control_array[TIC12400_FRAME_COUNT];
 
@@ -120,10 +59,6 @@ void tic124_start_normal_operation(void) {
 	tic124_tx_frame[TIC12400_CONFIG].bit.par = calc_parity(tic124_tx_frame[TIC12400_CONFIG].all, 32, PARITY_ODD);
 	//старт приема/передачи
 	spi_bus_transfer(&SPI_DIO_Bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 1, SPI_BYTE_ORDER_REVERSE);
-}
-
-void SPI4_IRQHandler() {
-	SPI_BUS_IRQHandler(&SPI_DIO_Bus);
 }
 
 uint8_t tic12400_digital_input[10];
@@ -164,19 +99,51 @@ void tic12400_stat_read() {
 	tic12400_analog_input[5] = ana_stat.bit.in1_ana;	//NTC2
 }
 
-NCV7608_INPUT_DATA_REG ncv7608_tx;
-NCV7608_OUTPUT_DATA_REG ncv7608_rx;
+//DO
+NCV7608_TX_FRAME_REG ncv7608_tx;
+NCV7608_RX_FRAME_REG ncv7608_rx;
 SPI_BUS_DATA_TypeDef ncv7608_spi_bus_data_control_array = {
 		.tx = (uint8_t*)&ncv7608_tx.all,
 		.rx = (uint8_t*)&ncv7608_rx.all,
 		.count = 2
 };
 
+
+//AO
+DAC7562_TX_FRAME_REG DAC7562_VREF_ENABLE = {
+		.cmd_addr.bit.cmd = 0x7,
+		.cmd_addr.bit.addr = 0x0,
+		.data.all = 0x1
+};
+
+DAC7562_TX_FRAME_REG DAC7562_GAIN_1_ALL = {
+		.cmd_addr.bit.cmd = 0x0,
+		.cmd_addr.bit.addr = 0x2,
+		.data.all = 0x3
+};
+
+DAC7562_TX_FRAME_REG DAC7562_WRITE_AND_UPDATE_DAC_A = {
+		.cmd_addr.bit.cmd = 3,
+		.cmd_addr.bit.addr = 0,
+		.data.all = 32768
+};
+
+DAC7562_TX_FRAME_REG DAC7562_WRITE_AND_UPDATE_DAC_B = {
+		.cmd_addr.bit.cmd = 3,
+		.cmd_addr.bit.addr = 1,
+		.data.all = 32768
+};
+
+SPI_BUS_DATA_TypeDef dac7562_spi_bus_data_control_array[4];
+
 int main(void) {
 	rcc_init();
 	nvic_init();
 	system_timer_init();
 	gpio_init();
+
+	spi_bus_init(&SPI_AIO_Bus, SPI2);
+	spi_bus_configure(&SPI_AIO_Bus, &spi_dac7562_cfg);
 
 	spi_bus_init(&SPI_DIO_Bus, SPI4);
 	spi_bus_configure(&SPI_DIO_Bus, &spi_ncv7608_cfg);
@@ -203,6 +170,38 @@ int main(void) {
 
 	tic12400_stat_read();
 	*/
+
+	gpio_output_bit_setup(&GPO_nCLR_App, GPIO_STATE_OFF);
+	sys_timer_delay(0, 100);
+	gpio_output_bit_setup(&GPO_nCLR_App, GPIO_STATE_ON);
+	sys_timer_delay(0, 100);
+
+	dac7562_spi_bus_data_control_array[0].tx = (uint8_t*)&DAC7562_VREF_ENABLE;
+	dac7562_spi_bus_data_control_array[0].rx = NULL;
+	dac7562_spi_bus_data_control_array[0].count = 3;
+
+	dac7562_spi_bus_data_control_array[1].tx = (uint8_t*)&DAC7562_GAIN_1_ALL;
+	dac7562_spi_bus_data_control_array[1].rx = NULL;
+	dac7562_spi_bus_data_control_array[1].count = 3;
+
+	dac7562_spi_bus_data_control_array[2].tx = (uint8_t*)&DAC7562_WRITE_AND_UPDATE_DAC_A;
+	dac7562_spi_bus_data_control_array[2].rx = NULL;
+	dac7562_spi_bus_data_control_array[2].count = 3;
+
+	dac7562_spi_bus_data_control_array[3].tx = (uint8_t*)&DAC7562_WRITE_AND_UPDATE_DAC_B;
+	dac7562_spi_bus_data_control_array[3].rx = NULL;
+	dac7562_spi_bus_data_control_array[3].count = 3;
+
+	spi_bus_transfer(&SPI_AIO_Bus, dac7562_spi_bus_data_control_array, 4, SPI_BYTE_ORDER_REVERSE);
+
+	while(SPI_AIO_Bus.done == false);
+
+	sys_timer_delay(0, 100);
+	gpio_output_bit_setup(&GPO_nLDAC_App, GPIO_STATE_OFF);
+	sys_timer_delay(0, 100);
+	gpio_output_bit_setup(&GPO_nLDAC_App, GPIO_STATE_ON);
+
+	uint16_t dac_data = 0;
 
 	while(1) {
 		ncv7608_tx.bit.driver_2_ena = ncv7608_tx.bit.driver_1_ena;
