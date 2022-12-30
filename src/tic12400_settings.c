@@ -331,6 +331,76 @@ void tic124_tx_frame_fill(void) {
 }
 
 
+SPI_BUS_DATA_TypeDef tic124_spi_bus_data_control_array[TIC12400_FRAME_COUNT];
+
+void tic124_spi_bus_data_control_array_fill(void) {
+	for(int i = 0; i < TIC12400_FRAME_COUNT; i++) {
+		tic124_spi_bus_data_control_array[i].tx = (uint8_t*)&tic124_tx_frame[i].all;
+		tic124_spi_bus_data_control_array[i].rx = (uint8_t*)&tic124_rx_frame[i].all;
+		tic124_spi_bus_data_control_array[i].count = 4;
+	}
+}
+
+void tic12400_configure(SPI_BUS_TypeDef* spi_bus) {
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE);
+}
+
+void tic124_start_normal_operation(SPI_BUS_TypeDef* spi_bus) {
+	while(spi_bus->done == false);
+
+	TIC12400_CONFIG_REG config;
+	//чтение настроек
+	config.all = tic124_settings_const.CONFIG.all;
+	//изменение настроек
+	config.bit.poll_en = 0x1; /*Polling enabled*/ //Нужно ли?
+	config.bit.trigger = 0x1; /*Start TIC12400-Q1 to normal operation*/
+
+	//формирование фрейма
+	tic124_tx_frame[TIC12400_CONFIG].bit.rw = 1;
+	tic124_tx_frame[TIC12400_CONFIG].bit.addr = TIC12400_CONFIG;
+	tic124_tx_frame[TIC12400_CONFIG].bit.data = config.all;
+	//сброс четности
+	tic124_tx_frame[TIC12400_CONFIG].bit.par = 0;
+	//расчет четности
+	tic124_tx_frame[TIC12400_CONFIG].bit.par = calc_parity(tic124_tx_frame[TIC12400_CONFIG].all, 32, PARITY_ODD);
+	//старт приема/передачи
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 1, SPI_BYTE_ORDER_REVERSE);
+}
+
+void tic12400_stat_read(SPI_BUS_TypeDef* spi_bus, uint8_t* digital_input_10, uint16_t* analog_input_6) {
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE);
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT1], 3, SPI_BYTE_ORDER_REVERSE);
+	while(spi_bus->done == false);
+
+	TIC12400_IN_STAT_COMP_REG in_stat_comp;
+
+	in_stat_comp.all = tic124_rx_frame[TIC12400_IN_STAT_COMP].bit.data;
+
+	digital_input_10[0] = in_stat_comp.bit.inc_8;	//DI1
+	digital_input_10[1] = in_stat_comp.bit.inc_9;	//DI2
+	digital_input_10[2] = in_stat_comp.bit.inc_10;	//DI3
+	digital_input_10[3] = in_stat_comp.bit.inc_11;	//DI4
+	digital_input_10[4] = in_stat_comp.bit.inc_12;	//DI5
+	digital_input_10[5] = in_stat_comp.bit.inc_13;	//DI6
+	digital_input_10[6] = in_stat_comp.bit.inc_14;	//DI7
+	digital_input_10[7] = in_stat_comp.bit.inc_15;	//DI8
+	digital_input_10[8] = in_stat_comp.bit.inc_19;	//DI9
+	digital_input_10[9] = in_stat_comp.bit.inc_20;	//DI10
+
+	TIC12400_ANA_STAT_REG ana_stat;
+
+	ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT1].bit.data;
+	analog_input_6[0] = ana_stat.bit.in0_ana;	//NTC5
+	analog_input_6[1] = ana_stat.bit.in1_ana;	//NTC6
+
+	ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT2].bit.data;
+	analog_input_6[2] = ana_stat.bit.in0_ana;	//NTC4
+	analog_input_6[3] = ana_stat.bit.in1_ana;	//NTC1
+
+	ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT3].bit.data;
+	analog_input_6[4] = ana_stat.bit.in0_ana;	//NTC3
+	analog_input_6[5] = ana_stat.bit.in1_ana;	//NTC2
+}
 
 
 
