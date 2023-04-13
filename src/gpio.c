@@ -37,6 +37,8 @@ void gpio_pull_updown_bit_setup(GPIO_TypeDef *gpio, gpio_pin_n_t pin_n,
 gpio_pin_state_t gpio_input_data_bit_read(GPIO_TypeDef *gpio,
 		gpio_pin_n_t pin_n);
 
+gpio_pin_state_t gpio_input_bit_read(const gpio_pin_t *pin);
+
 gpio_pin_state_t gpio_output_data_bit_read(GPIO_TypeDef *gpio,
 		gpio_pin_n_t pin_n);
 
@@ -363,6 +365,10 @@ gpio_pin_state_t gpio_input_data_bit_read(GPIO_TypeDef *gpio,
 	default:
 		return GPIO_STATE_OFF;
 	}
+}
+
+gpio_pin_state_t gpio_input_bit_read(const gpio_pin_t *pin) {
+	return gpio_input_data_bit_read(pin->gpio, pin->pin_n);
 }
 
 gpio_pin_state_t gpio_output_data_bit_read(GPIO_TypeDef *gpio,

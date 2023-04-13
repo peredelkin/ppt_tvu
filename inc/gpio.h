@@ -408,6 +408,8 @@ extern void gpio_pins_cfg_setup(const gpio_pin_cfg_t *pin, size_t count);
 
 extern void gpio_port_cfg_setup(gpio_port_cfg_t *port);
 
+extern gpio_pin_state_t gpio_input_bit_read(const gpio_pin_t *pin);
+
 extern void gpio_output_bit_setup(const gpio_pin_t *pin, gpio_pin_state_t pin_state);
 
 #endif /* INC_GPIO_H_ */

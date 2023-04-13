@@ -141,7 +141,7 @@ const gpio_pin_t GPI_Board_ID1 = GPIO_PIN(GPIOI, GPIO_PIN_5); /*174, PI5, GPIO_I
 const gpio_pin_t GPI_Board_ID2 = GPIO_PIN(GPIOI, GPIO_PIN_6); /*175, PI6, GPIO_Input, Board_ID2_App*/
 const gpio_pin_t GPI_Board_ID3 = GPIO_PIN(GPIOI, GPIO_PIN_7); /*176, PI7, GPIO_Input, Board_ID3_App*/
 
-//TODO: проверить состояния пинов при инициализации по схеме
+
 const gpio_pin_cfg_t gpio_init_array[GPIO_INIT_PINS_COUNT] = {
 GPIO_PIN_CFG(GPIOE, GPIO_PIN_2, GPIO_MODE_AF, GPIO_OTYPE_PP, GPIO_OSPEED_VERY_HIGH, GPIO_PUPD_UP, GPIO_AF_5, GPIO_STATE_OFF),		/*1, PE2,		SPI4_SCK,		OFF,		SCLK_DI_App*/
 //GPIO_PIN_CFG(GPIOE, GPIO_PIN_3, GPIO_MODE_OUT, GPIO_OTYPE_PP, GPIO_OSPEED_VERY_HIGH, GPIO_PUPD_NONE, GPIO_AF_0),					/*2, PE3,		GPIO_Output,	ON,		Chr_Batt_App*/
