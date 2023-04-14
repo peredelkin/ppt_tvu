@@ -19,6 +19,8 @@ void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi) {
 	bus->nss.trailing_delay_usec = 0;
 	bus->nss.next_frame_delay_usec = 0;
 
+	bus->callback = NULL;
+
 	bus->done = true;
 
 	bus->frame.data = NULL;
@@ -67,7 +69,7 @@ void spi_bus_transfer(
 		SPI_BUS_TypeDef* bus,
 		SPI_BUS_DATA_TypeDef* frame_control_array_pointer,
 		size_t frame_control_array_amount,
-		spi_byte_order_t frame_byte_order) {
+		spi_byte_order_t frame_byte_order, spi_bus_callback callback) {
 
 	while(bus->done == false);
 	bus->done = false;
@@ -76,6 +78,8 @@ void spi_bus_transfer(
 	bus->frame_service.count = frame_control_array_amount;
 	bus->frame_service.counter = 0;
 	bus->frame.data_service.byte_order = frame_byte_order;
+
+	bus->callback = callback;
 
 	spi_bus_transfer_start(bus);
 }
@@ -209,8 +213,9 @@ void SPI_BUS_IRQHandler(SPI_BUS_TypeDef *bus) {
 		spi_bus_transfer_stop(bus);
 		bus->frame_service.counter++;
 		if(bus->frame_service.counter >= bus->frame_service.count) {
+			if(bus->callback) bus->callback();
+			bus->callback = NULL;
 			bus->done = true;
-			//TODO: колбек для перехода к следующему массиву фреймов
 		} else {
 			spi_bus_transfer_start(bus);
 		}

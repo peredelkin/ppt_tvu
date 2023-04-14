@@ -58,11 +58,11 @@ void SPI4_IRQHandler() {
 }
 
 void tic12400_int_stat_read(SPI_BUS_TypeDef* spi_bus) {
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_INT_STAT], 1, SPI_BYTE_ORDER_REVERSE);
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_INT_STAT], 1, SPI_BYTE_ORDER_REVERSE, NULL);
 }
 
 void tic12400_configure(SPI_BUS_TypeDef* spi_bus) {
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE);
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE, NULL);
 }
 
 void tic124_start_normal_operation(SPI_BUS_TypeDef* spi_bus) {
@@ -84,42 +84,44 @@ void tic124_start_normal_operation(SPI_BUS_TypeDef* spi_bus) {
 	//расчет четности
 	tic124_tx_frame[TIC12400_CONFIG].bit.par = calc_parity(tic124_tx_frame[TIC12400_CONFIG].all, 32, PARITY_ODD);
 	//старт приема/передачи
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 1, SPI_BYTE_ORDER_REVERSE);
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 1, SPI_BYTE_ORDER_REVERSE, NULL);
 }
 
-void tic12400_stat_read(SPI_BUS_TypeDef* spi_bus, uint8_t* digital_input_10, uint16_t* analog_input_6) {
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE);
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT1], 3, SPI_BYTE_ORDER_REVERSE);
-	while(spi_bus->done == false);
+uint8_t tic12400_di[48];
+uint16_t tic12400_ai[26];
 
+void tic12400_in_stat_comp_handler() {
 	TIC12400_IN_STAT_COMP_REG in_stat_comp;
 
 	in_stat_comp.all = tic124_rx_frame[TIC12400_IN_STAT_COMP].bit.data;
 
-	digital_input_10[0] = in_stat_comp.bit.inc_8;	//DI1
-	digital_input_10[1] = in_stat_comp.bit.inc_9;	//DI2
-	digital_input_10[2] = in_stat_comp.bit.inc_10;	//DI3
-	digital_input_10[3] = in_stat_comp.bit.inc_11;	//DI4
-	digital_input_10[4] = in_stat_comp.bit.inc_12;	//DI5
-	digital_input_10[5] = in_stat_comp.bit.inc_13;	//DI6
-	digital_input_10[6] = in_stat_comp.bit.inc_14;	//DI7
-	digital_input_10[7] = in_stat_comp.bit.inc_15;	//DI8
-	digital_input_10[8] = in_stat_comp.bit.inc_19;	//DI9
-	digital_input_10[9] = in_stat_comp.bit.inc_20;	//DI10
+	for(int n=0; n < 24; n++) {
+		((uint16_t*)tic12400_di)[n] = (in_stat_comp.all & (1 << n)) ? 1 : 256;
+	}
+}
 
+void tic12400_in_stat_comp_read(SPI_BUS_TypeDef* spi_bus) {
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE,
+			&tic12400_in_stat_comp_handler);
+}
+
+void tic12400_ana_stat_handler() {
 	TIC12400_ANA_STAT_REG ana_stat;
 
-	ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT1].bit.data;
-	analog_input_6[0] = ana_stat.bit.in0_ana;	//NTC5
-	analog_input_6[1] = ana_stat.bit.in1_ana;	//NTC6
+	for(int n=0; n < 13; n++) {
+		ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT0 + n].bit.data;
+		((uint32_t*)tic12400_ai)[n] = (ana_stat.bit.in1_ana << 16) | ana_stat.bit.in0_ana;
+	}
+}
 
-	ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT2].bit.data;
-	analog_input_6[2] = ana_stat.bit.in0_ana;	//NTC4
-	analog_input_6[3] = ana_stat.bit.in1_ana;	//NTC1
+void tic12400_ana_stat_read(SPI_BUS_TypeDef* spi_bus) {
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT0], 13, SPI_BYTE_ORDER_REVERSE,
+			&tic12400_ana_stat_handler);
+}
 
-	ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT3].bit.data;
-	analog_input_6[4] = ana_stat.bit.in0_ana;	//NTC3
-	analog_input_6[5] = ana_stat.bit.in1_ana;	//NTC2
+void tic12400_stat_read(SPI_BUS_TypeDef* spi_bus) {
+	tic12400_in_stat_comp_read(spi_bus);
+	tic12400_ana_stat_read(spi_bus);
 }
 
 int main(void) {
@@ -143,12 +145,15 @@ int main(void) {
 	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
 
 	while (1) {
-		sys_timer_delay(1, 0);
+		sys_timer_delay(0, 50000);
 		if (gpio_input_bit_read(&GPI_Int_DI_App)) {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
+			tic12400_stat_read(&SPI4_Bus);
 		} else {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
+			tic12400_configure(&SPI4_Bus);
 			tic12400_int_stat_read(&SPI4_Bus);
+			tic124_start_normal_operation(&SPI4_Bus);
 		}
 	}
 	return 0;

@@ -92,6 +92,7 @@ void sys_timer_reset(void)
     system_timer.timer->CNT = 0;
 }
 
+__attribute__((noinline))
 void sys_timer_value(struct timeval* tv)
 {
     if(tv == NULL) return;
@@ -138,7 +139,10 @@ void sys_timer_delay(uint32_t sec, uint32_t usec) {
     sys_timer_value(&tv_cur);
     timeradd(&tv_cur, &tv_dt, &tv_end);
 
-    while(timercmp(&tv_cur, &tv_end, <)){
+    for(;;){
+		if(timercmp(&tv_cur, &tv_end, >=)){
+			break;
+		}
     	sys_timer_value(&tv_cur);
     }
 }
