@@ -438,7 +438,7 @@ typedef struct {
 } SPI_BUS_FRAME_TypeDef;
 
 //однократный обратный вызов по окончанию передачи всех ообщений
-typedef void (*spi_bus_callback) ();
+typedef void (*spi_bus_callback) (void*);
 
 //структура SPI BUS
 typedef struct _SPI_BUS_TypeDef {
@@ -446,6 +446,7 @@ typedef struct _SPI_BUS_TypeDef {
 	SPI_BUS_NSS_TypeDef nss;
 	SPI_BUS_FRAME_TypeDef frame;
 	SPI_BUS_FRAME_SERVICE_TypeDef frame_service;
+	void* callback_argument;
 	spi_bus_callback callback;
 	volatile bool done;
 } SPI_BUS_TypeDef;
@@ -464,6 +465,7 @@ extern void spi_bus_transfer(
 		SPI_BUS_DATA_TypeDef* frame_control_array_pointer,
 		size_t frame_control_array_amount,
 		spi_byte_order_t frame_byte_order,
-		spi_bus_callback callback);
+		spi_bus_callback callback,
+		void* callback_argument);
 
 #endif /* INC_SPI_H_ */

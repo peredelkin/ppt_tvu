@@ -58,11 +58,11 @@ void SPI4_IRQHandler() {
 }
 
 void tic12400_int_stat_read(SPI_BUS_TypeDef* spi_bus) {
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_INT_STAT], 1, SPI_BYTE_ORDER_REVERSE, NULL);
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_INT_STAT], 1, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
 }
 
 void tic12400_configure(SPI_BUS_TypeDef* spi_bus) {
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE, NULL);
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
 }
 
 void tic124_start_normal_operation(SPI_BUS_TypeDef* spi_bus) {
@@ -84,44 +84,44 @@ void tic124_start_normal_operation(SPI_BUS_TypeDef* spi_bus) {
 	//расчет четности
 	tic124_tx_frame[TIC12400_CONFIG].bit.par = calc_parity(tic124_tx_frame[TIC12400_CONFIG].all, 32, PARITY_ODD);
 	//старт приема/передачи
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 1, SPI_BYTE_ORDER_REVERSE, NULL);
+	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 1, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
 }
 
 uint8_t tic12400_di[48];
 uint16_t tic12400_ai[26];
 
-void tic12400_in_stat_comp_handler() {
+void tic12400_in_stat_comp_handler(void* rx_frame) {
 	TIC12400_IN_STAT_COMP_REG in_stat_comp;
 
-	in_stat_comp.all = tic124_rx_frame[TIC12400_IN_STAT_COMP].bit.data;
+	in_stat_comp.all = ((TIC12400_RX_FRAME*)rx_frame)[TIC12400_IN_STAT_COMP].bit.data;
 
 	for(int n=0; n < 24; n++) {
 		((uint16_t*)tic12400_di)[n] = (in_stat_comp.all & (1 << n)) ? 1 : 256;
 	}
 }
 
-void tic12400_in_stat_comp_read(SPI_BUS_TypeDef* spi_bus) {
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE,
-			&tic12400_in_stat_comp_handler);
+void tic12400_in_stat_comp_read(SPI_BUS_TypeDef* spi_bus, SPI_BUS_DATA_TypeDef* spi_bus_data_control_array) {
+	spi_bus_transfer(spi_bus, &spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE,
+			&tic12400_in_stat_comp_handler, (void*)tic124_rx_frame);
 }
 
-void tic12400_ana_stat_handler() {
+void tic12400_ana_stat_handler(void* rx_frame) {
 	TIC12400_ANA_STAT_REG ana_stat;
 
 	for(int n=0; n < 13; n++) {
-		ana_stat.all = tic124_rx_frame[TIC12400_ANA_STAT0 + n].bit.data;
+		ana_stat.all = ((TIC12400_RX_FRAME*)rx_frame)[TIC12400_ANA_STAT0 + n].bit.data;
 		((uint32_t*)tic12400_ai)[n] = (ana_stat.bit.in1_ana << 16) | ana_stat.bit.in0_ana;
 	}
 }
 
-void tic12400_ana_stat_read(SPI_BUS_TypeDef* spi_bus) {
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_ANA_STAT0], 13, SPI_BYTE_ORDER_REVERSE,
-			&tic12400_ana_stat_handler);
+void tic12400_ana_stat_read(SPI_BUS_TypeDef* spi_bus, SPI_BUS_DATA_TypeDef* spi_bus_data_control_array) {
+	spi_bus_transfer(spi_bus, &spi_bus_data_control_array[TIC12400_ANA_STAT0], 13, SPI_BYTE_ORDER_REVERSE,
+			&tic12400_ana_stat_handler, (void*)tic124_rx_frame);
 }
 
 void tic12400_stat_read(SPI_BUS_TypeDef* spi_bus) {
-	tic12400_in_stat_comp_read(spi_bus);
-	tic12400_ana_stat_read(spi_bus);
+	tic12400_in_stat_comp_read(spi_bus, tic124_spi_bus_data_control_array);
+	tic12400_ana_stat_read(spi_bus, tic124_spi_bus_data_control_array);
 }
 
 int main(void) {
