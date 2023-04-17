@@ -884,9 +884,10 @@ typedef struct {
 	TIC12400_RX_FRAME rx_frame[TIC12400_FRAME_COUNT];
 } tic12400_t;
 
-extern void tic124_tx_frame_fill(TIC12400_TX_FRAME* tx_frame, const TIC12400_SETTINGS_TypeDef* settings);
+extern void tic124_spi_bus_configure(tic12400_t* tic);
 
-extern void tic124_spi_bus_data_control_array_fill(SPI_BUS_DATA_TypeDef* spi_bus_data_control_array,
-		TIC12400_TX_FRAME* tx_frame, TIC12400_RX_FRAME* rx_frame);
+extern void tic124_tx_frame_fill(tic12400_t* tic);
+
+extern void tic124_spi_control_fill(tic12400_t* tic);
 
 #endif /* INC_TIC12400_H_ */
