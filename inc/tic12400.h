@@ -13,11 +13,14 @@
 #include <stdbool.h>
 #include <assert.h>
 #include "defs.h"
+#include "parity.h"
+#include "spi.h"
 
 #define TIC12400_RESERVED_SIZE 1
 #define TIC12400_DATA_SIZE 3
 #define TIC12400_FRAME_SIZE 4
 #define TIC12400_SETTINGS_SIZE (TIC12400_DATA_SIZE*25)
+#define TIC12400_FRAME_COUNT 51
 
 // tic12400_
 // TIC12400_
@@ -871,5 +874,9 @@ typedef union PACKED _TIC12400_RX_FRAME {
 	struct TIC12400_RX bit;
 } TIC12400_RX_FRAME;
 
+extern void tic124_tx_frame_fill(TIC12400_TX_FRAME* tx_frame, const TIC12400_SETTINGS_TypeDef* settings);
+
+extern void tic124_spi_bus_data_control_array_fill(SPI_BUS_DATA_TypeDef* spi_bus_data_control_array,
+		TIC12400_TX_FRAME* tx_frame, TIC12400_RX_FRAME* rx_frame);
 
 #endif /* INC_TIC12400_H_ */

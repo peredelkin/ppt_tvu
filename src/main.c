@@ -134,8 +134,8 @@ int main(void) {
 	spi_bus_init(&SPI4_Bus, SPI4);
 
 	spi_bus_configure(&SPI4_Bus, &spi_tic12400_cfg);
-	tic124_tx_frame_fill();
-	tic124_spi_bus_data_control_array_fill();
+	tic124_tx_frame_fill(tic124_tx_frame, &tic124_settings_const);
+	tic124_spi_bus_data_control_array_fill(tic124_spi_bus_data_control_array, tic124_tx_frame, tic124_rx_frame);
 
 	//task_timer_init();
 
