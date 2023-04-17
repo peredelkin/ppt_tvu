@@ -7,6 +7,16 @@
 
 #include "tic12400.h"
 //TODO: расставить функции в порядке вызова для функций инициализации масссивов и расставить в порядке регистров tic12400
+//TODO: добавить проверку четности
+
+void tic12400_init(tic12400_t* tic,
+		SPI_BUS_TypeDef* spi_bus,
+		const CFG_REG_SPI_TypeDef* spi_cfg,
+		const TIC12400_SETTINGS_TypeDef* tic_settings) {
+	tic->spi_bus = spi_bus;
+	tic->spi_cfg = spi_cfg;
+	tic->tic_settings = tic_settings;
+}
 
 void tic124_spi_bus_configure(tic12400_t* tic) {
 	spi_bus_configure(tic->spi_bus, tic->spi_cfg);

@@ -74,9 +74,7 @@ int main(void) {
 	spi_bus_init(&SPI2_Bus, SPI2);
 	spi_bus_init(&SPI4_Bus, SPI4);
 
-	tic12400_Q1.spi_bus = &SPI4_Bus;
-	tic12400_Q1.spi_cfg = &spi_tic12400_cfg;
-	tic12400_Q1.tic_settings = &tic124_settings_const;
+	tic12400_init(&tic12400_Q1, &SPI4_Bus, &spi_tic12400_cfg, &tic124_settings_const);
 	tic12400_Q1.in_stat_comp = &tic12400_in_stat_comp;
 	tic12400_Q1.ana_stat = tic12400_ana_stat;
 

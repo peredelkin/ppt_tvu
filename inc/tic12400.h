@@ -886,6 +886,11 @@ typedef struct {
 	TIC12400_ANA_STAT_REG* ana_stat;
 } tic12400_t;
 
+extern void tic12400_init(tic12400_t* tic,
+		SPI_BUS_TypeDef* spi_bus,
+		const CFG_REG_SPI_TypeDef* spi_cfg,
+		const TIC12400_SETTINGS_TypeDef* tic_settings);
+
 extern void tic124_spi_bus_configure(tic12400_t* tic);
 
 extern void tic124_tx_frame_fill(tic12400_t* tic);
