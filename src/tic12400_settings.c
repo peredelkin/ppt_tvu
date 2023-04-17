@@ -7,9 +7,6 @@
 
 #include "tic12400_settings.h"
 
-TIC12400_TX_FRAME tic124_tx_frame[TIC12400_FRAME_COUNT];
-TIC12400_RX_FRAME tic124_rx_frame[TIC12400_FRAME_COUNT];
-
 const TIC12400_SETTINGS_TypeDef tic124_settings_const = {
 		.CONFIG.bit.reset = 0x0,			/*No reset*/
 		.CONFIG.bit.poll_time = 0x2,		/*8ms(how frequently each input is sampled)*/
@@ -260,8 +257,6 @@ const TIC12400_SETTINGS_TypeDef tic124_settings_const = {
 		.MODE.bit.m_in22 = 0x0,				/*Comparator mode for ResDI_8*/
 		.MODE.bit.m_in23 = 0x0				/*Comparator mode for ResDI_6*/
 };
-
-SPI_BUS_DATA_TypeDef tic124_spi_bus_data_control_array[TIC12400_FRAME_COUNT];
 
 
 

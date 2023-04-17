@@ -13,14 +13,14 @@ gpio_pin_t bgr_led[3] = {
 		GPIO_PIN(GPIOH, GPIO_PIN_12)
 };
 
+tic12400_t tic12400_Q1;
+
 //dac7562
 SPI_BUS_TypeDef SPI2_Bus;
 
 //tic12400
 //ncv7608
 SPI_BUS_TypeDef SPI4_Bus;
-
-void tic12400_int_stat_read(SPI_BUS_TypeDef* spi_bus);
 
 void task_timer_irq_handler() {
 	if (TIM5->SR & TIM_SR_UIF) {
@@ -29,7 +29,7 @@ void task_timer_irq_handler() {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
 		} else {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
-			tic12400_int_stat_read(&SPI4_Bus);
+
 		}
 	}
 }
@@ -57,34 +57,34 @@ void SPI4_IRQHandler() {
 	SPI_BUS_IRQHandler(&SPI4_Bus);
 }
 
-void tic12400_int_stat_read(SPI_BUS_TypeDef* spi_bus) {
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_INT_STAT], 1, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
+void tic12400_int_stat_read(tic12400_t* tic) {
+	spi_bus_transfer(tic->spi_bus, &tic->spi_control[TIC12400_INT_STAT], 1, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
 }
 
-void tic12400_configure(SPI_BUS_TypeDef* spi_bus) {
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
+void tic12400_configure(tic12400_t* tic) {
+	spi_bus_transfer(tic->spi_bus, &tic->spi_control[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
 }
 
-void tic124_start_normal_operation(SPI_BUS_TypeDef* spi_bus) {
-	while(spi_bus->done == false);
+void tic124_start_normal_operation(tic12400_t* tic) {
+	spi_bus_wait_done(tic->spi_bus);
 
 	TIC12400_CONFIG_REG config;
 	//чтение настроек
-	config.all = tic124_settings_const.CONFIG.all;
+	config.all = tic->tic_settings->CONFIG.all;
 	//изменение настроек
 	config.bit.poll_en = 0x1; /*Polling enabled*/ //Нужно ли?
 	config.bit.trigger = 0x1; /*Start TIC12400-Q1 to normal operation*/
 
 	//формирование фрейма
-	tic124_tx_frame[TIC12400_CONFIG].bit.rw = 1;
-	tic124_tx_frame[TIC12400_CONFIG].bit.addr = TIC12400_CONFIG;
-	tic124_tx_frame[TIC12400_CONFIG].bit.data = config.all;
+	tic->tx_frame[TIC12400_CONFIG].bit.rw = 1;
+	tic->tx_frame[TIC12400_CONFIG].bit.addr = TIC12400_CONFIG;
+	tic->tx_frame[TIC12400_CONFIG].bit.data = config.all;
 	//сброс четности
-	tic124_tx_frame[TIC12400_CONFIG].bit.par = 0;
+	tic->tx_frame[TIC12400_CONFIG].bit.par = 0;
 	//расчет четности
-	tic124_tx_frame[TIC12400_CONFIG].bit.par = calc_parity(tic124_tx_frame[TIC12400_CONFIG].all, 32, PARITY_ODD);
+	tic->tx_frame[TIC12400_CONFIG].bit.par = calc_parity(tic->tx_frame[TIC12400_CONFIG].all, 32, PARITY_ODD);
 	//старт приема/передачи
-	spi_bus_transfer(spi_bus, &tic124_spi_bus_data_control_array[TIC12400_CONFIG], 1, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
+	spi_bus_transfer(tic->spi_bus, &tic->spi_control[TIC12400_CONFIG], 1, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
 }
 
 uint8_t tic12400_di[48];
@@ -102,7 +102,7 @@ void tic12400_in_stat_comp_handler(void* rx_frame) {
 
 void tic12400_in_stat_comp_read(SPI_BUS_TypeDef* spi_bus, SPI_BUS_DATA_TypeDef* spi_bus_data_control_array) {
 	spi_bus_transfer(spi_bus, &spi_bus_data_control_array[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE,
-			&tic12400_in_stat_comp_handler, (void*)tic124_rx_frame);
+			&tic12400_in_stat_comp_handler, (void*)tic12400_Q1.rx_frame);
 }
 
 void tic12400_ana_stat_handler(void* rx_frame) {
@@ -116,12 +116,12 @@ void tic12400_ana_stat_handler(void* rx_frame) {
 
 void tic12400_ana_stat_read(SPI_BUS_TypeDef* spi_bus, SPI_BUS_DATA_TypeDef* spi_bus_data_control_array) {
 	spi_bus_transfer(spi_bus, &spi_bus_data_control_array[TIC12400_ANA_STAT0], 13, SPI_BYTE_ORDER_REVERSE,
-			&tic12400_ana_stat_handler, (void*)tic124_rx_frame);
+			&tic12400_ana_stat_handler, (void*)tic12400_Q1.rx_frame);
 }
 
-void tic12400_stat_read(SPI_BUS_TypeDef* spi_bus) {
-	tic12400_in_stat_comp_read(spi_bus, tic124_spi_bus_data_control_array);
-	tic12400_ana_stat_read(spi_bus, tic124_spi_bus_data_control_array);
+void tic12400_stat_read(tic12400_t* tic) {
+	tic12400_in_stat_comp_read(tic->spi_bus, tic->spi_control);
+	tic12400_ana_stat_read(tic->spi_bus, tic->spi_control);
 }
 
 int main(void) {
@@ -133,9 +133,13 @@ int main(void) {
 	spi_bus_init(&SPI2_Bus, SPI2);
 	spi_bus_init(&SPI4_Bus, SPI4);
 
-	spi_bus_configure(&SPI4_Bus, &spi_tic12400_cfg);
-	tic124_tx_frame_fill(tic124_tx_frame, &tic124_settings_const);
-	tic124_spi_bus_data_control_array_fill(tic124_spi_bus_data_control_array, tic124_tx_frame, tic124_rx_frame);
+	tic12400_Q1.spi_bus = &SPI4_Bus;
+	tic12400_Q1.spi_cfg = &spi_tic12400_cfg;
+	tic12400_Q1.tic_settings = &tic124_settings_const;
+
+	spi_bus_configure(tic12400_Q1.spi_bus, tic12400_Q1.spi_cfg);
+	tic124_tx_frame_fill(tic12400_Q1.tx_frame, &tic124_settings_const);
+	tic124_spi_bus_data_control_array_fill(tic12400_Q1.spi_control, tic12400_Q1.tx_frame, tic12400_Q1.rx_frame);
 
 	//task_timer_init();
 
@@ -148,12 +152,12 @@ int main(void) {
 		sys_timer_delay(0, 50000);
 		if (gpio_input_bit_read(&GPI_Int_DI_App)) {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
-			tic12400_stat_read(&SPI4_Bus);
+			tic12400_stat_read(&tic12400_Q1);
 		} else {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
-			tic12400_configure(&SPI4_Bus);
-			tic12400_int_stat_read(&SPI4_Bus);
-			tic124_start_normal_operation(&SPI4_Bus);
+			tic12400_configure(&tic12400_Q1);
+			tic12400_int_stat_read(&tic12400_Q1);
+			tic124_start_normal_operation(&tic12400_Q1);
 		}
 	}
 	return 0;

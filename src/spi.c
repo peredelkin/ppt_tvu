@@ -38,6 +38,11 @@ void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi) {
 	bus->frame_service.count = 0;
 }
 
+//Функция ожидания освобождения шины
+void spi_bus_wait_done(SPI_BUS_TypeDef *bus) {
+	while(bus->done == false);
+}
+
 //Настройка SPI
 void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *cfg) {
 	//ожидание особождении шины

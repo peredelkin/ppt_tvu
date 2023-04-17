@@ -874,6 +874,16 @@ typedef union PACKED _TIC12400_RX_FRAME {
 	struct TIC12400_RX bit;
 } TIC12400_RX_FRAME;
 
+//структура управления TIC12400
+typedef struct {
+	SPI_BUS_TypeDef* spi_bus;
+	const CFG_REG_SPI_TypeDef* spi_cfg;
+	const TIC12400_SETTINGS_TypeDef* tic_settings;
+	SPI_BUS_DATA_TypeDef spi_control[TIC12400_FRAME_COUNT];
+	TIC12400_TX_FRAME tx_frame[TIC12400_FRAME_COUNT];
+	TIC12400_RX_FRAME rx_frame[TIC12400_FRAME_COUNT];
+} tic12400_t;
+
 extern void tic124_tx_frame_fill(TIC12400_TX_FRAME* tx_frame, const TIC12400_SETTINGS_TypeDef* settings);
 
 extern void tic124_spi_bus_data_control_array_fill(SPI_BUS_DATA_TypeDef* spi_bus_data_control_array,
