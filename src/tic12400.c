@@ -6,6 +6,7 @@
  */
 
 #include "tic12400.h"
+//TODO: расставить функции в порядке вызова для функций инициализации масссивов и расставить в порядке регистров tic12400
 
 void tic124_spi_bus_configure(tic12400_t* tic) {
 	spi_bus_configure(tic->spi_bus, tic->spi_cfg);
@@ -86,4 +87,54 @@ void tic124_spi_control_fill(tic12400_t* tic) {
 		tic->spi_control[i].rx = (uint8_t*)&tic->rx_frame[i].all;
 		tic->spi_control[i].count = TIC12400_FRAME_SIZE;
 	}
+}
+
+void tic124_start_normal_operation(tic12400_t* tic) {
+	spi_bus_wait_done(tic->spi_bus);
+
+	TIC12400_CONFIG_REG config;
+	//чтение настроек
+	config.all = tic->tic_settings->CONFIG.all;
+	//изменение настроек
+	config.bit.poll_en = 0x1; /*Polling enabled*/ //Нужно ли?
+	config.bit.trigger = 0x1; /*Start TIC12400-Q1 to normal operation*/
+
+	//формирование фрейма
+	tic->tx_frame[TIC12400_CONFIG].bit.rw = 1;
+	tic->tx_frame[TIC12400_CONFIG].bit.addr = TIC12400_CONFIG;
+	tic->tx_frame[TIC12400_CONFIG].bit.data = config.all;
+	//сброс четности
+	tic->tx_frame[TIC12400_CONFIG].bit.par = 0;
+	//расчет четности
+	tic->tx_frame[TIC12400_CONFIG].bit.par = calc_parity(tic->tx_frame[TIC12400_CONFIG].all, 32, PARITY_ODD);
+	//старт приема/передачи
+	spi_bus_transfer(tic->spi_bus, &tic->spi_control[TIC12400_CONFIG], 1, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
+}
+
+void tic12400_int_stat_read(tic12400_t* tic) {
+	spi_bus_transfer(tic->spi_bus, &tic->spi_control[TIC12400_INT_STAT], 1, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
+}
+
+void tic12400_configure(tic12400_t* tic) {
+	spi_bus_transfer(tic->spi_bus, &tic->spi_control[TIC12400_CONFIG], 25, SPI_BYTE_ORDER_REVERSE, NULL, NULL);
+}
+
+void tic12400_in_stat_comp_handler(void* tic) {
+	((tic12400_t*)tic)->in_stat_comp->all = ((tic12400_t*)tic)->rx_frame[TIC12400_IN_STAT_COMP].bit.data;
+}
+
+void tic12400_in_stat_comp_read(tic12400_t* tic) {
+	spi_bus_transfer(tic->spi_bus, &tic->spi_control[TIC12400_IN_STAT_COMP], 1, SPI_BYTE_ORDER_REVERSE,
+			&tic12400_in_stat_comp_handler, tic);
+}
+
+void tic12400_ana_stat_handler(void* tic) {
+	for(int n=0; n < 13; n++) {
+		((tic12400_t*)tic)->ana_stat[n].all = ((tic12400_t*)tic)->rx_frame[TIC12400_ANA_STAT0 + n].bit.data;
+	}
+}
+
+void tic12400_ana_stat_read(tic12400_t* tic) {
+	spi_bus_transfer(tic->spi_bus, &tic->spi_control[TIC12400_ANA_STAT0], 13, SPI_BYTE_ORDER_REVERSE,
+			&tic12400_ana_stat_handler, tic);
 }

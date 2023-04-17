@@ -882,6 +882,8 @@ typedef struct {
 	SPI_BUS_DATA_TypeDef spi_control[TIC12400_FRAME_COUNT];
 	TIC12400_TX_FRAME tx_frame[TIC12400_FRAME_COUNT];
 	TIC12400_RX_FRAME rx_frame[TIC12400_FRAME_COUNT];
+	TIC12400_IN_STAT_COMP_REG* in_stat_comp;
+	TIC12400_ANA_STAT_REG* ana_stat;
 } tic12400_t;
 
 extern void tic124_spi_bus_configure(tic12400_t* tic);
@@ -889,5 +891,15 @@ extern void tic124_spi_bus_configure(tic12400_t* tic);
 extern void tic124_tx_frame_fill(tic12400_t* tic);
 
 extern void tic124_spi_control_fill(tic12400_t* tic);
+
+extern void tic124_start_normal_operation(tic12400_t* tic);
+
+extern void tic12400_int_stat_read(tic12400_t* tic);
+
+extern void tic12400_configure(tic12400_t* tic);
+
+extern void tic12400_in_stat_comp_read(tic12400_t* tic);
+
+extern void tic12400_ana_stat_read(tic12400_t* tic);
 
 #endif /* INC_TIC12400_H_ */
