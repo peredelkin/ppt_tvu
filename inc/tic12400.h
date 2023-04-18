@@ -150,7 +150,7 @@ static_assert(sizeof(tic12400_int_stat_data_t) == TIC12400_DATA_SIZE, "Invalid s
 typedef union _TIC12400_INT_STAT_BITS_REG {
 	unsigned all : 24;
 	struct _TIC12400_INT_STAT_BITS bit;
-} TIC12400_INT_STAT_BITS_REG;
+} TIC12400_INT_STAT_REG;
 
 
 //структура данных CRC
@@ -879,11 +879,10 @@ typedef struct {
 	SPI_BUS_TypeDef* spi_bus;
 	const CFG_REG_SPI_TypeDef* spi_cfg;
 	const TIC12400_SETTINGS_TypeDef* tic_settings;
-	SPI_BUS_DATA_TypeDef spi_control[TIC12400_FRAME_COUNT];
-	TIC12400_TX_FRAME tx_frame[TIC12400_FRAME_COUNT];
-	TIC12400_RX_FRAME rx_frame[TIC12400_FRAME_COUNT];
-	TIC12400_IN_STAT_COMP_REG* in_stat_comp;
-	TIC12400_ANA_STAT_REG* ana_stat;
+	SPI_BUS_DATA_TypeDef spi_control;
+	TIC12400_TX_FRAME tx_frame;
+	TIC12400_RX_FRAME rx_frame;
+	TIC12400_INT_STAT_REG int_stat;
 } tic12400_t;
 
 extern void tic12400_init(tic12400_t* tic,
@@ -893,18 +892,6 @@ extern void tic12400_init(tic12400_t* tic,
 
 extern void tic124_spi_bus_configure(tic12400_t* tic);
 
-extern void tic124_tx_frame_fill(tic12400_t* tic);
-
-extern void tic124_spi_control_fill(tic12400_t* tic);
-
-extern void tic124_start_normal_operation(tic12400_t* tic);
-
 extern void tic12400_int_stat_read(tic12400_t* tic);
-
-extern void tic12400_configure(tic12400_t* tic);
-
-extern void tic12400_in_stat_comp_read(tic12400_t* tic);
-
-extern void tic12400_ana_stat_read(tic12400_t* tic);
 
 #endif /* INC_TIC12400_H_ */

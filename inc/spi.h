@@ -471,4 +471,12 @@ extern void spi_bus_transfer(
 		spi_bus_callback callback,
 		void* callback_argument);
 
+void spi_bus_callback_transfer(
+		SPI_BUS_TypeDef* bus,
+		SPI_BUS_DATA_TypeDef* frame_control_array_pointer,
+		size_t frame_control_array_amount,
+		spi_byte_order_t frame_byte_order,
+		spi_bus_callback callback,
+		void* callback_argument);
+
 #endif /* INC_SPI_H_ */

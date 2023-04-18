@@ -57,14 +57,6 @@ void SPI4_IRQHandler() {
 	SPI_BUS_IRQHandler(&SPI4_Bus);
 }
 
-TIC12400_IN_STAT_COMP_REG tic12400_in_stat_comp;
-TIC12400_ANA_STAT_REG tic12400_ana_stat[13];
-
-void tic12400_stat_read(tic12400_t* tic) {
-	tic12400_in_stat_comp_read(tic);
-	tic12400_ana_stat_read(tic);
-}
-
 int main(void) {
 	rcc_init();
 	nvic_init();
@@ -75,12 +67,8 @@ int main(void) {
 	spi_bus_init(&SPI4_Bus, SPI4);
 
 	tic12400_init(&tic12400_Q1, &SPI4_Bus, &spi_tic12400_cfg, &tic124_settings_const);
-	tic12400_Q1.in_stat_comp = &tic12400_in_stat_comp;
-	tic12400_Q1.ana_stat = tic12400_ana_stat;
 
 	tic124_spi_bus_configure(&tic12400_Q1);
-	tic124_tx_frame_fill(&tic12400_Q1);
-	tic124_spi_control_fill(&tic12400_Q1);
 
 	//task_timer_init();
 
@@ -93,12 +81,9 @@ int main(void) {
 		sys_timer_delay(0, 50000);
 		if (gpio_input_bit_read(&GPI_Int_DI_App)) {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
-			tic12400_stat_read(&tic12400_Q1);
 		} else {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
-			tic12400_configure(&tic12400_Q1);
 			tic12400_int_stat_read(&tic12400_Q1);
-			tic124_start_normal_operation(&tic12400_Q1);
 		}
 	}
 	return 0;
