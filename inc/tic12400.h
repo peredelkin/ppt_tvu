@@ -883,6 +883,7 @@ typedef struct {
 	TIC12400_TX_FRAME tx_frame;
 	TIC12400_RX_FRAME rx_frame;
 	TIC12400_INT_STAT_REG int_stat;
+	TIC12400_INT_STAT_REG int_stat_last;
 } tic12400_t;
 
 extern void tic12400_init(tic12400_t* tic,

@@ -155,6 +155,14 @@ void tic12400_spi_bus_free(tic12400_t* tic) {
 	spi_bus_free(tic->spi_bus);
 }
 
+void tic124_start_normal_operation(tic12400_t* tic) {
+	TIC12400_CONFIG_REG config;
+	config.all = tic->tic_settings->CONFIG.all;
+	config.bit.trigger  = 0x1; /*Start TIC12400-Q1 to normal operation*/
+	tic124_tx_frame_fill(tic, 1, TIC12400_CONFIG, config.all);
+	tic12400_callback_transfer(tic);
+}
+
 void tic12400_mode_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_int_stat_read(tic);
@@ -376,17 +384,22 @@ void tic12400_config_handler(tic12400_t* tic) {
 		tic12400_fill_in_en_settings_write(tic);
 		tic12400_callback_transfer(tic);
 	} else {
-
+		tic12400_spi_bus_free(tic);
 	}
 }
 
 void tic12400_int_stat_handler(tic12400_t* tic) {
+	tic->int_stat_last.all = tic->int_stat.all;
 	tic->int_stat.all = tic->rx_frame.bit.data;
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_config_settings_write(tic);
 		tic12400_callback_transfer(tic);
 	} else {
-		tic12400_spi_bus_free(tic);
+		if(tic->int_stat_last.bit.por) {
+			tic124_start_normal_operation(tic);
+		} else {
+			tic12400_spi_bus_free(tic);
+		}
 	}
 }
 
@@ -457,3 +470,7 @@ void tic12400_int_stat_read(tic12400_t* tic) {
 	tic12400_fill_int_stat_read(tic);
 	spi_bus_transfer(tic->spi_bus, &tic->spi_control, 1, SPI_BYTE_ORDER_REVERSE, &tic12400_handler, tic);
 }
+
+
+
+
