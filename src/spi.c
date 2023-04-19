@@ -115,6 +115,13 @@ void spi_bus_callback_transfer(
 	spi_bus_transfer_start(bus);
 }
 
+//Освобождение шины
+void spi_bus_free(SPI_BUS_TypeDef* bus) {
+	bus->callback = NULL;
+	bus->callback_argument = NULL;
+	bus->done = true;
+}
+
 
 //NSS off
 void spi_bus_nss_off(SPI_BUS_TypeDef *bus) {
@@ -244,10 +251,11 @@ void SPI_BUS_IRQHandler(SPI_BUS_TypeDef *bus) {
 		spi_bus_transfer_stop(bus);
 		bus->frame_service.counter++;
 		if(bus->frame_service.counter >= bus->frame_service.count) {
-			if(bus->callback) bus->callback(bus->callback_argument);
-			bus->callback = NULL;
-			bus->callback_argument = NULL;
-			bus->done = true;
+			if(bus->callback) {
+				bus->callback(bus->callback_argument);
+			} else {
+				spi_bus_free(bus);
+			}
 		} else {
 			spi_bus_transfer_start(bus);
 		}
