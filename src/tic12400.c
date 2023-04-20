@@ -148,7 +148,11 @@ void tic12400_fill_int_stat_read(tic12400_t* tic) {
 }
 
 void tic12400_callback_transfer(tic12400_t* tic) {
-	spi_bus_callback_transfer(tic->spi_bus, &tic->spi_control, 1, SPI_BYTE_ORDER_REVERSE, &tic12400_handler, tic);
+	spi_bus_callback_transfer(tic->spi_bus, &tic->spi_control, 1, SPI_BYTE_ORDER_REVERSE);
+}
+
+void tic12400_spi_wait_done(tic12400_t* tic) {
+	spi_bus_wait_done(tic->spi_bus);
 }
 
 void tic12400_spi_bus_free(tic12400_t* tic) {
@@ -675,6 +679,7 @@ void tic12400_handler(void* tic) {
 }
 
 void tic12400_int_stat_read(tic12400_t* tic) {
+	tic12400_spi_wait_done(tic);
 	tic12400_fill_int_stat_read(tic);
 	spi_bus_transfer(tic->spi_bus, &tic->spi_control, 1, SPI_BYTE_ORDER_REVERSE, &tic12400_handler, tic);
 }

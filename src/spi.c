@@ -46,7 +46,7 @@ void spi_bus_wait_done(SPI_BUS_TypeDef *bus) {
 //Настройка SPI
 void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *cfg) {
 	//ожидание особождении шины
-	while(bus->done == false);
+	spi_bus_wait_done(bus);
 	//занять шину
 	bus->done = false;
 
@@ -79,7 +79,7 @@ void spi_bus_transfer(
 		spi_bus_callback callback,
 		void* callback_argument) {
 
-	while(bus->done == false);
+	spi_bus_wait_done(bus);
 	bus->done = false;
 
 	bus->frame.data = frame_control_array_pointer;
@@ -98,19 +98,12 @@ void spi_bus_callback_transfer(
 		SPI_BUS_TypeDef* bus,
 		SPI_BUS_DATA_TypeDef* frame_control_array_pointer,
 		size_t frame_control_array_amount,
-		spi_byte_order_t frame_byte_order,
-		spi_bus_callback callback,
-		void* callback_argument) {
-
-	bus->done = false;
+		spi_byte_order_t frame_byte_order) {
 
 	bus->frame.data = frame_control_array_pointer;
 	bus->frame_service.count = frame_control_array_amount;
 	bus->frame_service.counter = 0;
 	bus->frame.data_service.byte_order = frame_byte_order;
-
-	bus->callback = callback;
-	bus->callback_argument = callback_argument;
 
 	spi_bus_transfer_start(bus);
 }
