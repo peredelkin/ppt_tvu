@@ -163,7 +163,7 @@ void tic124_start_normal_operation(tic12400_t* tic) {
 	tic12400_callback_transfer(tic);
 }
 
-void tic12400_mode_handler(tic12400_t* tic) {
+void tic12400_mode_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_int_stat_read(tic);
 		tic12400_callback_transfer(tic);
@@ -172,7 +172,7 @@ void tic12400_mode_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_matrix_handler(tic12400_t* tic) {
+void tic12400_matrix_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_mode_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -181,7 +181,7 @@ void tic12400_matrix_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_thresmap_cfg2_handler(tic12400_t* tic) {
+void tic12400_thresmap_cfg2_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_matrix_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -190,7 +190,7 @@ void tic12400_thresmap_cfg2_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_thresmap_cfg1_handler(tic12400_t* tic) {
+void tic12400_thresmap_cfg1_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_thresmap_cfg2_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -199,7 +199,7 @@ void tic12400_thresmap_cfg1_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_thresmap_cfg0_handler(tic12400_t* tic) {
+void tic12400_thresmap_cfg0_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_thresmap_cfg1_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -208,7 +208,7 @@ void tic12400_thresmap_cfg0_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_thres_cfg4_handler(tic12400_t* tic) {
+void tic12400_thres_cfg4_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_thresmap_cfg0_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -217,7 +217,7 @@ void tic12400_thres_cfg4_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_thres_cfg3_handler(tic12400_t* tic) {
+void tic12400_thres_cfg3_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_thres_cfg4_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -226,7 +226,7 @@ void tic12400_thres_cfg3_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_thres_cfg2_handler(tic12400_t* tic) {
+void tic12400_thres_cfg2_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_thres_cfg3_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -235,7 +235,7 @@ void tic12400_thres_cfg2_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_thres_cfg1_handler(tic12400_t* tic) {
+void tic12400_thres_cfg1_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_thres_cfg2_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -244,7 +244,7 @@ void tic12400_thres_cfg1_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_thres_cfg0_handler(tic12400_t* tic) {
+void tic12400_thres_cfg0_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_thres_cfg1_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -253,7 +253,7 @@ void tic12400_thres_cfg0_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_int_en_cfg4_handler(tic12400_t* tic) {
+void tic12400_int_en_cfg4_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_thres_cfg0_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -262,7 +262,7 @@ void tic12400_int_en_cfg4_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_int_en_cfg3_handler(tic12400_t* tic) {
+void tic12400_int_en_cfg3_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_int_en_cfg4_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -271,7 +271,7 @@ void tic12400_int_en_cfg3_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_int_en_cfg2_handler(tic12400_t* tic) {
+void tic12400_int_en_cfg2_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_int_en_cfg3_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -280,7 +280,7 @@ void tic12400_int_en_cfg2_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_int_en_cfg1_handler(tic12400_t* tic) {
+void tic12400_int_en_cfg1_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_int_en_cfg2_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -289,7 +289,7 @@ void tic12400_int_en_cfg1_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_int_en_cfg0_handler(tic12400_t* tic) {
+void tic12400_int_en_cfg0_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_int_en_cfg1_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -298,7 +298,7 @@ void tic12400_int_en_cfg0_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_int_en_comp2_handler(tic12400_t* tic) {
+void tic12400_int_en_comp2_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_int_en_cfg0_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -307,7 +307,7 @@ void tic12400_int_en_comp2_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_int_en_comp1_handler(tic12400_t* tic) {
+void tic12400_int_en_comp1_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_int_en_comp2_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -316,7 +316,7 @@ void tic12400_int_en_comp1_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_thres_comp_handler(tic12400_t* tic) {
+void tic12400_thres_comp_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_int_en_comp1_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -325,7 +325,7 @@ void tic12400_thres_comp_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_ccp_cfg1_handler(tic12400_t* tic) {
+void tic12400_ccp_cfg1_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_thres_comp_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -334,7 +334,7 @@ void tic12400_ccp_cfg1_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_ccp_cfg0_handler(tic12400_t* tic) {
+void tic12400_ccp_cfg0_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_ccp_cfg1_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -343,7 +343,7 @@ void tic12400_ccp_cfg0_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_wc_cfg1_handler(tic12400_t* tic) {
+void tic12400_wc_cfg1_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_ccp_cfg0_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -352,7 +352,7 @@ void tic12400_wc_cfg1_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_wc_cfg0_handler(tic12400_t* tic) {
+void tic12400_wc_cfg0_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_wc_cfg1_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -361,7 +361,7 @@ void tic12400_wc_cfg0_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_cs_select_handler(tic12400_t* tic) {
+void tic12400_cs_select_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_wc_cfg0_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -370,7 +370,7 @@ void tic12400_cs_select_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_in_en_handler(tic12400_t* tic) {
+void tic12400_in_en_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_cs_select_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -379,7 +379,7 @@ void tic12400_in_en_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_config_handler(tic12400_t* tic) {
+void tic12400_config_write_handler(tic12400_t* tic) {
 	if(tic->int_stat.bit.por) {
 		tic12400_fill_in_en_settings_write(tic);
 		tic12400_callback_transfer(tic);
@@ -388,7 +388,7 @@ void tic12400_config_handler(tic12400_t* tic) {
 	}
 }
 
-void tic12400_int_stat_handler(tic12400_t* tic) {
+void tic12400_int_stat_read_handler(tic12400_t* tic) {
 	tic->int_stat_last.all = tic->int_stat.all;
 	tic->int_stat.all = tic->rx_frame.bit.data;
 	if(tic->int_stat.bit.por) {
@@ -400,6 +400,214 @@ void tic12400_int_stat_handler(tic12400_t* tic) {
 		} else {
 			tic12400_spi_bus_free(tic);
 		}
+	}
+}
+
+void tic12400_mode_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_mode_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_matrix_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_matrix_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_thresmap_cfg2_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_thresmap_cfg2_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_thresmap_cfg1_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_thresmap_cfg1_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_thresmap_cfg0_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_thresmap_cfg0_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_thres_cfg4_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_thres_cfg4_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_thres_cfg3_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_thres_cfg3_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_thres_cfg2_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_thres_cfg2_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_thres_cfg1_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_thres_cfg1_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_thres_cfg0_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_thres_cfg0_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_int_en_cfg4_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_int_en_cfg4_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_int_en_cfg3_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_int_en_cfg3_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_int_en_cfg2_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_int_en_cfg2_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_int_en_cfg1_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_int_en_cfg1_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_int_en_cfg0_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_int_en_cfg0_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_int_en_comp2_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_int_en_comp2_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_int_en_comp1_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_int_en_comp1_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_thres_comp_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_thres_comp_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_ccp_cfg1_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_ccp_cfg1_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_ccp_cfg0_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_ccp_cfg0_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_wc_cfg1_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_wc_cfg1_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_wc_cfg0_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_wc_cfg0_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_cs_select_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_cs_select_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_in_en_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_in_en_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_config_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+		tic12400_config_write_handler(tic);
+	} else {
+
+	}
+}
+
+void tic12400_int_stat_handler(tic12400_t *tic) {
+	if (tic->tx_frame.bit.rw) {
+
+	} else {
+		tic12400_int_stat_read_handler(tic);
 	}
 }
 
@@ -461,7 +669,7 @@ void tic12400_handler(void* tic) {
 		break;
 	case TIC12400_MODE: tic12400_mode_handler(tic);
 		break;
-	default:
+	default: tic12400_spi_bus_free(tic);
 		break;
 	}
 }
@@ -470,7 +678,4 @@ void tic12400_int_stat_read(tic12400_t* tic) {
 	tic12400_fill_int_stat_read(tic);
 	spi_bus_transfer(tic->spi_bus, &tic->spi_control, 1, SPI_BYTE_ORDER_REVERSE, &tic12400_handler, tic);
 }
-
-
-
 
