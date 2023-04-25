@@ -39,16 +39,22 @@ void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi) {
 }
 
 //Функция ожидания освобождения шины
-void spi_bus_wait_done(SPI_BUS_TypeDef *bus) {
+void spi_bus_wait_and_take(SPI_BUS_TypeDef *bus) {
 	while(bus->done == false);
+	bus->done = false;
+}
+
+//Освобождение шины
+void spi_bus_free(SPI_BUS_TypeDef* bus) {
+	bus->callback = NULL;
+	bus->callback_argument = NULL;
+	bus->done = true;
 }
 
 //Настройка SPI
 void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *cfg) {
 	//ожидание особождении шины
-	spi_bus_wait_done(bus);
-	//занять шину
-	bus->done = false;
+	spi_bus_wait_and_take(bus);
 
 	//выключение SPI перед настройкой
 	bus->spi->CR1.bit.SPE = 0;
@@ -67,7 +73,7 @@ void spi_bus_configure(SPI_BUS_TypeDef *bus, const CFG_REG_SPI_TypeDef *cfg) {
 	bus->spi->CR1.bit.SPE = 1;
 
 	//освобождение шины
-	bus->done = true;
+	spi_bus_free(bus);
 }
 
 //Настройка и запуск приема/передачи
@@ -79,9 +85,6 @@ void spi_bus_transfer(
 		spi_bus_callback callback,
 		void* callback_argument) {
 
-	spi_bus_wait_done(bus);
-	bus->done = false;
-
 	bus->frame.data = frame_control_array_pointer;
 	bus->frame_service.count = frame_control_array_amount;
 	bus->frame_service.counter = 0;
@@ -91,28 +94,6 @@ void spi_bus_transfer(
 	bus->callback_argument = callback_argument;
 
 	spi_bus_transfer_start(bus);
-}
-
-//Настройка и продолжение приема/передачи
-void spi_bus_callback_transfer(
-		SPI_BUS_TypeDef* bus,
-		SPI_BUS_DATA_TypeDef* frame_control_array_pointer,
-		size_t frame_control_array_amount,
-		spi_byte_order_t frame_byte_order) {
-
-	bus->frame.data = frame_control_array_pointer;
-	bus->frame_service.count = frame_control_array_amount;
-	bus->frame_service.counter = 0;
-	bus->frame.data_service.byte_order = frame_byte_order;
-
-	spi_bus_transfer_start(bus);
-}
-
-//Освобождение шины
-void spi_bus_free(SPI_BUS_TypeDef* bus) {
-	bus->callback = NULL;
-	bus->callback_argument = NULL;
-	bus->done = true;
 }
 
 

@@ -57,6 +57,14 @@ void SPI4_IRQHandler() {
 	SPI_BUS_IRQHandler(&SPI4_Bus);
 }
 
+typedef struct {
+	TIC12400_DEVICE_ID_REG DEVICE_ID;
+	TIC12400_INT_STAT_REG INT_STAT;
+} tic12400_data_t;
+
+tic12400_data_t tic12400_data_array;
+uint8_t tic12400_addr_array[2];
+
 int main(void) {
 	rcc_init();
 	nvic_init();
@@ -66,9 +74,9 @@ int main(void) {
 	spi_bus_init(&SPI2_Bus, SPI2);
 	spi_bus_init(&SPI4_Bus, SPI4);
 
-	tic12400_init(&tic12400_Q1, &SPI4_Bus, &spi_tic12400_cfg, &tic124_settings_const);
+	tic12400_init(&tic12400_Q1, &SPI4_Bus, &spi_tic12400_cfg);
 
-	tic124_spi_bus_configure(&tic12400_Q1);
+	tic12400_spi_bus_configure(&tic12400_Q1);
 
 	//task_timer_init();
 
@@ -77,13 +85,16 @@ int main(void) {
 	sys_timer_delay(1, 0);
 	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
 
+	tic12400_addr_array[0] = TIC12400_DEVICE_ID;
+	tic12400_addr_array[1] = TIC12400_INT_STAT;
+
 	while (1) {
 		sys_timer_delay(0, 50000);
 		if (gpio_input_bit_read(&GPI_Int_DI_App)) {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
 		} else {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
-			tic12400_int_stat_read(&tic12400_Q1);
+			tic12400_reg_read(&tic12400_Q1, (uint32_t*)&tic12400_data_array, tic12400_addr_array, 2);
 		}
 	}
 	return 0;
