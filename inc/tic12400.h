@@ -16,11 +16,9 @@
 #include "stdbool.h"
 #include "spi.h"
 
-#define TIC12400_RESERVED_SIZE 1
 #define TIC12400_DATA_SIZE 3
 #define TIC12400_FRAME_SIZE 4
-#define TIC12400_SETTINGS_SIZE (TIC12400_DATA_SIZE*25)
-#define TIC12400_FRAME_COUNT 51
+
 
 // tic12400_
 // TIC12400_
@@ -843,7 +841,7 @@ typedef void (*tic12400_callback)(void*);
 typedef struct {
 	uint8_t count;
 	uint8_t index;
-	uint8_t *addr;
+	const uint8_t *addr;
 	uint32_t *data;
 } tic12400_sequential_t;
 
@@ -869,13 +867,13 @@ extern void tic12400_wait(tic12400_t *tic);
 
 extern void tic12400_bus_free(tic12400_t *tic);
 
-extern void tic12400_reg_read(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t count);
+extern void tic12400_reg_read(tic12400_t *tic, uint32_t *data, const uint8_t *addr, uint8_t count);
 
-extern void tic12400_reg_read_from_callback(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t count);
+extern void tic12400_reg_read_from_callback(tic12400_t *tic, uint32_t *data, const uint8_t *addr, uint8_t count);
 
-extern void tic12400_reg_write(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t count);
+extern void tic12400_reg_write(tic12400_t *tic, uint32_t *data, const uint8_t *addr, uint8_t count);
 
-extern void tic12400_reg_write_from_callback(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t count);
+extern void tic12400_reg_write_from_callback(tic12400_t *tic, uint32_t *data, const uint8_t *addr, uint8_t count);
 
 
 #endif /* INC_TIC12400_H_ */

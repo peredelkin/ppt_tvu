@@ -122,8 +122,8 @@ void tic12400_init(tic12400_t *tic, SPI_BUS_TypeDef *spi_bus, const CFG_REG_SPI_
 	//TODO: вынести отдельно
 	tic->status_mask.bit.oi = 0x1; //Other Interrupt
 	tic->status_mask.bit.temp = 0x1; //Temperature Event
-	tic->status_mask.bit.vs_th = 0x1; //VS Threshold Crossing
-	tic->status_mask.bit.ssc = 0x1; //Switch State Change
+	tic->status_mask.bit.vs_th = 0x0; //VS Threshold Crossing
+	tic->status_mask.bit.ssc = 0x0; //Switch State Change
 	tic->status_mask.bit.par_fail = 0x1; //Parity Fail
 	tic->status_mask.bit.spi_fail = 0x1; //SPI Error
 	tic->status_mask.bit.por = 0x1; //Power-on Reset
@@ -143,7 +143,7 @@ void tic12400_spi_bus_configure(tic12400_t *tic) {
 	spi_bus_configure(tic->spi_bus, tic->spi_cfg);
 }
 
-void tic12400_reg_read(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t count) {
+void tic12400_reg_read(tic12400_t *tic, uint32_t *data, const uint8_t *addr, uint8_t count) {
 	tic12400_bus_wait_and_take(tic);
 	tic->sequential.count = count;
 	tic->sequential.index = 0;
@@ -153,7 +153,7 @@ void tic12400_reg_read(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t c
 	tic12400_transfer(tic);
 }
 
-void tic12400_reg_read_from_callback(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t count) {
+void tic12400_reg_read_from_callback(tic12400_t *tic, uint32_t *data, const uint8_t *addr, uint8_t count) {
 	tic->sequential.count = count;
 	tic->sequential.index = 0;
 	tic->sequential.addr = addr;
@@ -162,7 +162,7 @@ void tic12400_reg_read_from_callback(tic12400_t *tic, uint32_t *data, uint8_t *a
 	tic12400_transfer(tic);
 }
 
-void tic12400_reg_write(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t count) {
+void tic12400_reg_write(tic12400_t *tic, uint32_t *data, const uint8_t *addr, uint8_t count) {
 	tic12400_bus_wait_and_take(tic);
 	tic->sequential.count = count;
 	tic->sequential.index = 0;
@@ -172,7 +172,7 @@ void tic12400_reg_write(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t 
 	tic12400_transfer(tic);
 }
 
-void tic12400_reg_write_from_callback(tic12400_t *tic, uint32_t *data, uint8_t *addr, uint8_t count) {
+void tic12400_reg_write_from_callback(tic12400_t *tic, uint32_t *data, const uint8_t *addr, uint8_t count) {
 	tic->sequential.count = count;
 	tic->sequential.index = 0;
 	tic->sequential.addr = addr;

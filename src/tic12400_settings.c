@@ -7,6 +7,35 @@
 
 #include "tic12400_settings.h"
 
+const uint8_t tic124_settings_addr[TIC12400_SETTINGS_COUNT] = {
+		TIC12400_CONFIG,
+		TIC12400_IN_EN,
+		TIC12400_CS_SELECT,
+		TIC12400_WC_CFG0,
+		TIC12400_WC_CFG1,
+		TIC12400_CCP_CFG0,
+		TIC12400_CCP_CFG1,
+		TIC12400_THRES_COMP,
+		TIC12400_INT_EN_COMP1,
+		TIC12400_INT_EN_COMP2,
+		TIC12400_INT_EN_CFG0,
+		TIC12400_INT_EN_CFG1,
+		TIC12400_INT_EN_CFG2,
+		TIC12400_INT_EN_CFG3,
+		TIC12400_INT_EN_CFG4,
+		TIC12400_THRES_CFG0,
+		TIC12400_THRES_CFG1,
+		TIC12400_THRES_CFG2,
+		TIC12400_THRES_CFG3,
+		TIC12400_THRES_CFG4,
+		TIC12400_THRESMAP_CFG0,
+		TIC12400_THRESMAP_CFG1,
+		TIC12400_THRESMAP_CFG2,
+		TIC12400_MATRIX,
+		TIC12400_MODE,
+		TIC12400_CONFIG
+};
+
 const TIC12400_SETTINGS_TypeDef tic124_settings_const = {
 		.CONFIG.bit.reset = 0x0,			/*No reset*/
 		.CONFIG.bit.poll_time = 0x2,		/*8ms(how frequently each input is sampled)*/
@@ -255,7 +284,25 @@ const TIC12400_SETTINGS_TypeDef tic124_settings_const = {
 		.MODE.bit.m_in20 = 0x0,				/*Comparator mode for DI10*/
 		.MODE.bit.m_in21 = 0x0,				/*Comparator mode for ResDI_10*/
 		.MODE.bit.m_in22 = 0x0,				/*Comparator mode for ResDI_8*/
-		.MODE.bit.m_in23 = 0x0				/*Comparator mode for ResDI_6*/
+		.MODE.bit.m_in23 = 0x0,				/*Comparator mode for ResDI_6*/
+
+		.CONFIG_START.bit.reset = 0x0,			/*No reset*/
+		.CONFIG_START.bit.poll_time = 0x2,		/*8ms(how frequently each input is sampled)*/
+		.CONFIG_START.bit.poll_act_time = 0x7,	/*512μs(time for wetting current)*/
+		.CONFIG_START.bit.crc_t = 0x0,			/*no CRC calculation triggered*/
+		.CONFIG_START.bit.poll_en = 0x1,			/*Polling enabled*/
+		.CONFIG_START.bit.trigger = 0x1,			/*Stop TIC12400-Q1 from normal operation*/
+		.CONFIG_START.bit.int_config = 0x0,		/*INT pin assertion scheme set to static*/
+		.CONFIG_START.bit.tw_cur_dis_cso = 0x0,	/*Enable CSO wetting current reduction*/
+		.CONFIG_START.bit.det_filter = 0x0,		/*Every sample is valid and taken for threshold evaluation*/
+		.CONFIG_START.bit.tw_cur_dis_csi = 0x0,	/*Enable CSI wetting current reduction*/
+		.CONFIG_START.bit.vs_meas_en = 0x1,		/*Enable VS measurement at the end of every polling cycle*/
+		.CONFIG_START.bit.wet_d_in0_en = 0x0,		/*Disable wetting current diagnostic for input IN0*/
+		.CONFIG_START.bit.wet_d_in1_en = 0x0,		/*Disable wetting current diagnostic for input IN1*/
+		.CONFIG_START.bit.wet_d_in2_en = 0x0,		/*Disable wetting current diagnostic for input IN2*/
+		.CONFIG_START.bit.wet_d_in3_en = 0x0,		/*Disable wetting current diagnostic for input IN3*/
+		.CONFIG_START.bit.adc_diag_t = 0x0,		/*Disable ADC self-diagnostic feature*/
+		.CONFIG_START.bit.vs_ratio = 0x1,			/*Use voltage divider factor of 10 for the VS measurement*/
 };
 
 
