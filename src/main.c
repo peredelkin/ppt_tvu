@@ -65,6 +65,19 @@ typedef struct {
 tic12400_data_t tic12400_data_array;
 uint8_t tic12400_addr_array[2];
 
+void tic12400_Q1_status_handler(tic12400_t *tic) {
+	if(tic->tx_frame.bit.addr == tic12400_addr_array[1]) {
+		((uint32_t*)&tic12400_data_array)[1] = tic->rx_frame.bit.data;
+		tic12400_bus_free(tic);
+	} else {
+		tic12400_reg_read_from_callback(tic, (uint32_t*)&tic12400_data_array, &tic12400_addr_array[1], 1);
+	}
+}
+
+void tic12400_Q1_status_callback(void *tic) {
+	tic12400_Q1_status_handler(tic);
+}
+
 int main(void) {
 	rcc_init();
 	nvic_init();
@@ -75,6 +88,9 @@ int main(void) {
 	spi_bus_init(&SPI4_Bus, SPI4);
 
 	tic12400_init(&tic12400_Q1, &SPI4_Bus, &spi_tic12400_cfg);
+
+	tic12400_Q1.status_callback = &tic12400_Q1_status_callback;
+	tic12400_Q1.status_callback_argument = &tic12400_Q1;
 
 	tic12400_spi_bus_configure(&tic12400_Q1);
 
@@ -94,7 +110,7 @@ int main(void) {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
 		} else {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
-			tic12400_reg_read(&tic12400_Q1, (uint32_t*)&tic12400_data_array, tic12400_addr_array, 2);
+			tic12400_reg_read(&tic12400_Q1, (uint32_t*)&tic12400_data_array, &tic12400_addr_array[0], 1);
 		}
 	}
 	return 0;

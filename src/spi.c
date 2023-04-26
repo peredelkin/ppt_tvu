@@ -38,9 +38,14 @@ void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi) {
 	bus->frame_service.count = 0;
 }
 
-//Функция ожидания освобождения шины
-void spi_bus_wait_and_take(SPI_BUS_TypeDef *bus) {
+//Ожидает освобождения шины
+void spi_bus_wait(SPI_BUS_TypeDef *bus) {
 	while(bus->done == false);
+}
+
+//Ожидает освобождения шины и сразу занимает
+void spi_bus_wait_and_take(SPI_BUS_TypeDef *bus) {
+	spi_bus_wait(bus);
 	bus->done = false;
 }
 

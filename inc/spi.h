@@ -416,7 +416,8 @@ typedef struct _SPI_BUS_TypeDef {
 //инициализация SPI
 extern void spi_bus_init(SPI_BUS_TypeDef *bus, SPI_TypeDef *spi);
 
-//Ожидание освобождения шины
+extern void spi_bus_wait(SPI_BUS_TypeDef *bus);
+
 extern void spi_bus_wait_and_take(SPI_BUS_TypeDef *bus);
 
 //Настройка SPI
