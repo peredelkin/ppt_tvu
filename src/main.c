@@ -61,10 +61,24 @@ typedef struct {
 	TIC12400_DEVICE_ID_REG DEVICE_ID;
 	TIC12400_INT_STAT_REG INT_STAT;
 	TIC12400_IN_STAT_COMP_REG IN_STAT_COMP;
+	TIC12400_ANA_STAT_REG ANA_STAT1;
+	TIC12400_ANA_STAT_REG ANA_STAT2;
+	TIC12400_ANA_STAT_REG ANA_STAT3;
+	TIC12400_ANA_STAT_REG ANA_STAT9;
+	TIC12400_ANA_STAT_REG ANA_STAT12;
 } tic12400_data_t;
 
 tic12400_data_t tic12400_data_array;
-uint8_t tic12400_addr_array[3];
+uint8_t tic12400_addr_array[8] = {
+		TIC12400_DEVICE_ID,
+		TIC12400_INT_STAT,
+		TIC12400_IN_STAT_COMP,
+		TIC12400_ANA_STAT1,
+		TIC12400_ANA_STAT2,
+		TIC12400_ANA_STAT3,
+		TIC12400_ANA_STAT9,
+		TIC12400_ANA_STAT12
+};
 
 void tic12400_Q1_status_handler(tic12400_t *tic) {
 	if(tic->tx_frame.bit.addr == tic12400_addr_array[1]) {
@@ -106,18 +120,18 @@ int main(void) {
 	sys_timer_delay(1, 0);
 	gpio_output_bit_setup(&GPO_Reset_DI_App, GPIO_STATE_OFF);
 
-	tic12400_addr_array[0] = TIC12400_DEVICE_ID;
-	tic12400_addr_array[1] = TIC12400_INT_STAT;
-	tic12400_addr_array[2] = TIC12400_IN_STAT_COMP;
-
 	while (1) {
 		sys_timer_delay(0, 50000);
 		if (gpio_input_bit_read(&GPI_Int_DI_App)) {
-			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
-			tic12400_reg_read(&tic12400_Q1, &((uint32_t*)&tic12400_data_array)[2], &tic12400_addr_array[2], 1);
+			if(tic12400_data_array.IN_STAT_COMP.bit.inc_8) {
+				gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
+			} else {
+				gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
+			}
+			tic12400_reg_read(&tic12400_Q1, &((uint32_t*)&tic12400_data_array)[2], &tic12400_addr_array[2], 6);
 		} else {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
-			tic12400_reg_read(&tic12400_Q1, (uint32_t*)&tic12400_data_array, &tic12400_addr_array[0], 1);
+			tic12400_reg_read(&tic12400_Q1, &((uint32_t*)&tic12400_data_array)[0], &tic12400_addr_array[0], 1);
 		}
 	}
 	return 0;
