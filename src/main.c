@@ -58,7 +58,6 @@ void SPI4_IRQHandler() {
 }
 
 typedef struct {
-	TIC12400_DEVICE_ID_REG DEVICE_ID;
 	TIC12400_INT_STAT_REG INT_STAT;
 	TIC12400_IN_STAT_COMP_REG IN_STAT_COMP;
 	TIC12400_ANA_STAT_REG ANA_STAT1;
@@ -70,7 +69,6 @@ typedef struct {
 
 tic12400_data_t tic12400_data_array;
 uint8_t tic12400_addr_array[8] = {
-		TIC12400_DEVICE_ID,
 		TIC12400_INT_STAT,
 		TIC12400_IN_STAT_COMP,
 		TIC12400_ANA_STAT1,
@@ -81,15 +79,15 @@ uint8_t tic12400_addr_array[8] = {
 };
 
 void tic12400_Q1_status_handler(tic12400_t *tic) {
-	if(tic->tx_frame.bit.addr == tic12400_addr_array[1]) {
-		((uint32_t*)&tic12400_data_array)[1] = tic->rx_frame.bit.data;
+	if(tic->tx_frame.bit.addr == tic12400_addr_array[0]) {
+		((uint32_t*)&tic12400_data_array)[0] = tic->rx_frame.bit.data;
 		if(tic12400_data_array.INT_STAT.bit.por) {
 			tic12400_reg_write_from_callback(tic, (uint32_t*)&tic124_settings_const, &tic124_settings_addr[0], TIC12400_SETTINGS_COUNT);
 		} else {
 			tic12400_bus_free(tic);
 		}
 	} else {
-		tic12400_reg_read_from_callback(tic, &((uint32_t*)&tic12400_data_array)[1], &tic12400_addr_array[1], 1);
+		tic12400_reg_read_from_callback(tic, &((uint32_t*)&tic12400_data_array)[0], &tic12400_addr_array[0], 1);
 	}
 }
 
@@ -122,17 +120,12 @@ int main(void) {
 
 	while (1) {
 		sys_timer_delay(0, 50000);
-		if (gpio_input_bit_read(&GPI_Int_DI_App)) {
-			if(tic12400_data_array.IN_STAT_COMP.bit.inc_8) {
-				gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
-			} else {
-				gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
-			}
-			tic12400_reg_read(&tic12400_Q1, &((uint32_t*)&tic12400_data_array)[2], &tic12400_addr_array[2], 6);
+		if (tic12400_data_array.IN_STAT_COMP.bit.inc_8) {
+			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_ON);
 		} else {
 			gpio_output_bit_setup(&bgr_led[2], GPIO_STATE_OFF);
-			tic12400_reg_read(&tic12400_Q1, &((uint32_t*)&tic12400_data_array)[0], &tic12400_addr_array[0], 1);
 		}
+		tic12400_reg_read(&tic12400_Q1, &((uint32_t*) &tic12400_data_array)[1], &tic12400_addr_array[1], 6);
 	}
 	return 0;
 }
